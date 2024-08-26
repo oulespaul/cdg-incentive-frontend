@@ -7,7 +7,7 @@ export default function DashboardLayout() {
             <header className="flex justify-between bg-primary px-4 py-1">
                 <div className="flex items-center">
                     <Avatar className="mr-2">
-                        <AvatarImage src="public/central-logo2.png" alt="central-logo2"/>
+                        <AvatarImage src="/central-logo2.png" alt="central-logo2"/>
                     </Avatar>
                     <div className="flex flex-col items-start">
                         <p className="text-primary-foreground text-base	font-semibold">CDG</p>
