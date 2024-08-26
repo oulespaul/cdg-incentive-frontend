@@ -7,7 +7,7 @@ export default function AuthenticationPage() {
         <div className="absolute inset-0 h-full bg-authen-banner bg-cover bg-no-repeat"></div>
         <div className="relative z-20">
           <p className="text-3xl font-bold">Central Department Store Group</p>
-          <p className="text-xl">Incentive System</p>
+          <p className="text-xl font-semibold">Incentive System</p>
         </div>
       </div>
       <div className="lg:p-8">
@@ -19,7 +19,7 @@ export default function AuthenticationPage() {
             <h1 className="text-2xl font-semibold tracking-tight">
               เข้าสู่ระบบ
             </h1>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-muted-foreground font-semibold">
               เข้าสู่ระบบผ่าน Single Sign-On
             </p>
           </div>

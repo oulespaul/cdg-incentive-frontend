@@ -1,12 +1,7 @@
-import { useMsal } from "@azure/msal-react";
-import { Button } from "@/components/ui/button";
-
 const TargetCommissionPage = () => {
-    const { instance } = useMsal();
     return (
-        <div>
-            <div>TargetCommissionPage</div>
-            <Button onClick={() => instance.logout()}>Logout</Button>
+        <div className="flex justify-center align-middle items-center">
+            <div className="font-bold mt-auto">TargetCommissionPage</div>
         </div>
     );
 };

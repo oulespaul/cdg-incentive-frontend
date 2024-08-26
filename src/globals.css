@@ -67,3 +67,27 @@
     @apply bg-background text-foreground;
   }
 }
+
+@font-face {
+  font-family: "Sarabun-Regular";
+  src: local("Sarabun-Regular"),
+    url("./assets/fonts/Sarabun-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Sarabun-Medium";
+  src: local("Sarabun-Medium"),
+    url("./assets/fonts/Sarabun-Medium.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Sarabun-SemiBold";
+  src: local("Sarabun-SemiBold"),
+    url("./assets/fonts/Sarabun-SemiBold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Sarabun-Bold";
+  src: local("Sarabun-Bold"),
+    url("./assets/fonts/Sarabun-Bold.ttf") format("truetype");
+}

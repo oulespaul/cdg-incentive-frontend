@@ -73,6 +73,13 @@ module.exports = {
       },
       backgroundImage: {
         'authen-banner': "url('/central-auth-banner.png')",
+      },
+      fontFamily: {
+        regular: ["Sarabun-Regular"],
+        normal: ["Sarabun-Regular"],
+        medium: ["Sarabun-Medium"],
+        semibold: ["Sarabun-SemiBold"],
+        bold: ["Sarabun-Bold"]
       }
     },
   },
