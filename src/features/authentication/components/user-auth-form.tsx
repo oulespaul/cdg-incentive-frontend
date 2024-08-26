@@ -1,12 +1,12 @@
 import * as React from "react"
-import { Label } from "../../../components/ui/label"
-import { Input } from "../../../components/ui/input"
-import { cn } from "../../../lib/utils"
-import { Button } from "../../../components/ui/button"
-import { Icons } from "../../../components/icons"
+import { Label } from "@/components/ui/label"
+import { Input } from "@/components/ui/input"
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import { Icons } from "@/components/icons"
 
 
-interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
+type UserAuthFormProps = React.HTMLAttributes<HTMLDivElement>
 
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   const [isLoading, setIsLoading] = React.useState<boolean>(false)

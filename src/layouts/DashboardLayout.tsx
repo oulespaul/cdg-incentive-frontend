@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom"
-import { Avatar, AvatarImage } from "../components/ui/avatar"
+import { Avatar, AvatarImage } from "@/components/ui/avatar"
 
 export default function DashboardLayout() {
     return (
