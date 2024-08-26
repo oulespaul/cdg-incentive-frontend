@@ -14,7 +14,7 @@ export default function AuthenticationPage() {
         <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
           <div className="flex flex-col space-y-2 text-center">
             <div className="flex">
-              <img src="/public/central-robinson-logo.png" alt="central-robinson-logo" />
+              <img src="/central-robinson-logo.png" alt="central-robinson-logo" />
             </div>
             <h1 className="text-2xl font-semibold tracking-tight">
               เข้าสู่ระบบ
