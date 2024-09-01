@@ -1,17 +1,17 @@
-import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 import { UserRound, LogOut } from "lucide-react";
 import { useMsal } from "@azure/msal-react";
 import { SidebarToggle } from "./SidebarToggle";
 import { useStore } from "@/hooks/use-store";
 import { useSidebarToggle } from "@/hooks/use-sidebar-toggle";
 import { Button } from "@/components/ui/button";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 
 export function Navbar() {
   const sidebar = useStore(useSidebarToggle, (state) => state);
   const { instance, accounts } = useMsal();
 
   return (
-    <header className="sticky z-10 flex justify-between bg-primary px-4 py-1">
+    <header className="fixed w-full z-10 flex justify-between bg-primary px-4 py-1">
       <div className="flex items-center">
         <SidebarToggle isOpen={sidebar?.isOpen} setIsOpen={sidebar?.setIsOpen} />
 

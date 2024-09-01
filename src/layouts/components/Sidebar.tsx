@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import { useStore } from "@/hooks/use-store";
 import { useSidebarToggle } from "@/hooks/use-sidebar-toggle";
-import { Menu } from "./menu";
+import { Menu } from "./Menu";
 
 export function Sidebar() {
   const sidebar = useStore(useSidebarToggle, (state) => state);
