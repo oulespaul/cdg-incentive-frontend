@@ -1,6 +1,18 @@
 import LoginButton from "@/components/LoginButton";
+import { useMsal } from "@azure/msal-react";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function AuthenticationPage() {
+  const { accounts } = useMsal()
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (accounts.length > 0) {
+      navigate("/dashboard")
+    }
+  }, [accounts.length, navigate])
+
   return (
     <div className="w-full relative hidden min-h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
       <div className="relative hidden h-screen flex-col bg-muted p-10 text-white dark:border-r lg:flex justify-center">
