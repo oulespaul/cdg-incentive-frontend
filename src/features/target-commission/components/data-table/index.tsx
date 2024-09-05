@@ -2,7 +2,8 @@ import {
     ColumnDef,
     flexRender,
     getCoreRowModel,
-    getPaginationRowModel,
+    OnChangeFn,
+    PaginationState,
     useReactTable,
 } from "@tanstack/react-table"
 
@@ -19,17 +20,26 @@ import { PaginationControl } from "./PaginationControl"
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
+    onPaginationChange?: OnChangeFn<PaginationState> | undefined
+    pageCount?: number | undefined
+    pagination?: PaginationState | undefined
 }
 
 export function DataTable<TData, TValue>({
     columns,
     data,
+    onPaginationChange,
+    pageCount,
+    pagination,
 }: DataTableProps<TData, TValue>) {
     const table = useReactTable({
         data,
         columns,
         getCoreRowModel: getCoreRowModel(),
-        getPaginationRowModel: getPaginationRowModel(),
+        manualPagination: true,
+        onPaginationChange,
+        state: { pagination },
+        rowCount: pageCount,
     })
 
     return (
@@ -71,7 +81,7 @@ export function DataTable<TData, TValue>({
                     ) : (
                         <TableRow>
                             <TableCell colSpan={columns.length} className="h-24 text-center">
-                                No results.
+                                ไม่พบข้อมูล
                             </TableCell>
                         </TableRow>
                     )}
