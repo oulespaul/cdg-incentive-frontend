@@ -2,15 +2,16 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { CloudDownload, Search } from "lucide-react";
 import { DataTable } from "./components/data-table";
-import { columns, TargetCommission } from "./components/data-table/columns";
+import { columns } from "./components/data-table/columns";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { useCallback, useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { usePagination } from "@/hooks/use-pagination";
-import { TargetCommissionFilterOption } from "./models/target-commission-filter-option";
+import { useFetchTargetCommission } from "./hooks/use-target-commission";
+import { useFetchTargetCommissionMonthFilter, useFetchTargetCommissionStoreFilter, useFetchTargetCommissionYearFilter } from "./hooks/use-target-commission-filters";
 
-interface FilterParams {
+export interface FilterParams {
     month?: string;
     year?: string;
     storeNumber?: string,
@@ -27,74 +28,17 @@ const initialFilterParams = {
 };
 
 const TargetCommissionPage = () => {
-    const [targetCommissionList, setTargetCommissionList] = useState<TargetCommission[]>([])
-    const [totalTargetCommission, setTotalTargetCommission] = useState(0)
-
-    const [yearFilterOptions, setYearFilterOptions] = useState<TargetCommissionFilterOption[]>([])
-    const [monthFilterOptions, setMonthFilterOptions] = useState<TargetCommissionFilterOption[]>([])
-    const [storeFilterOptions, setStoreFilterOptions] = useState<TargetCommissionFilterOption[]>([])
-
     const [filterParams, setFilterParams] = useState<FilterParams>(initialFilterParams)
 
     const { onPaginationChange, resetPaginationState, pagination } = usePagination();
+    const { data: targetCommissionData, refetch: refetchTargetCommission } = useFetchTargetCommission({ ...filterParams, ...pagination })
 
-    const fetchTargetCommissionList = async () => {
-        try {
-            const params = new URLSearchParams({
-                page: pagination.pageIndex.toString(),
-                pageSize: pagination.pageSize.toString(),
-                ...(filterParams.month && { month: filterParams.month }),
-                ...(filterParams.year && { year: filterParams.year }),
-                ...(filterParams.storeNumber && { storeNumber: filterParams.storeNumber }),
-                ...(filterParams.storeBU && { storeBU: filterParams.storeBU }),
-                ...(filterParams.storeCode && { storeCode: filterParams.storeCode }),
-            });
-
-            const requestOptions: RequestInit = {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            };
-
-            const response = await fetch(`http://localhost:8080/api/target-commission?${params}`, requestOptions);
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            const json = await response.json();
-            setTotalTargetCommission(json.totalElements);
-            setTargetCommissionList(json.content.map((target: TargetCommission, index: number) => ({ ...target, id: index + 1 })));
-        } catch (error) {
-            console.error('Error fetching target commissions:', error);
-        }
-    }
-
-    const fetchYearFilterOptions = () => {
-        fetch(`http://localhost:8080/api/target-commission/filter/year`)
-            .then(response => response.json())
-            .then(json => setYearFilterOptions(json));
-    }
-
-    const fetchMonthFilterOptions = () => {
-        fetch(`http://localhost:8080/api/target-commission/filter/month`)
-            .then(response => response.json())
-            .then(json => setMonthFilterOptions(json));
-    }
-
-    const fetchStoreFilterOptions = () => {
-        fetch(`http://localhost:8080/api/target-commission/filter/store`)
-            .then(response => response.json())
-            .then(json => setStoreFilterOptions(json));
-    }
+    const { data: yearFilterOptions } = useFetchTargetCommissionYearFilter()
+    const { data: monthFilterOptions } = useFetchTargetCommissionMonthFilter()
+    const { data: storeFilterOptions } = useFetchTargetCommissionStoreFilter()
 
     useEffect(() => {
-        fetchYearFilterOptions()
-        fetchMonthFilterOptions()
-        fetchStoreFilterOptions()
-    }, [])
-
-    useEffect(() => {
-        fetchTargetCommissionList()
+        refetchTargetCommission()
     }, [pagination.pageIndex, pagination.pageSize])
 
     const onFilterSelectHandler = (key: string, value: string) => {
@@ -131,7 +75,7 @@ const TargetCommissionPage = () => {
                                 <SelectValue placeholder="ปี" />
                             </SelectTrigger>
                             <SelectContent>
-                                {yearFilterOptions.map((option, index) => (
+                                {yearFilterOptions?.map((option, index) => (
                                     <SelectItem key={`${index}-${option.value}`} value={option.value}>{option.label}</SelectItem>
                                 ))}
                             </SelectContent>
@@ -142,7 +86,7 @@ const TargetCommissionPage = () => {
                                 <SelectValue placeholder="เดือน" />
                             </SelectTrigger>
                             <SelectContent>
-                                {monthFilterOptions.map((option, index) => (
+                                {monthFilterOptions?.map((option, index) => (
                                     <SelectItem key={`${index}-${option.value}`} value={option.value}>{option.label}</SelectItem>
                                 ))}
                             </SelectContent>
@@ -153,7 +97,7 @@ const TargetCommissionPage = () => {
                                 <SelectValue placeholder="สาขา" />
                             </SelectTrigger>
                             <SelectContent>
-                                {storeFilterOptions.map((option, index) => (
+                                {storeFilterOptions?.map((option, index) => (
                                     <SelectItem key={`${index}-${option.value}`} value={option.value}>{option.label}</SelectItem>
                                 ))}
                             </SelectContent>
@@ -173,7 +117,7 @@ const TargetCommissionPage = () => {
             </div>
 
             <div className="flex mt-2 gap-2">
-                <Button variant="outline" className="text-primary hover:text-primary" onClick={() => fetchTargetCommissionList()}><Search className="mr-2 h-4 w-4" />ค้นหา</Button>
+                <Button variant="outline" className="text-primary hover:text-primary" onClick={() => refetchTargetCommission()}><Search className="mr-2 h-4 w-4" />ค้นหา</Button>
                 <Button variant="ghost" className="text-primary hover:text-primary" onClick={() => onClearFilterHandler()}>ล้างตัวกรอง</Button>
             </div>
 
@@ -183,9 +127,9 @@ const TargetCommissionPage = () => {
                 <h1 className="text-lg font-medium mb-4">รายการข้อมูลเป้า commission (เป้าสาขา)</h1>
                 <DataTable
                     columns={columns}
-                    data={targetCommissionList}
+                    data={targetCommissionData?.content ?? []}
                     onPaginationChange={onPaginationChange}
-                    pageCount={totalTargetCommission}
+                    pageCount={targetCommissionData?.totalElements ?? 0}
                     pagination={pagination}
                 />
             </Card>
