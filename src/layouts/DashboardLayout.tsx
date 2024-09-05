@@ -4,6 +4,7 @@ import { useSidebarToggle } from "@/hooks/use-sidebar-toggle";
 import { Outlet } from "react-router-dom";
 import { Navbar } from "./components/Navbar";
 import { Sidebar } from "./components/Sidebar";
+import { ToastContainer } from 'react-toastify';
 
 export default function DashboardLayout() {
   const sidebar = useStore(useSidebarToggle, (state) => state);
@@ -24,6 +25,7 @@ export default function DashboardLayout() {
       >
         <Outlet />
       </main>
+      <ToastContainer />
     </>
   );
 }

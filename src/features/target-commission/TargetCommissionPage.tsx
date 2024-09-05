@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { CloudDownload, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import { DataTable } from "./components/data-table";
 import { columns } from "./components/data-table/columns";
 import { Input } from "@/components/ui/input";
@@ -8,8 +8,9 @@ import { Separator } from "@/components/ui/separator";
 import { useCallback, useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { usePagination } from "@/hooks/use-pagination";
-import { useFetchTargetCommission } from "./hooks/use-target-commission";
-import { useFetchTargetCommissionMonthFilter, useFetchTargetCommissionStoreFilter, useFetchTargetCommissionYearFilter } from "./hooks/use-target-commission-filters";
+import { useFetchTargetCommission } from "./hooks/use-fetch-target-commission";
+import { useFetchTargetCommissionMonthFilter, useFetchTargetCommissionStoreFilter, useFetchTargetCommissionYearFilter } from "./hooks/use-fetch-target-commission-filters";
+import UploadFile from "./components/upload-file-button";
 
 export interface FilterParams {
     month?: string;
@@ -37,6 +38,7 @@ const TargetCommissionPage = () => {
     const { data: monthFilterOptions } = useFetchTargetCommissionMonthFilter()
     const { data: storeFilterOptions } = useFetchTargetCommissionStoreFilter()
 
+
     useEffect(() => {
         refetchTargetCommission()
     }, [pagination.pageIndex, pagination.pageSize])
@@ -60,6 +62,7 @@ const TargetCommissionPage = () => {
         resetPaginationState()
         setFilterParams(initialFilterParams)
     }, [resetPaginationState])
+
 
     return (
         <div className="flex flex-col">
@@ -105,7 +108,7 @@ const TargetCommissionPage = () => {
                     </div>
 
                     <div className="flex w-1/2 justify-end">
-                        <Button className="bg-gradient-to-l from-cyan-500 to-blue-500"><CloudDownload className="mr-2 h-4 w-4" />นำเข้าเป้า commission</Button>
+                        <UploadFile />
                     </div>
                 </div>
 
@@ -127,7 +130,7 @@ const TargetCommissionPage = () => {
                 <h1 className="text-lg font-medium mb-4">รายการข้อมูลเป้า commission (เป้าสาขา)</h1>
                 <DataTable
                     columns={columns}
-                    data={targetCommissionData?.content ?? []}
+                    data={targetCommissionData?.content?.map((target, index) => ({ ...target, id: index + 1 })) ?? []}
                     onPaginationChange={onPaginationChange}
                     pageCount={targetCommissionData?.totalElements ?? 0}
                     pagination={pagination}

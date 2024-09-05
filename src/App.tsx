@@ -1,5 +1,7 @@
 import './App.css'
 import './globals.css'
+import 'react-toastify/dist/ReactToastify.css';
+
 import { PublicClientApplication } from '@azure/msal-browser';
 import { msalConfig } from './configs/authConfig';
 import { MsalProvider } from '@azure/msal-react';

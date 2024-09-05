@@ -2,6 +2,7 @@ import {
     ColumnDef,
     flexRender,
     getCoreRowModel,
+    getPaginationRowModel,
     OnChangeFn,
     PaginationState,
     useReactTable,
@@ -16,10 +17,12 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import { PaginationControl } from "./PaginationControl"
+import { useState } from "react"
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
+    manualPagination?: boolean
     onPaginationChange?: OnChangeFn<PaginationState> | undefined
     pageCount?: number | undefined
     pagination?: PaginationState | undefined
@@ -28,24 +31,31 @@ interface DataTableProps<TData, TValue> {
 export function DataTable<TData, TValue>({
     columns,
     data,
+    manualPagination = true,
     onPaginationChange,
     pageCount,
     pagination,
 }: DataTableProps<TData, TValue>) {
+    const [paginationLocal, setPaginationLocal] = useState<PaginationState>({
+        pageIndex: 0,
+        pageSize: 10,
+    })
+
     const table = useReactTable({
         data,
         columns,
         getCoreRowModel: getCoreRowModel(),
-        manualPagination: true,
-        onPaginationChange,
-        state: { pagination },
+        manualPagination,
+        getPaginationRowModel: manualPagination ? undefined : getPaginationRowModel(),
+        onPaginationChange: manualPagination ? onPaginationChange : setPaginationLocal,
+        state: { pagination: manualPagination ? pagination : paginationLocal },
         rowCount: pageCount,
     })
 
     return (
         <div className="rounded-md border">
             <Table>
-                <TableHeader className="bg-[#E2E8F0]">
+                <TableHeader className="bg-[#E2E8F0] sticky top-0">
                     {table.getHeaderGroups().map((headerGroup) => (
                         <TableRow key={headerGroup.id}>
                             {headerGroup.headers.map((header) => {
