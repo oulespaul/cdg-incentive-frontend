@@ -1,4 +1,4 @@
-import LoginButton from "@/components/LoginButton";
+import LoginButton from "@/components/login-button";
 import { useMsal } from "@azure/msal-react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
