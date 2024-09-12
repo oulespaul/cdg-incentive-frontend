@@ -1,17 +1,17 @@
-import LoginButton from "@/components/login-button";
-import { useMsal } from "@azure/msal-react";
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import LoginButton from '@/components/login-button';
+import { useMsal } from '@azure/msal-react';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-export default function AuthenticationPage() {
-  const { accounts } = useMsal()
+export const LoginPage = () => {
+  const { accounts } = useMsal();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (accounts.length > 0) {
-      navigate("/dashboard")
+      // navigate('/dashboard');
     }
-  }, [accounts.length, navigate])
+  }, [accounts.length, navigate]);
 
   return (
     <div className="w-full relative hidden min-h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
@@ -26,7 +26,10 @@ export default function AuthenticationPage() {
         <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
           <div className="flex flex-col space-y-2 text-center">
             <div className="flex">
-              <img src="/central-robinson-logo.png" alt="central-robinson-logo" />
+              <img
+                src="/central-robinson-logo.png"
+                alt="central-robinson-logo"
+              />
             </div>
             <h1 className="text-2xl font-semibold tracking-tight">
               เข้าสู่ระบบ
@@ -40,4 +43,4 @@ export default function AuthenticationPage() {
       </div>
     </div>
   );
-}
+};

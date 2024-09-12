@@ -1,17 +1,17 @@
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
-import { DataTable } from "../../components/data-table";
-import { columns } from "../../components/data-table/columns";
+import { DataTable } from "@/components/data-table";
+import { columns } from "@/components/data-table/columns";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { useCallback, useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { usePagination } from "@/hooks/use-pagination";
-import { useFetchTargetCommission } from "./hooks/use-fetch-target-commission";
-import { useFetchTargetCommissionMonthFilter, useFetchTargetCommissionStoreFilter, useFetchTargetCommissionYearFilter } from "./hooks/use-fetch-target-commission-filters";
-import UploadFile from "./components/upload-file-button";
-import { FilterParams } from "./models/target-commission-filter-params";
-import FilterSelect from "../../components/select";
+import { useFetchTargetCommission } from "@/features/target-commission/hooks/use-fetch-target-commission";
+import { useFetchTargetCommissionMonthFilter, useFetchTargetCommissionStoreFilter, useFetchTargetCommissionYearFilter } from "@/features/target-commission/hooks/use-fetch-target-commission-filters";
+import UploadFile from "@/features/target-commission/components/upload-file-button";
+import { FilterParams } from "@/features/target-commission/models/target-commission-filter-params";
+import FilterSelect from "@/components/select";
 
 const initialFilterParams = {
     year: undefined,
@@ -21,7 +21,7 @@ const initialFilterParams = {
     storeBU: ""
 };
 
-const TargetCommissionPage = () => {
+export const TargetCommissionPage = () => {
     const [filterParams, setFilterParams] = useState<FilterParams>(initialFilterParams)
 
     const { onPaginationChange, resetPaginationState, pagination } = usePagination();
@@ -128,5 +128,3 @@ const TargetCommissionPage = () => {
         </div>
     );
 };
-
-export default TargetCommissionPage;

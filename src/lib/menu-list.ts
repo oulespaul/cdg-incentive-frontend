@@ -1,4 +1,4 @@
-import {LucideIcon,Star} from "lucide-react";
+import { LucideIcon, Star } from "lucide-react";
 
 type Submenu = {
     href: string;
@@ -25,9 +25,9 @@ export function getMenuList(pathname: string): Group[] {
             groupLabel: "",
             menus: [
                 {
-                    href: "/dashboard",
+                    href: "/app",
                     label: "นำเข้าเป้า commission (เป้าสาขา)",
-                    active: pathname.includes("/dashboard"),
+                    active: pathname.includes("/app"),
                     icon: Star,
                     submenus: []
                 }
