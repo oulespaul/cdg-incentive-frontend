@@ -4,7 +4,7 @@ import UploadInput, { FileUploadProgress } from './components/upload-input'
 import { Button } from '@/components/ui/button'
 import { CloudDownload, Loader2 } from 'lucide-react'
 import { useUploadTargetCommissionFile, useValidatedTargetCommissionUploadFile } from '../../hooks/use-upload-target-commission'
-import { columns, TargetCommission } from '../../../../components/data-table/columns'
+import { columns, TargetCommission } from '../../constants/target-commission-columns'
 import { DataTable } from '../../../../components/data-table'
 import { toast } from 'react-toastify'
 

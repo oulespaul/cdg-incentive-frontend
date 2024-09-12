@@ -56,7 +56,7 @@ export function Menu({ isOpen }: MenuProps) {
                           <TooltipTrigger asChild>
                             <Button
                               variant={active ? "default" : "ghost"}
-                              className="w-full justify-start h-10 mb-1 rounded-none"
+                              className="w-full justify-start h-10 mb-1 rounded-none text-white"
                               asChild
                             >
                               <Link to={href}>

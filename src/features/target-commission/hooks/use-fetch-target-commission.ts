@@ -2,7 +2,7 @@ import { apiClient } from "@/lib/api-client";
 import { useQuery } from "@tanstack/react-query";
 import { PaginationState } from "@tanstack/react-table";
 import { Page } from "@/models/pagination-response";
-import { TargetCommission } from "../../../components/data-table/columns";
+import { TargetCommission } from "../constants/target-commission-columns";
 import { FilterParams } from "../models/target-commission-filter-params";
 
 const fetchTargetCommission = async (

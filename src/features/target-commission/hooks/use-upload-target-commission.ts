@@ -1,7 +1,7 @@
 import { apiClient } from "@/lib/api-client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosResponse } from "axios";
-import { TargetCommission } from "../../../components/data-table/columns";
+import { TargetCommission } from "../constants/target-commission-columns";
 
 const validateUploadFile = async (
   file: File

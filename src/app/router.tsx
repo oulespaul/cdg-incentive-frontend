@@ -21,12 +21,21 @@ export const createAppRouter = () =>
       ),
       children: [
         {
-          path: '',
+          path: 'target-commission',
           lazy: async () => {
             const { TargetCommissionPage } = await import(
               './routes/app/target-commission'
             );
             return { Component: TargetCommissionPage };
+          },
+        },
+        {
+          path: 'target-branch',
+          lazy: async () => {
+            const { TargetBranchPage } = await import(
+              './routes/app/target-branch'
+            );
+            return { Component: TargetBranchPage };
           },
         },
       ],

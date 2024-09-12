@@ -1,5 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table"
-import { DataTableColumnHeader } from "./ColumnHeader";
+import { DataTableColumnHeader } from "../../../components/data-table/ColumnHeader";
 
 export type TargetCommission = {
   id: number,
@@ -12,7 +12,7 @@ export type TargetCommission = {
   targetCommission: number
 };
 
-export const columns: ColumnDef<TargetCommission>[] = [
+export const targetCommissionColumns: ColumnDef<TargetCommission>[] = [
   {
     accessorKey: "id",
     header: ({ column }) => (
