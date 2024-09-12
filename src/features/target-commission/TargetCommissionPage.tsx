@@ -1,8 +1,7 @@
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Search } from "lucide-react";
-import { DataTable } from "./components/data-table";
-import { columns } from "./components/data-table/columns";
+import { DataTable } from "../../components/data-table";
+import { columns } from "../../components/data-table/columns";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { useCallback, useEffect, useState } from "react";
@@ -11,14 +10,8 @@ import { usePagination } from "@/hooks/use-pagination";
 import { useFetchTargetCommission } from "./hooks/use-fetch-target-commission";
 import { useFetchTargetCommissionMonthFilter, useFetchTargetCommissionStoreFilter, useFetchTargetCommissionYearFilter } from "./hooks/use-fetch-target-commission-filters";
 import UploadFile from "./components/upload-file-button";
-
-export interface FilterParams {
-    month?: string;
-    year?: string;
-    storeNumber?: string,
-    storeCode?: string,
-    storeBU?: string;
-}
+import { FilterParams } from "./models/target-commission-filter-params";
+import FilterSelect from "../../components/select";
 
 const initialFilterParams = {
     year: undefined,
@@ -38,10 +31,9 @@ const TargetCommissionPage = () => {
     const { data: monthFilterOptions } = useFetchTargetCommissionMonthFilter()
     const { data: storeFilterOptions } = useFetchTargetCommissionStoreFilter()
 
-
     useEffect(() => {
         refetchTargetCommission()
-    }, [pagination.pageIndex, pagination.pageSize])
+    }, [pagination.pageIndex, pagination.pageSize, refetchTargetCommission])
 
     const onFilterSelectHandler = (key: string, value: string) => {
         setFilterParams(prevFilters => ({
@@ -73,38 +65,24 @@ const TargetCommissionPage = () => {
             <div className="flex flex-col mt-4">
                 <div className="flex">
                     <div className="flex w-1/2 gap-3">
-                        <Select value={filterParams.year ?? ''} onValueChange={(value) => onFilterSelectHandler("year", value)}>
-                            <SelectTrigger>
-                                <SelectValue placeholder="ปี" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {yearFilterOptions?.map((option, index) => (
-                                    <SelectItem key={`${index}-${option.value}`} value={option.value}>{option.label}</SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-
-                        <Select value={filterParams.month ?? ''} onValueChange={(value) => onFilterSelectHandler("month", value)}>
-                            <SelectTrigger>
-                                <SelectValue placeholder="เดือน" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {monthFilterOptions?.map((option, index) => (
-                                    <SelectItem key={`${index}-${option.value}`} value={option.value}>{option.label}</SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-
-                        <Select value={filterParams.storeNumber ?? ''} onValueChange={(value) => onFilterSelectHandler("storeNumber", value)}>
-                            <SelectTrigger>
-                                <SelectValue placeholder="สาขา" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {storeFilterOptions?.map((option, index) => (
-                                    <SelectItem key={`${index}-${option.value}`} value={option.value}>{option.label}</SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
+                        <FilterSelect
+                            value={filterParams.year}
+                            options={yearFilterOptions}
+                            placeholder="ปี"
+                            onChange={value => onFilterSelectHandler("year", value)}
+                        />
+                        <FilterSelect
+                            value={filterParams.month}
+                            options={monthFilterOptions}
+                            placeholder="เดือน"
+                            onChange={value => onFilterSelectHandler("month", value)}
+                        />
+                        <FilterSelect
+                            value={filterParams.storeNumber}
+                            options={storeFilterOptions}
+                            placeholder="สาขา"
+                            onChange={value => onFilterSelectHandler("storeNumber", value)}
+                        />
                     </div>
 
                     <div className="flex w-1/2 justify-end">
@@ -113,14 +91,25 @@ const TargetCommissionPage = () => {
                 </div>
 
                 <div className="flex w-1/2 gap-2 mt-2">
-                    <Input type="text" placeholder="Business Unit" value={filterParams.storeBU} onChange={(event) => onFilterValueChangeHandler("storeBU", event)} />
+                    <Input
+                        type="text"
+                        placeholder="Business Unit"
+                        value={filterParams.storeBU}
+                        onChange={(event) => onFilterValueChangeHandler("storeBU", event)}
+                    />
 
-                    <Input type="text" placeholder="Store Code" value={filterParams.storeCode} onChange={(event) => onFilterValueChangeHandler("storeCode", event)} />
+                    <Input
+                        type="text"
+                        placeholder="Store Code"
+                        value={filterParams.storeCode}
+                        onChange={(event) => onFilterValueChangeHandler("storeCode", event)}
+                    />
                 </div>
             </div>
 
             <div className="flex mt-2 gap-2">
-                <Button variant="outline" className="text-primary hover:text-primary" onClick={() => refetchTargetCommission()}><Search className="mr-2 h-4 w-4" />ค้นหา</Button>
+                <Button variant="outline" 
+                className="text-primary hover:text-primary" onClick={() => refetchTargetCommission()}><Search className="mr-2 h-4 w-4" />ค้นหา</Button>
                 <Button variant="ghost" className="text-primary hover:text-primary" onClick={() => onClearFilterHandler()}>ล้างตัวกรอง</Button>
             </div>
 
