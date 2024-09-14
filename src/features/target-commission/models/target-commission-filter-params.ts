@@ -2,7 +2,7 @@
 export interface FilterParams {
     month?: string;
     year?: string;
-    storeNumber?: string,
-    storeCode?: string,
-    storeBU?: string;
+    branchNumber?: string,
+    branchCode?: string,
+    branchBU?: string;
 }

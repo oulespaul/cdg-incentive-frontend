@@ -9,7 +9,7 @@ import { usePagination } from '@/hooks/use-pagination';
 import { useFetchTargetCommission } from '@/features/target-commission/hooks/use-fetch-target-commission';
 import {
     useFetchTargetCommissionMonthFilter,
-    useFetchTargetCommissionStoreFilter,
+    useFetchTargetCommissionBranchFilter,
     useFetchTargetCommissionYearFilter,
 } from '@/features/target-commission/hooks/use-fetch-target-commission-filters';
 import UploadFile from '@/features/target-commission/components/upload-file-button';
@@ -20,9 +20,9 @@ import { targetCommissionColumns } from '@/features/target-commission/constants/
 const initialFilterParams = {
     year: undefined,
     month: undefined,
-    storeNumber: undefined,
-    storeCode: '',
-    storeBU: '',
+    branchNumber: undefined,
+    branchCode: '',
+    branchBU: '',
 };
 
 export const TargetCommissionPage = () => {
@@ -36,7 +36,7 @@ export const TargetCommissionPage = () => {
 
     const { data: yearFilterOptions } = useFetchTargetCommissionYearFilter();
     const { data: monthFilterOptions } = useFetchTargetCommissionMonthFilter();
-    const { data: storeFilterOptions } = useFetchTargetCommissionStoreFilter();
+    const { data: branchFilterOptions } = useFetchTargetCommissionBranchFilter();
 
     useEffect(() => {
         refetchTargetCommission();
@@ -84,10 +84,10 @@ export const TargetCommissionPage = () => {
                             onChange={value => onFilterSelectHandler('month', value)}
                         />
                         <FilterSelect
-                            value={filterParams.storeNumber}
-                            options={storeFilterOptions}
+                            value={filterParams.branchNumber}
+                            options={branchFilterOptions}
                             placeholder="สาขา"
-                            onChange={value => onFilterSelectHandler('storeNumber', value)}
+                            onChange={value => onFilterSelectHandler('branchNumber', value)}
                         />
                     </div>
 
@@ -100,15 +100,15 @@ export const TargetCommissionPage = () => {
                     <Input
                         type="text"
                         placeholder="Business Unit"
-                        value={filterParams.storeBU}
-                        onChange={event => onFilterValueChangeHandler('storeBU', event)}
+                        value={filterParams.branchBU}
+                        onChange={event => onFilterValueChangeHandler('branchBU', event)}
                     />
 
                     <Input
                         type="text"
-                        placeholder="Store Code"
-                        value={filterParams.storeCode}
-                        onChange={event => onFilterValueChangeHandler('storeCode', event)}
+                        placeholder="Branch Code"
+                        value={filterParams.branchCode}
+                        onChange={event => onFilterValueChangeHandler('branchCode', event)}
                     />
                 </div>
             </div>

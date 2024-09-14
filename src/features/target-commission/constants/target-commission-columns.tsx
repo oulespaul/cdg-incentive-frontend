@@ -5,10 +5,10 @@ export type TargetCommission = {
   id: number,
   month: string,
   year: string,
-  storeBU: string,
-  storeNumber: string,
-  storeName: string,
-  storeCode: string,
+  branchBU: string,
+  branchNumber: string,
+  branchName: string,
+  branchCode: string,
   targetCommission: number
 };
 
@@ -35,34 +35,34 @@ export const targetCommissionColumns: ColumnDef<TargetCommission>[] = [
     enableHiding: false,
   },
   {
-    id: "storeBU",
-    accessorKey: "storeBU",
+    id: "branchBU",
+    accessorKey: "branchBU",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="BU" className="text-start" />
     ),
-    cell: ({ row }) => <div className="text-start">{`${row.getValue("storeBU")}`}</div>,
+    cell: ({ row }) => <div className="text-start">{`${row.getValue("branchBU")}`}</div>,
     size: 200,
     enableSorting: false,
     enableHiding: false,
   },
   {
-    id: "store",
-    accessorFn: (row => `${row.storeNumber} - ${row.storeName}`),
+    id: "branch",
+    accessorFn: (row => `${row.branchNumber} - ${row.branchName}`),
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="รหัส - ชื่อสาขา" className="text-start" />
     ),
-    cell: ({ row }) => <div className="text-start">{`${row.getValue("store")}`}</div>,
+    cell: ({ row }) => <div className="text-start">{`${row.getValue("branch")}`}</div>,
     size: 200,
     enableSorting: false,
     enableHiding: false,
   },
   {
-    id: "storeCode",
-    accessorKey: "storeCode",
+    id: "branchCode",
+    accessorKey: "branchCode",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Store Code" className="text-start" />
     ),
-    cell: ({ row }) => <div className="text-start">{`${row.getValue("storeCode")}`}</div>,
+    cell: ({ row }) => <div className="text-start">{`${row.getValue("branchCode")}`}</div>,
     size: 200,
     enableSorting: false,
     enableHiding: false,

@@ -26,12 +26,12 @@ export const useFetchTargetCommissionMonthFilter = () => {
   });
 };
 
-export const useFetchTargetCommissionStoreFilter = () => {
+export const useFetchTargetCommissionBranchFilter = () => {
   return useQuery<TargetCommissionFilterOption[], unknown>({
     queryFn: async () => {
-      const { data } = await fetchTargetCommissionFilter("store");
+      const { data } = await fetchTargetCommissionFilter("branch");
       return data;
     },
-    queryKey: ["target-commission/filter/store"],
+    queryKey: ["target-commission/filter/branch"],
   });
 };

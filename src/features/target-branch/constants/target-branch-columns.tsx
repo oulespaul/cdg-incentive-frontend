@@ -7,10 +7,10 @@ export type TargetCommission = {
     id: number;
     month: string;
     year: string;
-    storeBU: string;
-    storeNumber: string;
-    storeName: string;
-    storeCode: string;
+    branchBU: string;
+    branchNumber: string;
+    branchName: string;
+    branchCode: string;
     targetCommission: number;
 };
 
