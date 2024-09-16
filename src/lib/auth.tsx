@@ -1,17 +1,21 @@
 import { useMsal } from '@azure/msal-react';
-import { Navigate, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const user = useMsal();
-  const location = useLocation();
+    const user = useMsal();
+    const location = useLocation();
+    const navigate = useNavigate();
 
-  if (user.accounts.length === 0) {
-    return <Navigate to={`/`} replace />;
-  } else {
-    if (location.pathname === '/app') {
-      return <Navigate to={`/app/target-commission`} replace />;
-    }
-  }
+    useEffect(() => {
+        if (user.accounts.length === 0) {
+            navigate('/');
+        } else {
+            if (location.pathname === '/app') {
+                navigate('/app/target-commission', { replace: true });
+            }
+        }
+    }, [location.pathname]);
 
-  return children;
+    return children;
 };

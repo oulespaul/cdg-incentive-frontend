@@ -13,6 +13,7 @@ import {
 import { FilterParams } from '@/features/target-commission/models/target-commission-filter-params';
 import FilterSelect from '@/components/select';
 import { targetBranchColumns } from '@/features/target-branch/constants/target-branch-columns';
+import { useNavigate } from 'react-router-dom';
 
 const initialFilterParams = {
     year: undefined,
@@ -21,6 +22,7 @@ const initialFilterParams = {
 
 export const TargetBranchPage = () => {
     const [filterParams, setFilterParams] = useState<FilterParams>(initialFilterParams);
+    const navigate = useNavigate();
 
     const { onPaginationChange, resetPaginationState, pagination } = usePagination();
     const { data: targetCommissionData, refetch: refetchTargetCommission } = useFetchTargetCommission({
@@ -72,7 +74,10 @@ export const TargetBranchPage = () => {
                     </div>
 
                     <div className="flex w-1/2 justify-end">
-                        <Button className="bg-gradient-to-l from-cyan-500 to-blue-500">
+                        <Button
+                            className="bg-gradient-to-l from-cyan-500 to-blue-500"
+                            onClick={() => navigate('/app/target-branch/create')}
+                        >
                             <Plus className="mr-2 h-4 w-4" />
                             สร้าง Target
                         </Button>
