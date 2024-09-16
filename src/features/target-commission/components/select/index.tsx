@@ -1,5 +1,5 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { TargetCommissionFilterOption } from "../../features/target-commission/models/target-commission-filter-option";
+import { TargetCommissionFilterOption } from "../../models/target-commission-filter-option";
 
 interface FilterSelectProps {
     value?: string | undefined

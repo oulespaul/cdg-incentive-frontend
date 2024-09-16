@@ -2,7 +2,7 @@ export const msalConfig = {
   auth: {
     clientId: "6dd3a7cf-63fb-43ff-9ff3-43944c306c24",
     authority: "https://login.microsoftonline.com/intasarnkoutlook.onmicrosoft.com",
-    redirectUri: "/dashboard",
+    redirectUri: "/app",
     postLogoutRedirectUri: "/",
     navigateToLoginRequestUrl: false,
   },

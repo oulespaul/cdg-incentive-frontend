@@ -1,4 +1,4 @@
-import {LucideIcon,Star} from "lucide-react";
+import { Calculator, LucideIcon, Star } from 'lucide-react';
 
 type Submenu = {
     href: string;
@@ -10,7 +10,7 @@ type Menu = {
     href: string;
     label: string;
     active: boolean;
-    icon: LucideIcon
+    icon: LucideIcon;
     submenus: Submenu[];
 };
 
@@ -22,16 +22,23 @@ type Group = {
 export function getMenuList(pathname: string): Group[] {
     return [
         {
-            groupLabel: "",
+            groupLabel: '',
             menus: [
                 {
-                    href: "/dashboard",
-                    label: "นำเข้าเป้า commission (เป้าสาขา)",
-                    active: pathname.includes("/dashboard"),
+                    href: '/app/target-commission',
+                    label: 'นำเข้าเป้า commission (เป้าสาขา)',
+                    active: pathname.includes('/app/target-commission'),
                     icon: Star,
-                    submenus: []
-                }
-            ]
-        }
+                    submenus: [],
+                },
+                {
+                    href: '/app/target-branch',
+                    label: 'จัดการเป้าสาขา',
+                    active: pathname.includes('/app/target-branch'),
+                    icon: Calculator,
+                    submenus: [],
+                },
+            ],
+        },
     ];
 }
