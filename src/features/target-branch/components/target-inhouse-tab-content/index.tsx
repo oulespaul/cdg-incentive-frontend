@@ -5,18 +5,20 @@ import { TargetInHouse, targetInHouseColumns } from './constants/target-in-house
 import BrandDialog from '../brand-dialog';
 import { Brand } from '@/features/brand/models/brand';
 import { useFetchBrand } from '@/features/brand/hooks/use-fetch-branch';
+import { useTargetBranchStore } from '../../hooks/use-target-branch-store';
+import _ from 'lodash';
 
 const TargetInHouseTabContent = () => {
-    const [targetInHouseList, setTargetInHouseList] = useState<TargetInHouse[]>([]);
     const [brandDialogOpen, setBrandDialogOpen] = useState(false);
     const [currentRowIndex, setCurrentRowIndex] = useState<number | null>(null);
+
+    const { targetCommission, targetInHouseList, setTargetInHouseList } = useTargetBranchStore();
 
     const { data: brandList } = useFetchBrand();
 
     const handleBrandSelected = useCallback(
         (brandSelected: Brand | undefined) => {
             if (!brandSelected || currentRowIndex === null) return;
-
             setTargetInHouseList(old =>
                 old.map((row, index) => {
                     if (index === currentRowIndex) {
@@ -48,6 +50,7 @@ const TargetInHouseTabContent = () => {
             <TargetBranchDataTable
                 columns={targetInHouseColumns}
                 data={targetInHouseList.map((target, index) => ({ ...target, id: index + 1 })) ?? []}
+                isCanAddRow={!_.isEmpty(targetCommission)}
                 meta={{
                     updateData: (rowIndex, columnId, value) => {
                         setTargetInHouseList(old =>
@@ -65,8 +68,8 @@ const TargetInHouseTabContent = () => {
                     addRow: () => {
                         const newRow = {
                             id: undefined,
-                            departmentCode: 'NEW',
-                            departmentName: 'NEW',
+                            departmentCode: '',
+                            departmentName: '',
                             subDepartmentCode: '',
                             subDepartmentName: '',
                             brandId: undefined,

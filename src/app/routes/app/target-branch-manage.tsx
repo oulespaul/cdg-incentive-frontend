@@ -1,46 +1,23 @@
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { useEffect, useState } from 'react';
 import { Card } from '@/components/ui/card';
-import { usePagination } from '@/hooks/use-pagination';
-import { useFetchTargetCommission } from '@/features/target-commission/hooks/use-fetch-target-commission';
-import {
-    useFetchTargetCommissionMonthFilter,
-    useFetchTargetCommissionYearFilter,
-} from '@/features/target-commission/hooks/use-fetch-target-commission-filters';
-import { FilterParams } from '@/features/target-commission/models/target-commission-filter-params';
 import FilterSelect from '@/components/select';
 import { TargetBranchTabs } from '@/features/target-branch/components/TargetBranchTabs';
 import { useNavigate } from 'react-router-dom';
-
-const initialFilterParams = {
-    year: undefined,
-    month: undefined,
-};
+import { formatThaiCurrency } from '@/lib/number-utils';
+import _ from 'lodash';
+import { useTargetBranchManage } from '@/features/target-branch/hooks/use-target-branch-manage';
 
 export const TargetBranchManagePage = () => {
-    const [filterParams, setFilterParams] = useState<FilterParams>(initialFilterParams);
+    const {
+        filterParams,
+        yearFilterOptions,
+        monthFilterOptions,
+        onFilterSelectHandler,
+        targetCommission,
+        onSaveTargetHandler,
+    } = useTargetBranchManage();
     const navigate = useNavigate();
-
-    const { pagination } = usePagination();
-    const { refetch: refetchTargetCommission } = useFetchTargetCommission({
-        ...filterParams,
-        ...pagination,
-    });
-
-    const { data: yearFilterOptions } = useFetchTargetCommissionYearFilter();
-    const { data: monthFilterOptions } = useFetchTargetCommissionMonthFilter();
-
-    useEffect(() => {
-        refetchTargetCommission();
-    }, [pagination.pageIndex, pagination.pageSize, refetchTargetCommission]);
-
-    const onFilterSelectHandler = (key: string, value: string) => {
-        setFilterParams(prevFilters => ({
-            ...prevFilters,
-            [key]: value,
-        }));
-    };
 
     return (
         <div className="flex flex-col">
@@ -66,15 +43,24 @@ export const TargetBranchManagePage = () => {
                 </div>
                 <div className="flex w-1/3">
                     <p className="text-lg font-medium text-end self-center ml-2">
-                        เป้า commission (เป้าสาขา): <span className="text-blue-500">65,000,000 บาท</span>
+                        เป้า commission (เป้าสาขา):{' '}
+                        {!_.isEmpty(targetCommission) && (
+                            <span className="text-blue-500">
+                                {formatThaiCurrency(targetCommission.targetCommission, ' บาท')}
+                            </span>
+                        )}
                     </p>
                 </div>
                 <div className="flex w-1/3 gap-3 justify-end">
                     <Button variant="outline" onClick={() => navigate('/app/target-branch')}>
                         ยกเลิก
                     </Button>
-                    <Button variant="primary">บันทึก</Button>
-                    <Button variant="success">ส่งคำขออนุมัติ</Button>
+                    <Button variant="primary" disabled={_.isEmpty(targetCommission)} onClick={onSaveTargetHandler}>
+                        บันทึก
+                    </Button>
+                    <Button variant="success" disabled={_.isEmpty(targetCommission)}>
+                        ส่งคำขออนุมัติ
+                    </Button>
                 </div>
             </div>
 

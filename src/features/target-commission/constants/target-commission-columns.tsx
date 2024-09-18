@@ -1,16 +1,7 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { DataTableColumnHeader } from '../../../components/data-table/ColumnHeader';
-
-export type TargetCommission = {
-    id: number;
-    month: string;
-    year: string;
-    branchBU: string;
-    branchNumber: string;
-    branchName: string;
-    branchCode: string;
-    targetCommission: number;
-};
+import { TargetCommission } from '../models/target-commission-response';
+import { formatThaiCurrency } from '@/lib/number-utils';
 
 export const targetCommissionColumns: ColumnDef<TargetCommission>[] = [
     {
@@ -64,11 +55,7 @@ export const targetCommissionColumns: ColumnDef<TargetCommission>[] = [
         header: ({ column }) => (
             <DataTableColumnHeader column={column} title="เป้า Commission (บาท)" className="text-end" />
         ),
-        cell: ({ row }) => (
-            <div className="text-end">
-                {new Intl.NumberFormat('th-TH', { currency: 'THB' }).format(row.getValue('targetCommission'))}
-            </div>
-        ),
+        cell: ({ row }) => <div className="text-end">{formatThaiCurrency(row.getValue('targetCommission'))}</div>,
         size: 200,
         enableSorting: false,
         enableHiding: false,

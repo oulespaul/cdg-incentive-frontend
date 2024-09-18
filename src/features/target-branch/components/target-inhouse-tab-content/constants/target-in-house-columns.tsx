@@ -2,6 +2,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Button } from '@/components/ui/button';
 import { Plus, X } from 'lucide-react';
 import { DataTableColumnHeader } from '@/components/data-table/ColumnHeader';
+import _ from 'lodash';
 
 export type TargetInHouse = {
     id?: number;
@@ -27,12 +28,15 @@ export const targetInHouseColumns: ColumnDef<TargetInHouse>[] = [
     },
     {
         id: 'department',
-        accessorFn: row => `${row.departmentCode} - ${row.departmentName}`,
+        accessorFn: row => {
+            if (_.isEmpty(row.departmentCode) || _.isEmpty(row.departmentName)) return undefined;
+            return `${row.departmentCode} - ${row.departmentName}`;
+        },
         header: ({ column }) => (
             <DataTableColumnHeader column={column} title="Department" className="text-start w-[120px]" />
         ),
         cell: ({ row, table }) => {
-            if (row.getValue('department') === 'NEW - NEW') {
+            if (row.getValue('department') === undefined) {
                 if (table.options.meta?.selectedBrand) {
                     return (
                         <Button
@@ -56,7 +60,11 @@ export const targetInHouseColumns: ColumnDef<TargetInHouse>[] = [
     },
     {
         id: 'subDepartment',
-        accessorFn: row => `${row.subDepartmentCode} - ${row.subDepartmentName}`,
+        accessorFn: row => {
+            if (_.isEmpty(row.subDepartmentCode) || _.isEmpty(row.subDepartmentName)) return "";
+            return `${row.subDepartmentCode} - ${row.subDepartmentName}`;
+        },
+
         header: ({ column }) => (
             <DataTableColumnHeader column={column} title="Sub Department" className="text-start w-[120px]" />
         ),

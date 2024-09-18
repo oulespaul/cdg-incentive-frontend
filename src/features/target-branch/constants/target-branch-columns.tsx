@@ -2,17 +2,8 @@ import { ColumnDef } from '@tanstack/react-table';
 import { DataTableColumnHeader } from '../../../components/data-table/ColumnHeader';
 import { Button } from '@/components/ui/button';
 import { Ellipsis } from 'lucide-react';
-
-export type TargetCommission = {
-    id: number;
-    month: string;
-    year: string;
-    branchBU: string;
-    branchNumber: string;
-    branchName: string;
-    branchCode: string;
-    targetCommission: number;
-};
+import { formatThaiCurrency } from '@/lib/number-utils';
+import { TargetCommission } from '@/features/target-commission/models/target-commission-response';
 
 export const targetBranchColumns: ColumnDef<TargetCommission>[] = [
     {
@@ -37,11 +28,7 @@ export const targetBranchColumns: ColumnDef<TargetCommission>[] = [
         header: ({ column }) => (
             <DataTableColumnHeader column={column} title="เป้า Commission (บาท)" className="text-end" />
         ),
-        cell: ({ row }) => (
-            <div className="text-end">
-                {new Intl.NumberFormat('th-TH', { currency: 'THB' }).format(row.getValue('targetCommission'))}
-            </div>
-        ),
+        cell: ({ row }) => <div className="text-end">{formatThaiCurrency(row.getValue('targetCommission'))}</div>,
         size: 200,
         enableSorting: false,
         enableHiding: false,
@@ -51,11 +38,7 @@ export const targetBranchColumns: ColumnDef<TargetCommission>[] = [
         header: ({ column }) => (
             <DataTableColumnHeader column={column} title="Actual sales LY (บาท)" className="text-end" />
         ),
-        cell: ({ row }) => (
-            <div className="text-end">
-                {new Intl.NumberFormat('th-TH', { currency: 'THB' }).format(row.getValue('targetCommission'))}
-            </div>
-        ),
+        cell: ({ row }) => <div className="text-end">{formatThaiCurrency(row.getValue('targetCommission'))}</div>,
         size: 200,
         enableSorting: false,
         enableHiding: false,
@@ -65,11 +48,7 @@ export const targetBranchColumns: ColumnDef<TargetCommission>[] = [
         header: ({ column }) => (
             <DataTableColumnHeader column={column} title="เป้าหมายพนักงานห้าง (บาท)" className="text-end" />
         ),
-        cell: ({ row }) => (
-            <div className="text-end">
-                {new Intl.NumberFormat('th-TH', { currency: 'THB' }).format(row.getValue('targetCommission'))}
-            </div>
-        ),
+        cell: ({ row }) => <div className="text-end">{formatThaiCurrency(row.getValue('targetCommission'))}</div>,
         size: 200,
         enableSorting: false,
         enableHiding: false,
@@ -79,11 +58,7 @@ export const targetBranchColumns: ColumnDef<TargetCommission>[] = [
         header: ({ column }) => (
             <DataTableColumnHeader column={column} title="Actual sales ID (บาท)" className="text-end" />
         ),
-        cell: ({ row }) => (
-            <div className="text-end">
-                {new Intl.NumberFormat('th-TH', { currency: 'THB' }).format(row.getValue('targetCommission'))}
-            </div>
-        ),
+        cell: ({ row }) => <div className="text-end">{formatThaiCurrency(row.getValue('targetCommission'))}</div>,
         size: 200,
         enableSorting: false,
         enableHiding: false,

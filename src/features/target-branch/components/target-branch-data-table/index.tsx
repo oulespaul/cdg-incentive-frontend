@@ -36,12 +36,14 @@ interface TargetBranchDataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
     meta?: TableMeta<any> | undefined;
+    isCanAddRow?: boolean;
 }
 
 export function TargetBranchDataTable<TData, TValue>({
     columns,
     data,
     meta,
+    isCanAddRow,
 }: TargetBranchDataTableProps<TData, TValue>) {
     const table = useReactTable({
         data,
@@ -91,7 +93,7 @@ export function TargetBranchDataTable<TData, TValue>({
                             </TableCell>
                         </TableRow>
                     )}
-                    {meta?.addRow ? (
+                    {isCanAddRow && meta?.addRow ? (
                         <TableRow>
                             <TableCell colSpan={columns.length} className="text-end">
                                 <Button onClick={meta.addRow} variant="success">

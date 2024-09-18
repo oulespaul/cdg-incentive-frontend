@@ -1,9 +1,9 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { TargetCommissionFilterOption } from "../../features/target-commission/models/target-commission-filter-option";
+import { FilterOption } from "@/models/filter-option";
 
 interface FilterSelectProps {
     value?: string | undefined
-    options: TargetCommissionFilterOption[] | undefined
+    options: FilterOption[] | undefined
     placeholder: string
     onChange: (value: string) => void
 }
