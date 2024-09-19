@@ -3,9 +3,9 @@ import { DataTableColumnHeader } from '../../../components/data-table/ColumnHead
 import { Button } from '@/components/ui/button';
 import { Ellipsis } from 'lucide-react';
 import { formatThaiCurrency } from '@/lib/number-utils';
-import { TargetCommission } from '@/features/target-commission/models/target-commission-response';
+import { TargetBranchDetail } from '../hooks/use-fetch-target-branch-detail-list';
 
-export const targetBranchColumns: ColumnDef<TargetCommission>[] = [
+export const targetBranchColumns: ColumnDef<TargetBranchDetail>[] = [
     {
         accessorKey: 'id',
         header: ({ column }) => <DataTableColumnHeader column={column} title="ลำดับ" className="text-center" />,
@@ -34,51 +34,59 @@ export const targetBranchColumns: ColumnDef<TargetCommission>[] = [
         enableHiding: false,
     },
     {
-        accessorKey: 'actualSalesLY',
+        accessorKey: 'actualSalesLyTotal',
         header: ({ column }) => (
             <DataTableColumnHeader column={column} title="Actual sales LY (บาท)" className="text-end" />
         ),
-        cell: ({ row }) => <div className="text-end">{formatThaiCurrency(row.getValue('targetCommission'))}</div>,
+        cell: ({ row }) => (
+            <div className="text-end">{formatThaiCurrency(row.getValue('actualSalesLyTotal') || 0)}</div>
+        ),
         size: 200,
         enableSorting: false,
         enableHiding: false,
     },
     {
-        accessorKey: 'targetSalesID',
+        accessorKey: 'targetID',
         header: ({ column }) => (
             <DataTableColumnHeader column={column} title="เป้าหมายพนักงานห้าง (บาท)" className="text-end" />
         ),
-        cell: ({ row }) => <div className="text-end">{formatThaiCurrency(row.getValue('targetCommission'))}</div>,
+        cell: ({ row }) => <div className="text-end">{formatThaiCurrency(row.getValue('targetID') || 0)}</div>,
         size: 200,
         enableSorting: false,
         enableHiding: false,
     },
     {
-        accessorKey: 'actualSalesID',
+        accessorKey: 'actualLyID',
         header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Actual sales ID (บาท)" className="text-end" />
+            <DataTableColumnHeader column={column} title="Actual sales ID LY (บาท)" className="text-end" />
         ),
-        cell: ({ row }) => <div className="text-end">{formatThaiCurrency(row.getValue('targetCommission'))}</div>,
+        cell: ({ row }) => <div className="text-end">{formatThaiCurrency(row.getValue('actualLyID') || 0)}</div>,
         size: 200,
         enableSorting: false,
         enableHiding: false,
     },
     {
-        accessorKey: 'percentChangeTargetCommission',
+        accessorKey: 'changeTargetCommissionPercentage',
         header: ({ column }) => (
             <DataTableColumnHeader column={column} title="% Change เป้า commission" className="text-center" />
         ),
-        cell: () => <div className="text-center">13%</div>,
+        cell: ({ row }) => (
+            <div className="text-center">
+                {formatThaiCurrency(row.getValue('changeTargetCommissionPercentage') || 0, '%')}
+            </div>
+        ),
         size: 200,
         enableSorting: false,
         enableHiding: false,
     },
     {
-        accessorKey: 'percentChangeTargetID',
+        accessorKey: 'changeTargetIDPercentage',
         header: ({ column }) => (
             <DataTableColumnHeader column={column} title="% Change เป้า ID" className="text-center" />
         ),
-        cell: () => <div className="text-center">3%</div>,
+        cell: ({ row }) => (
+            <div className="text-center">{formatThaiCurrency(row.getValue('changeTargetIDPercentage') || 0, '%')}</div>
+        ),
         size: 200,
         enableSorting: false,
         enableHiding: false,
@@ -86,7 +94,7 @@ export const targetBranchColumns: ColumnDef<TargetCommission>[] = [
     {
         accessorKey: 'status',
         header: ({ column }) => <DataTableColumnHeader column={column} title="สถานะ" className="text-center" />,
-        cell: () => <div className="text-amber-500 text-center">Pending</div>,
+        cell: ({ row }) => <div className="text-blue-600 font-bold text-center">{row.getValue('status')}</div>,
         size: 200,
         enableSorting: false,
         enableHiding: false,

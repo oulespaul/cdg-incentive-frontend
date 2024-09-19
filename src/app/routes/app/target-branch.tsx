@@ -5,7 +5,6 @@ import { Separator } from '@/components/ui/separator';
 import { useCallback, useEffect, useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { usePagination } from '@/hooks/use-pagination';
-import { TargetCommissionFilterParams, useFetchTargetCommission } from '@/features/target-commission/hooks/use-fetch-target-commission';
 import {
     useFetchTargetCommissionMonthFilter,
     useFetchTargetCommissionYearFilter,
@@ -13,6 +12,10 @@ import {
 import FilterSelect from '@/components/select';
 import { targetBranchColumns } from '@/features/target-branch/constants/target-branch-columns';
 import { useNavigate } from 'react-router-dom';
+import {
+    TargetBranchFilterParams,
+    useFetchTargetBranchDetailList,
+} from '@/features/target-branch/hooks/use-fetch-target-branch-detail-list';
 
 const initialFilterParams = {
     year: undefined,
@@ -20,11 +23,11 @@ const initialFilterParams = {
 };
 
 export const TargetBranchPage = () => {
-    const [filterParams, setFilterParams] = useState<TargetCommissionFilterParams>(initialFilterParams);
+    const [filterParams, setFilterParams] = useState<TargetBranchFilterParams>(initialFilterParams);
     const navigate = useNavigate();
 
     const { onPaginationChange, resetPaginationState, pagination } = usePagination();
-    const { data: targetCommissionData, refetch: refetchTargetCommission } = useFetchTargetCommission({
+    const { data: targetBranchData, refetch: refetchTargetBranch } = useFetchTargetBranchDetailList({
         ...filterParams,
         ...pagination,
     });
@@ -33,8 +36,8 @@ export const TargetBranchPage = () => {
     const { data: monthFilterOptions } = useFetchTargetCommissionMonthFilter();
 
     useEffect(() => {
-        refetchTargetCommission();
-    }, [pagination.pageIndex, pagination.pageSize, refetchTargetCommission]);
+        refetchTargetBranch();
+    }, [pagination.pageIndex, pagination.pageSize, refetchTargetBranch]);
 
     const onFilterSelectHandler = (key: string, value: string) => {
         setFilterParams(prevFilters => ({
@@ -88,7 +91,7 @@ export const TargetBranchPage = () => {
                 <Button
                     variant="outline"
                     className="text-primary hover:text-primary"
-                    onClick={() => refetchTargetCommission()}
+                    onClick={() => refetchTargetBranch()}
                 >
                     <Search className="mr-2 h-4 w-4" />
                     ค้นหา
@@ -109,13 +112,13 @@ export const TargetBranchPage = () => {
                 <DataTable
                     columns={targetBranchColumns}
                     data={
-                        targetCommissionData?.content?.map((target, index) => ({
+                        targetBranchData?.content?.map((target, index) => ({
                             ...target,
                             id: index + 1,
                         })) ?? []
                     }
                     onPaginationChange={onPaginationChange}
-                    pageCount={targetCommissionData?.totalElements ?? 0}
+                    pageCount={targetBranchData?.totalElements ?? 0}
                     pagination={pagination}
                 />
             </Card>

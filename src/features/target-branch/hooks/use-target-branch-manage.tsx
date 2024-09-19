@@ -46,6 +46,9 @@ export const useTargetBranchManage = () => {
             </div>,
             { position: 'bottom-right' },
         );
+        setTargetInHouseList(() => []);
+        setTargetCommission(undefined);
+        navigate('/app/target-branch');
     };
 
     const onCreateTargetError = () => {
