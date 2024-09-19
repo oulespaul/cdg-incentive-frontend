@@ -6,14 +6,16 @@ import { Separator } from '@/components/ui/separator';
 import { useCallback, useEffect, useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { usePagination } from '@/hooks/use-pagination';
-import { useFetchTargetCommission } from '@/features/target-commission/hooks/use-fetch-target-commission';
+import {
+    TargetCommissionFilterParams,
+    useFetchTargetCommission,
+} from '@/features/target-commission/hooks/use-fetch-target-commission';
 import {
     useFetchTargetCommissionMonthFilter,
     useFetchTargetCommissionBranchFilter,
     useFetchTargetCommissionYearFilter,
 } from '@/features/target-commission/hooks/use-fetch-target-commission-filters';
 import UploadFile from '@/features/target-commission/components/upload-file-button';
-import { FilterParams } from '@/features/target-commission/models/target-commission-filter-params';
 import FilterSelect from '@/components/select';
 import { targetCommissionColumns } from '@/features/target-commission/constants/target-commission-columns';
 
@@ -26,7 +28,7 @@ const initialFilterParams = {
 };
 
 export const TargetCommissionPage = () => {
-    const [filterParams, setFilterParams] = useState<FilterParams>(initialFilterParams);
+    const [filterParams, setFilterParams] = useState<TargetCommissionFilterParams>(initialFilterParams);
 
     const { onPaginationChange, resetPaginationState, pagination } = usePagination();
     const { data: targetCommissionData, refetch: refetchTargetCommission } = useFetchTargetCommission({
@@ -43,7 +45,7 @@ export const TargetCommissionPage = () => {
     }, [pagination.pageIndex, pagination.pageSize, refetchTargetCommission]);
 
     const onFilterSelectHandler = (key: string, value: string) => {
-        setFilterParams(prevFilters => ({
+        setFilterParams((prevFilters: TargetCommissionFilterParams) => ({
             ...prevFilters,
             [key]: value,
         }));
@@ -51,7 +53,7 @@ export const TargetCommissionPage = () => {
 
     const onFilterValueChangeHandler = (key: string, event: React.ChangeEvent<HTMLInputElement>) => {
         event.preventDefault();
-        setFilterParams(prevFilters => ({
+        setFilterParams((prevFilters: TargetCommissionFilterParams) => ({
             ...prevFilters,
             [key]: event.target.value,
         }));

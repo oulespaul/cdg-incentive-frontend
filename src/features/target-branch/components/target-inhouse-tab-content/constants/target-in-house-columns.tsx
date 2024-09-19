@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Plus, X } from 'lucide-react';
 import { DataTableColumnHeader } from '@/components/data-table/ColumnHeader';
 import _ from 'lodash';
+import { formatThaiCurrency } from '@/lib/number-utils';
 
 export type TargetInHouse = {
     id?: number;
@@ -14,7 +15,7 @@ export type TargetInHouse = {
     brandName?: string;
     groupBrand: string;
     goalBrand?: number;
-    actualSalesIdLastYear?: number;
+    actualSalesIDLastYear?: number;
 };
 
 export const targetInHouseColumns: ColumnDef<TargetInHouse>[] = [
@@ -61,7 +62,7 @@ export const targetInHouseColumns: ColumnDef<TargetInHouse>[] = [
     {
         id: 'subDepartment',
         accessorFn: row => {
-            if (_.isEmpty(row.subDepartmentCode) || _.isEmpty(row.subDepartmentName)) return "";
+            if (_.isEmpty(row.subDepartmentCode) || _.isEmpty(row.subDepartmentName)) return '';
             return `${row.subDepartmentCode} - ${row.subDepartmentName}`;
         },
 
@@ -69,6 +70,7 @@ export const targetInHouseColumns: ColumnDef<TargetInHouse>[] = [
             <DataTableColumnHeader column={column} title="Sub Department" className="text-start w-[120px]" />
         ),
         cell: ({ row }) => <div className="text-start">{`${row.getValue('subDepartment')}`}</div>,
+        footer: () => 'รวม',
         enableSorting: false,
         enableHiding: false,
     },
@@ -93,6 +95,12 @@ export const targetInHouseColumns: ColumnDef<TargetInHouse>[] = [
         header: ({ column }) => (
             <DataTableColumnHeader column={column} title="Goal Brand (บาท)" className="text-start" />
         ),
+        footer: info => {
+            return formatThaiCurrency(
+                info.table.getFilteredRowModel().rows.reduce((sum, row) => sum + +(row.original.goalBrand ?? 0), 0),
+                '',
+            );
+        },
         enableSorting: false,
         enableHiding: false,
     },
@@ -106,6 +114,14 @@ export const targetInHouseColumns: ColumnDef<TargetInHouse>[] = [
                 className="text-start w-[200px]"
             />
         ),
+        footer: info => {
+            return formatThaiCurrency(
+                info.table
+                    .getFilteredRowModel()
+                    .rows.reduce((sum, row) => sum + +(row.original.actualSalesIDLastYear ?? 0), 0),
+                '',
+            );
+        },
         enableSorting: false,
         enableHiding: false,
     },

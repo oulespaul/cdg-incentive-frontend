@@ -7,6 +7,7 @@ import { Brand } from '@/features/brand/models/brand';
 import { useFetchBrand } from '@/features/brand/hooks/use-fetch-branch';
 import { useTargetBranchStore } from '../../hooks/use-target-branch-store';
 import _ from 'lodash';
+import { toast } from 'react-toastify';
 
 const TargetInHouseTabContent = () => {
     const [brandDialogOpen, setBrandDialogOpen] = useState(false);
@@ -19,11 +20,22 @@ const TargetInHouseTabContent = () => {
     const handleBrandSelected = useCallback(
         (brandSelected: Brand | undefined) => {
             if (!brandSelected || currentRowIndex === null) return;
-            setTargetInHouseList(old =>
-                old.map((row, index) => {
+            if (targetInHouseList.some(target => target.brandId === brandSelected.id)) {
+                toast.error(
+                    <div className="flex flex-col text-start">
+                        <p className="text-sm font-bold text-ref-400">แบรนด์นี้มีข้อมูลอยูู่แล้ว</p>
+                        <p className="mt-2 text-xs">ไม่สามารถเพิ่มแบรนด์ได้ กรุณาลองใหม่อีกครั้ง</p>
+                    </div>,
+                    { position: 'bottom-right' },
+                );
+                return;
+            }
+
+            setTargetInHouseList(prevTargetInHouseList => {
+                return prevTargetInHouseList.map((row, index) => {
                     if (index === currentRowIndex) {
                         return {
-                            ...old[currentRowIndex]!,
+                            ...prevTargetInHouseList[currentRowIndex]!,
                             departmentCode: brandSelected.departmentCode,
                             departmentName: brandSelected.departmentName,
                             subDepartmentCode: brandSelected.subDepartmentCode,
@@ -33,11 +45,11 @@ const TargetInHouseTabContent = () => {
                         };
                     }
                     return row;
-                }),
-            );
+                });
+            });
             setBrandDialogOpen(false); // Close the dialog
         },
-        [currentRowIndex],
+        [currentRowIndex, JSON.stringify(targetInHouseList)],
     );
 
     const openBrandDialog = useCallback((rowIndex: number) => {
@@ -76,7 +88,7 @@ const TargetInHouseTabContent = () => {
                             brandName: '',
                             groupBrand: '',
                             goalBrand: undefined,
-                            actualSalesIdLastYear: undefined,
+                            actualSalesIDLastYear: undefined,
                         };
                         setTargetInHouseList((old: TargetInHouse[]) => [...old, newRow]);
                     },

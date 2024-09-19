@@ -1,6 +1,6 @@
 import { ColumnDef, flexRender, getCoreRowModel, RowData, TableMeta, useReactTable } from '@tanstack/react-table';
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useEffect, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -54,7 +54,7 @@ export function TargetBranchDataTable<TData, TValue>({
     });
 
     return (
-        <div className="rounded-md border">
+        <div className="rounded-md border h-[650px]">
             <Table>
                 <TableHeader className="bg-[#E2E8F0] sticky top-0">
                     {table.getHeaderGroups().map(headerGroup => (
@@ -103,6 +103,19 @@ export function TargetBranchDataTable<TData, TValue>({
                         </TableRow>
                     ) : null}
                 </TableBody>
+                <TableFooter>
+                    {table.getFooterGroups().map(footerGroup => (
+                        <TableRow key={footerGroup.id}>
+                            {footerGroup.headers.map(header => (
+                                <TableCell key={header.id}>
+                                    {header.isPlaceholder
+                                        ? null
+                                        : flexRender(header.column.columnDef.footer, header.getContext())}
+                                </TableCell>
+                            ))}
+                        </TableRow>
+                    ))}
+                </TableFooter>
             </Table>
         </div>
     );

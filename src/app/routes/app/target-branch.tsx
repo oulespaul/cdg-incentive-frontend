@@ -5,12 +5,11 @@ import { Separator } from '@/components/ui/separator';
 import { useCallback, useEffect, useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { usePagination } from '@/hooks/use-pagination';
-import { useFetchTargetCommission } from '@/features/target-commission/hooks/use-fetch-target-commission';
+import { TargetCommissionFilterParams, useFetchTargetCommission } from '@/features/target-commission/hooks/use-fetch-target-commission';
 import {
     useFetchTargetCommissionMonthFilter,
     useFetchTargetCommissionYearFilter,
 } from '@/features/target-commission/hooks/use-fetch-target-commission-filters';
-import { FilterParams } from '@/features/target-commission/models/target-commission-filter-params';
 import FilterSelect from '@/components/select';
 import { targetBranchColumns } from '@/features/target-branch/constants/target-branch-columns';
 import { useNavigate } from 'react-router-dom';
@@ -21,7 +20,7 @@ const initialFilterParams = {
 };
 
 export const TargetBranchPage = () => {
-    const [filterParams, setFilterParams] = useState<FilterParams>(initialFilterParams);
+    const [filterParams, setFilterParams] = useState<TargetCommissionFilterParams>(initialFilterParams);
     const navigate = useNavigate();
 
     const { onPaginationChange, resetPaginationState, pagination } = usePagination();

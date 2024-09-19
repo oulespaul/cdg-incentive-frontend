@@ -5,6 +5,7 @@ export interface TargetInhouseRequest {
     brandId?: number;
     groupBrand?: string;
     goalBrand?: number;
+    actualSalesIDLastYear?: number;
 }
 
 export interface CreateTargetBranchRequest {
@@ -18,8 +19,17 @@ const createTargetBranch = async (data: CreateTargetBranchRequest) => {
     return response.data;
 };
 
-export const useCreateTargetBranch = () => {
+interface UseCrerateTargetBranchProps {
+    onCreateTargetSuccess: (data: any) => void;
+    onCreateTargetError: (error: Error) => void;
+}
+
+export const useCreateTargetBranch = ({ onCreateTargetSuccess, onCreateTargetError }: UseCrerateTargetBranchProps) => {
     return useMutation({
         mutationFn: (request: CreateTargetBranchRequest) => createTargetBranch(request),
+        onSuccess: response => {
+            onCreateTargetSuccess(response.data);
+        },
+        onError: onCreateTargetError,
     });
 };

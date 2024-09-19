@@ -3,7 +3,6 @@ import { Separator } from '@/components/ui/separator';
 import { Card } from '@/components/ui/card';
 import FilterSelect from '@/components/select';
 import { TargetBranchTabs } from '@/features/target-branch/components/TargetBranchTabs';
-import { useNavigate } from 'react-router-dom';
 import { formatThaiCurrency } from '@/lib/number-utils';
 import _ from 'lodash';
 import { useTargetBranchManage } from '@/features/target-branch/hooks/use-target-branch-manage';
@@ -16,9 +15,8 @@ export const TargetBranchManagePage = () => {
         onFilterSelectHandler,
         targetCommission,
         onSaveTargetHandler,
+        onCancelTargetHandler,
     } = useTargetBranchManage();
-    const navigate = useNavigate();
-
     return (
         <div className="flex flex-col">
             <div className="flex justify-between text-start">
@@ -52,7 +50,7 @@ export const TargetBranchManagePage = () => {
                     </p>
                 </div>
                 <div className="flex w-1/3 gap-3 justify-end">
-                    <Button variant="outline" onClick={() => navigate('/app/target-branch')}>
+                    <Button variant="outline" onClick={onCancelTargetHandler}>
                         ยกเลิก
                     </Button>
                     <Button variant="primary" disabled={_.isEmpty(targetCommission)} onClick={onSaveTargetHandler}>
