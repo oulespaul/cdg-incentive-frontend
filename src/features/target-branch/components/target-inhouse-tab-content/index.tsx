@@ -29,7 +29,7 @@ const TargetInHouseTabContent = () => {
                             subDepartmentCode: brandSelected.subDepartmentCode,
                             subDepartmentName: brandSelected.subDepartmentName,
                             brandId: brandSelected.id,
-                            brand: brandSelected.brandName,
+                            brandName: brandSelected.brandName,
                         };
                     }
                     return row;
@@ -66,14 +66,14 @@ const TargetInHouseTabContent = () => {
                         );
                     },
                     addRow: () => {
-                        const newRow = {
+                        const newRow: TargetInHouse = {
                             id: undefined,
                             departmentCode: '',
                             departmentName: '',
                             subDepartmentCode: '',
                             subDepartmentName: '',
                             brandId: undefined,
-                            brand: '',
+                            brandName: '',
                             groupBrand: '',
                             goalBrand: undefined,
                             actualSalesIdLastYear: undefined,

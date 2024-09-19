@@ -10,6 +10,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useTargetBranchStore } from './use-target-branch-store';
 import { TargetInHouse } from '../components/target-inhouse-tab-content/constants/target-in-house-columns';
 import { TargetInhouseRequest, useCreateTargetBranch } from './use-create-target-branch';
+import { useFetchTargetBranchDetail } from './use-fetch-target-branch-detail';
 
 const initialFilterParams = {
     year: undefined,
@@ -18,28 +19,42 @@ const initialFilterParams = {
 
 export const useTargetBranchManage = () => {
     const [filterParams, setFilterParams] = useState<TargetCommissionDetailFilterParams>(initialFilterParams);
-    const { currentBranchId, targetCommission, setTargetCommission, targetInHouseList } = useTargetBranchStore();
+    const { currentBranchId, targetCommission, setTargetCommission, targetInHouseList, setTargetInHouseList } =
+        useTargetBranchStore();
 
     const { data: yearFilterOptions } = useFetchTargetCommissionYearFilter({ branchId: currentBranchId });
     const { data: monthFilterOptions } = useFetchTargetCommissionMonthFilter({ branchId: currentBranchId });
 
-    const { refetch } = useFetchTargetCommissionDetail({
+    const { refetch: fetchTargetCommissionDetail } = useFetchTargetCommissionDetail({
         branchId: currentBranchId,
         ...filterParams,
     });
+
+    const { refetch: fetchTargetBranchDetail } = useFetchTargetBranchDetail(targetCommission?.id);
 
     const { mutate: createTargetBranch } = useCreateTargetBranch();
 
     useEffect(() => {
         setTargetCommission(undefined);
         if (currentBranchId && filterParams.year && filterParams.month) {
-            refetch().then(result => {
+            fetchTargetCommissionDetail().then(result => {
                 if (result.data) {
                     setTargetCommission(result.data);
                 }
             });
         }
-    }, [currentBranchId, filterParams.year, filterParams.month, refetch, setTargetCommission]);
+    }, [currentBranchId, filterParams.year, filterParams.month, fetchTargetBranchDetail, setTargetCommission]);
+
+    useEffect(() => {
+        setTargetInHouseList(() => []);
+        if (targetCommission?.id) {
+            fetchTargetBranchDetail().then(result => {
+                if (result.data && result.data.targetInHouseList?.length > 0) {
+                    setTargetInHouseList(() => result.data.targetInHouseList);
+                }
+            });
+        }
+    }, [targetCommission?.id]);
 
     const onFilterSelectHandler = (key: string, value: string) => {
         setFilterParams(prevFilters => ({

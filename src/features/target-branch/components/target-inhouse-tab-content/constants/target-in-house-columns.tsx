@@ -11,7 +11,7 @@ export type TargetInHouse = {
     subDepartmentCode?: string;
     subDepartmentName?: string;
     brandId?: number;
-    brand?: string;
+    brandName?: string;
     groupBrand: string;
     goalBrand?: number;
     actualSalesIdLastYear?: number;
@@ -73,10 +73,10 @@ export const targetInHouseColumns: ColumnDef<TargetInHouse>[] = [
         enableHiding: false,
     },
     {
-        id: 'brand',
-        accessorKey: 'brand',
+        id: 'brandName',
+        accessorKey: 'brandName',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Brand" className="text-start" />,
-        cell: ({ row }) => <div className="text-start">{`${row.getValue('brand')}`}</div>,
+        cell: ({ row }) => <div className="text-start">{`${row.getValue('brandName')}`}</div>,
         enableSorting: false,
         enableHiding: false,
     },
