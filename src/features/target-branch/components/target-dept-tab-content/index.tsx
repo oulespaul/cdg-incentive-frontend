@@ -2,45 +2,42 @@ import { Card } from '@/components/ui/card';
 import { TargetBranchDataTable } from '../target-branch-data-table';
 import { useCallback, useState } from 'react';
 import { TargetDept, targetDeptColumns } from './constants/target-dept-columns';
-import BrandDialog from '../brand-dialog';
-import { Brand } from '@/features/brand/models/brand';
-import { useFetchBrand } from '@/features/brand/hooks/use-fetch-branch';
+import _ from 'lodash';
+import { useTargetBranchStore } from '../../hooks/use-target-branch-store';
+import SubDepartmentDialog from '../sub-dept-dialog';
+import { useFetchSubDepartment } from '@/features/sub-department/hooks/use-fetch-sub-department';
+import { SubDepartment } from '@/features/sub-department/models/sub-department';
 
 const TargetDeptTabContent = () => {
-    const [targetDeptList, setTargetDeptList] = useState<TargetDept[]>([]);
-    const [brandDialogOpen, setBrandDialogOpen] = useState(false);
+    const [subDepartmentDialogOpen, setSubDepartmentDialogOpen] = useState(false);
     const [currentRowIndex, setCurrentRowIndex] = useState<number | null>(null);
+ 
+    const { targetCommission, targetDeptList, setTargetDeptList } = useTargetBranchStore();
 
-    const { data: brandList } = useFetchBrand();
+    const { data: subDeparmentList } = useFetchSubDepartment();
 
-    const handleBrandSelected = useCallback(
-        (brandSelected: Brand | undefined) => {
-            if (!brandSelected || currentRowIndex === null) return;
-
+    const handleSubDepartmentChecked = useCallback(
+        (subDepartmentSelected: SubDepartment[] | undefined) => {
+            if (!subDepartmentSelected || currentRowIndex === null) return;
             setTargetDeptList(old =>
                 old.map((row, index) => {
                     if (index === currentRowIndex) {
                         return {
                             ...old[currentRowIndex]!,
-                            departmentCode: brandSelected.departmentCode,
-                            departmentName: brandSelected.departmentName,
-                            subDepartmentCode: brandSelected.subDepartmentCode,
-                            subDepartmentName: brandSelected.subDepartmentName,
-                            brandId: brandSelected.id,
-                            brand: brandSelected.brandName,
+                            subDepartmentPool: subDepartmentSelected,
                         };
                     }
                     return row;
                 }),
             );
-            setBrandDialogOpen(false); // Close the dialog
+            setSubDepartmentDialogOpen(false); // Close the dialog
         },
         [currentRowIndex],
     );
 
     const openBrandDialog = useCallback((rowIndex: number) => {
         setCurrentRowIndex(rowIndex);
-        setBrandDialogOpen(true); // Open the dialog
+        setSubDepartmentDialogOpen(true); // Open the dialog
     }, []);
 
     return (
@@ -48,6 +45,7 @@ const TargetDeptTabContent = () => {
             <TargetBranchDataTable
                 columns={targetDeptColumns}
                 data={targetDeptList.map((target, index) => ({ ...target, id: index + 1 })) ?? []}
+                isCanAddRow={!_.isEmpty(targetCommission)}
                 meta={{
                     updateData: (rowIndex, columnId, value) => {
                         setTargetDeptList(old =>
@@ -66,10 +64,9 @@ const TargetDeptTabContent = () => {
                         const newRow = {
                             id: undefined,
                             groupDept: '',
-                            subDepartmentCode: 'NEW',
-                            subDepartmentName: 'NEW',
+                            subDepartmentPool: [],
                             goalDept: undefined,
-                            actualSalesIdLastYear: undefined,
+                            actualSalesIDLastYear: undefined,
                         };
                         setTargetDeptList((old: TargetDept[]) => [...old, newRow]);
                     },
@@ -82,11 +79,12 @@ const TargetDeptTabContent = () => {
                 }}
             />
 
-            {brandDialogOpen && (
-                <BrandDialog
-                    brandList={brandList}
-                    onBandSelected={handleBrandSelected}
-                    onCloseDialog={() => setBrandDialogOpen(false)}
+            {subDepartmentDialogOpen && (
+                <SubDepartmentDialog
+                    subDeparmentList={subDeparmentList}
+                    onSubDepartmentChecked={handleSubDepartmentChecked}
+                    onCloseDialog={() => setSubDepartmentDialogOpen(false)}
+                    defaultValue={targetDeptList[currentRowIndex ?? 0]['subDepartmentPool'] ?? []}
                 />
             )}
         </Card>

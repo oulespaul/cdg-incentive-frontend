@@ -2,6 +2,7 @@ import { TargetCommission } from '@/features/target-commission/models/target-com
 import { apiClient } from '@/lib/api-client';
 import { useQuery } from '@tanstack/react-query';
 import { TargetInHouse } from '../components/target-inhouse-tab-content/constants/target-in-house-columns';
+import { TargetDept } from '../components/target-dept-tab-content/constants/target-dept-columns';
 
 export interface TargetBranch {
     id: number;
@@ -17,6 +18,7 @@ export interface TargetBranch {
     calculatedBy: string;
     targetCommission: TargetCommission;
     targetInHouseList: TargetInHouse[];
+    targetDeptList: TargetDept[];
 }
 
 const fetchTargetBranchDetail = async (targetCommissionId?: number) => {

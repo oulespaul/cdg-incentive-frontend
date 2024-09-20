@@ -8,10 +8,18 @@ export interface TargetInhouseRequest {
     actualSalesIDLastYear?: number;
 }
 
+export interface TargetDeptRequest {
+    groupDept?: string;
+    subDepartmentPool?: number[];
+    goalDept?: string;
+    actualSalesIDLastYear?: string;
+}
+
 export interface CreateTargetBranchRequest {
     targetCommissionId?: number;
     branchId?: number;
     targetInHouseList: TargetInhouseRequest[];
+    targetDeptList: TargetDeptRequest[];
 }
 
 const createTargetBranch = async (data: CreateTargetBranchRequest) => {

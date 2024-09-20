@@ -9,12 +9,13 @@ import {
 import { useCallback, useEffect, useState } from 'react';
 import { useTargetBranchStore } from './use-target-branch-store';
 import { TargetInHouse } from '../components/target-inhouse-tab-content/constants/target-in-house-columns';
-import { TargetInhouseRequest, useCreateTargetBranch } from './use-create-target-branch';
+import { TargetDeptRequest, TargetInhouseRequest, useCreateTargetBranch } from './use-create-target-branch';
 import { useFetchTargetBranchDetail } from './use-fetch-target-branch-detail';
 import { useModalContext } from '@/app/providers/modal-provider';
 import { InfoCircledIcon } from '@radix-ui/react-icons';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { TargetDept } from '../components/target-dept-tab-content/constants/target-dept-columns';
 
 const initialFilterParams = {
     year: undefined,
@@ -23,8 +24,15 @@ const initialFilterParams = {
 
 export const useTargetBranchManage = () => {
     const [filterParams, setFilterParams] = useState<TargetCommissionDetailFilterParams>(initialFilterParams);
-    const { currentBranchId, targetCommission, setTargetCommission, targetInHouseList, setTargetInHouseList } =
-        useTargetBranchStore();
+    const {
+        currentBranchId,
+        targetCommission,
+        setTargetCommission,
+        targetInHouseList,
+        setTargetInHouseList,
+        targetDeptList,
+        setTargetDeptList,
+    } = useTargetBranchStore();
 
     const { data: yearFilterOptions } = useFetchTargetCommissionYearFilter({ branchId: currentBranchId });
     const { data: monthFilterOptions } = useFetchTargetCommissionMonthFilter({ branchId: currentBranchId });
@@ -47,6 +55,7 @@ export const useTargetBranchManage = () => {
             { position: 'bottom-right' },
         );
         setTargetInHouseList(() => []);
+        setTargetDeptList(() => []);
         setTargetCommission(undefined);
         navigate('/app/target-branch');
     };
@@ -78,10 +87,14 @@ export const useTargetBranchManage = () => {
 
     useEffect(() => {
         setTargetInHouseList(() => []);
+        setTargetDeptList(() => []);
         if (targetCommission?.id) {
             fetchTargetBranchDetail().then(result => {
                 if (result.data && result.data.targetInHouseList?.length > 0) {
                     setTargetInHouseList(() => result.data.targetInHouseList);
+                }
+                if (result.data && result.data.targetDeptList?.length > 0) {
+                    setTargetDeptList(() => result.data.targetDeptList);
                 }
             });
         }
@@ -103,6 +116,15 @@ export const useTargetBranchManage = () => {
         };
     };
 
+    const transformToTargetDeptRequestFormat = (targetDept: TargetDept): TargetDeptRequest => {
+        return {
+            groupDept: targetDept.groupDept,
+            goalDept: targetDept.goalDept,
+            actualSalesIDLastYear: targetDept.actualSalesIDLastYear,
+            subDepartmentPool: targetDept?.subDepartmentPool?.map(sub => sub.id) ?? [],
+        };
+    };
+
     const onSaveTargetHandler = useCallback(() => {
         openModal({
             title: (
@@ -117,11 +139,12 @@ export const useTargetBranchManage = () => {
                     targetCommissionId: targetCommission?.id,
                     branchId: currentBranchId,
                     targetInHouseList: targetInHouseList.map(transformToRequestFormat),
+                    targetDeptList: targetDeptList.map(transformToTargetDeptRequestFormat),
                 });
                 closeModal();
             },
         });
-    }, [JSON.stringify(targetInHouseList)]);
+    }, [JSON.stringify(targetInHouseList), JSON.stringify(targetDeptList)]);
 
     const onCancelTargetHandler = useCallback(() => {
         openModal({
@@ -139,19 +162,22 @@ export const useTargetBranchManage = () => {
                     targetCommissionId: targetCommission?.id,
                     branchId: currentBranchId,
                     targetInHouseList: targetInHouseList.map(transformToRequestFormat),
+                    targetDeptList: targetDeptList.map(transformToTargetDeptRequestFormat),
                 });
                 setTargetInHouseList(() => []);
+                setTargetDeptList(() => []);
                 setTargetCommission(undefined);
                 closeModal();
             },
             onSecondaryActionClick: () => {
                 setTargetInHouseList(() => []);
+                setTargetDeptList(() => []);
                 setTargetCommission(undefined);
                 closeModal();
                 navigate('/app/target-branch');
             },
         });
-    }, [JSON.stringify(targetInHouseList)]);
+    }, [JSON.stringify(targetInHouseList), JSON.stringify(targetDeptList)]);
 
     return {
         filterParams,
