@@ -6,6 +6,7 @@ import { TargetBranchTabs } from '@/features/target-branch/components/TargetBran
 import { formatThaiCurrency } from '@/lib/number-utils';
 import _ from 'lodash';
 import { useTargetBranchManage } from '@/features/target-branch/hooks/use-target-branch-manage';
+// import { timelineData, TimelineLayout } from '@/components/timeline/timeline-layout';
 
 export const TargetBranchManagePage = () => {
     const {
@@ -64,15 +65,18 @@ export const TargetBranchManagePage = () => {
 
             <Separator className="my-4" />
 
-            <div className="grid grid-cols-4 gap-4">
-                <div className="col-span-3">
+            <div className="flex gap-2">
+                <div className="w-4/5">
                     <div className="flex flex-col">
                         <TargetBranchTabs />
                     </div>
                 </div>
-                <div className="">
+                <div className="w-1/5">
                     <Card className="p-4 text-start">
-                        <h1 className="text-lg font-medium mb-4">รายการข้อมูลเป้าสาขา</h1>
+                        <h1 className="text-lg font-medium mb-4 text-end">
+                            สถานะ: {!_.isEmpty(targetCommission) && <span className="text-blue-500">New</span>}
+                        </h1>
+                        {/* <TimelineLayout items={timelineData} /> */}
                     </Card>
                 </div>
             </div>
