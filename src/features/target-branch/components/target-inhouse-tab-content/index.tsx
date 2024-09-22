@@ -4,10 +4,10 @@ import { useCallback, useState } from 'react';
 import { TargetInHouse, targetInHouseColumns } from './constants/target-in-house-columns';
 import BrandDialog from '../brand-dialog';
 import { Brand } from '@/features/brand/models/brand';
-import { useFetchBrand } from '@/features/brand/hooks/use-fetch-branch';
-import { useTargetBranchStore } from '../../hooks/use-target-branch-store';
+import { useTargetBranchStore } from '../../api/use-target-branch-store';
 import _ from 'lodash';
 import { toast } from 'react-toastify';
+import { useFetchBrand } from '@/features/brand/api/use-fetch-branch';
 
 const TargetInHouseTabContent = () => {
     const [brandDialogOpen, setBrandDialogOpen] = useState(false);

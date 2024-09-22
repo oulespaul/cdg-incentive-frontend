@@ -6,7 +6,7 @@ import { CloudDownload, Loader2 } from 'lucide-react';
 import {
     useUploadTargetCommissionFile,
     useValidatedTargetCommissionUploadFile,
-} from '../../hooks/use-upload-target-commission';
+} from '../../api/use-upload-target-commission';
 import { targetCommissionColumns } from '../../constants/target-commission-columns';
 import { DataTable } from '../../../../components/data-table';
 import { toast } from 'react-toastify';

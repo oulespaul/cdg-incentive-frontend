@@ -9,12 +9,12 @@ import { usePagination } from '@/hooks/use-pagination';
 import {
     TargetCommissionFilterParams,
     useFetchTargetCommission,
-} from '@/features/target-commission/hooks/use-fetch-target-commission';
+} from '@/features/target-commission/api/use-fetch-target-commission';
 import {
     useFetchTargetCommissionMonthFilter,
     useFetchTargetCommissionBranchFilter,
     useFetchTargetCommissionYearFilter,
-} from '@/features/target-commission/hooks/use-fetch-target-commission-filters';
+} from '@/features/target-commission/api/use-fetch-target-commission-filters';
 import UploadFile from '@/features/target-commission/components/upload-file-button';
 import FilterSelect from '@/components/select';
 import { targetCommissionColumns } from '@/features/target-commission/constants/target-commission-columns';

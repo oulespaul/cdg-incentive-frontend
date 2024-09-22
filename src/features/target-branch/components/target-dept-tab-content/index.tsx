@@ -3,15 +3,15 @@ import { TargetBranchDataTable } from '../target-branch-data-table';
 import { useCallback, useState } from 'react';
 import { TargetDept, targetDeptColumns } from './constants/target-dept-columns';
 import _ from 'lodash';
-import { useTargetBranchStore } from '../../hooks/use-target-branch-store';
+import { useTargetBranchStore } from '../../api/use-target-branch-store';
 import SubDepartmentDialog from '../sub-dept-dialog';
-import { useFetchSubDepartment } from '@/features/sub-department/hooks/use-fetch-sub-department';
 import { SubDepartment } from '@/features/sub-department/models/sub-department';
+import { useFetchSubDepartment } from '@/features/sub-department/api/use-fetch-sub-department';
 
 const TargetDeptTabContent = () => {
     const [subDepartmentDialogOpen, setSubDepartmentDialogOpen] = useState(false);
     const [currentRowIndex, setCurrentRowIndex] = useState<number | null>(null);
- 
+
     const { targetCommission, targetDeptList, setTargetDeptList } = useTargetBranchStore();
 
     const { data: subDeparmentList } = useFetchSubDepartment();

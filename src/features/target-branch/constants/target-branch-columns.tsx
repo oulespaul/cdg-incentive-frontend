@@ -3,7 +3,7 @@ import { DataTableColumnHeader } from '../../../components/data-table/ColumnHead
 import { Button } from '@/components/ui/button';
 import { Ellipsis } from 'lucide-react';
 import { formatThaiCurrency } from '@/lib/number-utils';
-import { TargetBranchDetail } from '../hooks/use-fetch-target-branch-detail-list';
+import { TargetBranchDetail } from '../api/use-fetch-target-branch-detail-list';
 
 export const targetBranchColumns: ColumnDef<TargetBranchDetail>[] = [
     {

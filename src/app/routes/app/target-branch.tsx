@@ -8,14 +8,14 @@ import { usePagination } from '@/hooks/use-pagination';
 import {
     useFetchTargetCommissionMonthFilter,
     useFetchTargetCommissionYearFilter,
-} from '@/features/target-commission/hooks/use-fetch-target-commission-filters';
+} from '@/features/target-commission/api/use-fetch-target-commission-filters';
 import FilterSelect from '@/components/select';
 import { targetBranchColumns } from '@/features/target-branch/constants/target-branch-columns';
 import { useNavigate } from 'react-router-dom';
 import {
     TargetBranchFilterParams,
     useFetchTargetBranchDetailList,
-} from '@/features/target-branch/hooks/use-fetch-target-branch-detail-list';
+} from '@/features/target-branch/api/use-fetch-target-branch-detail-list';
 
 const initialFilterParams = {
     year: undefined,

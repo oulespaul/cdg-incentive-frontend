@@ -1,11 +1,11 @@
 import {
     TargetCommissionDetailFilterParams,
     useFetchTargetCommissionDetail,
-} from '@/features/target-commission/hooks/use-fetch-target-commission-detail';
+} from '@/features/target-commission/api/use-fetch-target-commission-detail';
 import {
     useFetchTargetCommissionYearFilter,
     useFetchTargetCommissionMonthFilter,
-} from '@/features/target-commission/hooks/use-fetch-target-commission-filters';
+} from '@/features/target-commission/api/use-fetch-target-commission-filters';
 import { useCallback, useEffect, useState } from 'react';
 import { useTargetBranchStore } from './use-target-branch-store';
 import { TargetInHouse } from '../components/target-inhouse-tab-content/constants/target-in-house-columns';
