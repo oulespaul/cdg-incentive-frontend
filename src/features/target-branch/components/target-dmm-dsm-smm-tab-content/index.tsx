@@ -3,43 +3,48 @@ import { TargetBranchDataTable } from '../target-branch-data-table';
 import { useCallback, useState } from 'react';
 import _ from 'lodash';
 import { useTargetBranchStore } from '../../api/use-target-branch-store';
-import SubDepartmentDialog from '../sub-dept-pool-dialog';
-import { SubDepartment } from '@/features/sub-department/models/sub-department';
-import { useFetchSubDepartment } from '@/features/sub-department/api/use-fetch-sub-department';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { targetDMMDSMSMMColumns, TargetSMMDSM } from './constants/target-dmm-dsm-smm-columns';
+import { useFetchDepartment } from '@/features/department/api/use-fetch-department';
+import DepartmentDialog from '../department-dialog';
+import { Department } from '@/features/department/models/department';
 
 const TargetDMMDSMSMMTabContent = () => {
-    const [subDepartmentDialogOpen, setSubDepartmentDialogOpen] = useState(false);
+    const [departmentDialogOpen, setDepartmentDialogOpen] = useState(false);
     const [currentRowIndex, setCurrentRowIndex] = useState<number | null>(null);
 
     const { targetCommission, targetDeptList, setTargetDeptList } = useTargetBranchStore();
 
-    const { data: subDeparmentList } = useFetchSubDepartment();
+    const { data: departmentList } = useFetchDepartment();
 
-    const handleSubDepartmentChecked = useCallback(
-        (subDepartmentSelected: SubDepartment[] | undefined) => {
-            if (!subDepartmentSelected || currentRowIndex === null) return;
-            setTargetDeptList(old =>
-                old.map((row, index) => {
-                    if (index === currentRowIndex) {
-                        return {
-                            ...old[currentRowIndex]!,
-                            subDepartmentPool: subDepartmentSelected,
-                        };
-                    }
-                    return row;
-                }),
-            );
-            setSubDepartmentDialogOpen(false);
+    const onDepartmentSelectedHandler = useCallback(
+        (brandSelected: Department | undefined) => {
+            if (!brandSelected || currentRowIndex === null) return;
+            // setTargetInHouseList(prevTargetInHouseList => {
+            //     return prevTargetInHouseList.map((row, index) => {
+            //         if (index === currentRowIndex) {
+            //             return {
+            //                 ...prevTargetInHouseList[currentRowIndex]!,
+            //                 departmentCode: brandSelected.departmentCode,
+            //                 departmentName: brandSelected.departmentName,
+            //                 subDepartmentCode: brandSelected.subDepartmentCode,
+            //                 subDepartmentName: brandSelected.subDepartmentName,
+            //                 brandId: brandSelected.id,
+            //                 brandName: brandSelected.brandName,
+            //             };
+            //         }
+            //         return row;
+            //     });
+            // });
+            setDepartmentDialogOpen(false);
         },
         [currentRowIndex],
     );
 
     const openBrandDialog = useCallback((rowIndex: number) => {
         setCurrentRowIndex(rowIndex);
-        setSubDepartmentDialogOpen(true);
+        setDepartmentDialogOpen(true);
     }, []);
 
     return (
@@ -89,12 +94,12 @@ const TargetDMMDSMSMMTabContent = () => {
                     selectedBrand: openBrandDialog,
                 }}
             />
-            {subDepartmentDialogOpen && (
-                <SubDepartmentDialog
-                    subDeparmentList={subDeparmentList}
-                    onSubDepartmentChecked={handleSubDepartmentChecked}
-                    onCloseDialog={() => setSubDepartmentDialogOpen(false)}
-                    defaultValue={targetDeptList[currentRowIndex ?? 0]['subDepartmentPool'] ?? []}
+
+            {departmentDialogOpen && (
+                <DepartmentDialog
+                    departmentList={departmentList}
+                    onSelected={onDepartmentSelectedHandler}
+                    onCloseDialog={() => setDepartmentDialogOpen(false)}
                 />
             )}
         </Card>
