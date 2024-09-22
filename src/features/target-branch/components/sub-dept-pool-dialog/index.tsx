@@ -7,19 +7,19 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { CheckedState } from '@radix-ui/react-checkbox';
 import { SubDepartment } from '@/features/sub-department/models/sub-department';
 
-interface SubDepartmentDialogProps {
+interface SubDepartmentPoolDialogProps {
     subDeparmentList: SubDepartment[] | undefined;
     onSubDepartmentChecked?: (subDepartmentSelected: SubDepartment[] | undefined) => void;
     onCloseDialog: () => void;
     defaultValue: SubDepartment[];
 }
 
-const SubDepartmentDialog = ({
+const SubDepartmentPoolDialog = ({
     subDeparmentList,
     onSubDepartmentChecked,
     onCloseDialog,
     defaultValue,
-}: SubDepartmentDialogProps) => {
+}: SubDepartmentPoolDialogProps) => {
     const [subDepartmentSelected, setSubDepartmentSelected] = useState<SubDepartment[]>(defaultValue);
     const [subDepartmentOptionSearch, setsubDepartmentOptionSearch] = useState<string>('');
 
@@ -90,4 +90,4 @@ const SubDepartmentDialog = ({
     );
 };
 
-export default SubDepartmentDialog;
+export default SubDepartmentPoolDialog;

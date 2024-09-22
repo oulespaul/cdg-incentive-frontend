@@ -1,14 +1,16 @@
 import { Card } from '@/components/ui/card';
 import { TargetBranchDataTable } from '../target-branch-data-table';
 import { useCallback, useState } from 'react';
-import { TargetDept, targetDeptColumns } from './constants/target-dept-columns';
 import _ from 'lodash';
 import { useTargetBranchStore } from '../../api/use-target-branch-store';
-import SubDepartmentPoolDialog from '../sub-dept-pool-dialog';
+import SubDepartmentDialog from '../sub-dept-pool-dialog';
 import { SubDepartment } from '@/features/sub-department/models/sub-department';
 import { useFetchSubDepartment } from '@/features/sub-department/api/use-fetch-sub-department';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { targetDMMDSMSMMColumns, TargetSMMDSM } from './constants/target-dmm-dsm-smm-columns';
 
-const TargetDeptTabContent = () => {
+const TargetDMMDSMSMMTabContent = () => {
     const [subDepartmentDialogOpen, setSubDepartmentDialogOpen] = useState(false);
     const [currentRowIndex, setCurrentRowIndex] = useState<number | null>(null);
 
@@ -35,17 +37,25 @@ const TargetDeptTabContent = () => {
         [currentRowIndex],
     );
 
-    const openSubDepartmentDialog = useCallback((rowIndex: number) => {
+    const openBrandDialog = useCallback((rowIndex: number) => {
         setCurrentRowIndex(rowIndex);
         setSubDepartmentDialogOpen(true);
     }, []);
 
     return (
-        <Card>
+        <Card className="p-4">
+            <div className="flex text-start mb-2">
+                <div className="grid w-full max-w-sm items-center gap-1.5">
+                    <Label htmlFor="smm_id">รหัสพนักงาน SMM</Label>
+                    <Input id="smm_id" value="" onChange={e => {}} />
+                </div>
+            </div>
+
             <TargetBranchDataTable
-                columns={targetDeptColumns}
+                columns={targetDMMDSMSMMColumns}
                 data={targetDeptList.map((target, index) => ({ ...target, id: index + 1 })) ?? []}
                 isCanAddRow={!_.isEmpty(targetCommission)}
+                className="max-h-[300px]"
                 meta={{
                     updateData: (rowIndex, columnId, value) => {
                         setTargetDeptList(old =>
@@ -60,7 +70,7 @@ const TargetDeptTabContent = () => {
                             }),
                         );
                     },
-                    addRowTitle: 'เพิ่ม Group',
+                    addRowTitle: 'เพิ่มพนักงาน DSM',
                     addRow: () => {
                         const newRow = {
                             id: undefined,
@@ -69,19 +79,18 @@ const TargetDeptTabContent = () => {
                             goalDept: undefined,
                             actualSalesIDLastYear: undefined,
                         };
-                        setTargetDeptList((old: TargetDept[]) => [...old, newRow]);
+                        setTargetDeptList((old: TargetSMMDSM[]) => [...old, newRow]);
                     },
                     removeRow: (rowIndex: number) => {
-                        setTargetDeptList((old: TargetDept[]) =>
-                            old.filter((_row: TargetDept, index: number) => index !== rowIndex),
+                        setTargetDeptList((old: TargetSMMDSM[]) =>
+                            old.filter((_row: TargetSMMDSM, index: number) => index !== rowIndex),
                         );
                     },
-                    selectedSubDepartmentPool: openSubDepartmentDialog,
+                    selectedBrand: openBrandDialog,
                 }}
             />
-
             {subDepartmentDialogOpen && (
-                <SubDepartmentPoolDialog
+                <SubDepartmentDialog
                     subDeparmentList={subDeparmentList}
                     onSubDepartmentChecked={handleSubDepartmentChecked}
                     onCloseDialog={() => setSubDepartmentDialogOpen(false)}
@@ -92,4 +101,4 @@ const TargetDeptTabContent = () => {
     );
 };
 
-export default TargetDeptTabContent;
+export default TargetDMMDSMSMMTabContent;

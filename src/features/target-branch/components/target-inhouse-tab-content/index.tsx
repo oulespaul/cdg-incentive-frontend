@@ -47,14 +47,14 @@ const TargetInHouseTabContent = () => {
                     return row;
                 });
             });
-            setBrandDialogOpen(false); // Close the dialog
+            setBrandDialogOpen(false);
         },
         [currentRowIndex, JSON.stringify(targetInHouseList)],
     );
 
     const openBrandDialog = useCallback((rowIndex: number) => {
         setCurrentRowIndex(rowIndex);
-        setBrandDialogOpen(true); // Open the dialog
+        setBrandDialogOpen(true);
     }, []);
 
     return (
@@ -77,6 +77,7 @@ const TargetInHouseTabContent = () => {
                             }),
                         );
                     },
+                    addRowTitle: 'เพิ่ม Group',
                     addRow: () => {
                         const newRow: TargetInHouse = {
                             id: undefined,

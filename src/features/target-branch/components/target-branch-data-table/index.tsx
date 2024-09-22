@@ -5,13 +5,18 @@ import { useEffect, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 declare module '@tanstack/react-table' {
     interface TableMeta<TData extends RowData> {
         updateData: (rowIndex: number, columnId: string, value: unknown) => void;
+        addRowTitle: string;
         addRow: () => void;
         removeRow: (rowIndex: number) => void;
         selectedBrand?: (rowIndex: number) => void;
+        selectedSubDepartmentPool?: (rowIndex: number) => void;
+        selectedDepartment?: (rowIndex: number) => void;
+        selectedSubDepartment?: (rowIndex: number) => void;
     }
 }
 
@@ -37,6 +42,7 @@ interface TargetBranchDataTableProps<TData, TValue> {
     data: TData[];
     meta?: TableMeta<any> | undefined;
     isCanAddRow?: boolean;
+    className?: string | undefined;
 }
 
 export function TargetBranchDataTable<TData, TValue>({
@@ -44,6 +50,7 @@ export function TargetBranchDataTable<TData, TValue>({
     data,
     meta,
     isCanAddRow,
+    className,
 }: TargetBranchDataTableProps<TData, TValue>) {
     const table = useReactTable({
         data,
@@ -54,7 +61,7 @@ export function TargetBranchDataTable<TData, TValue>({
     });
 
     return (
-        <div className="rounded-md border h-[650px]">
+        <div className={cn(`rounded-md border max-h-[650px] overflow-auto`, className)}>
             <Table>
                 <TableHeader className="bg-[#E2E8F0] sticky top-0">
                     {table.getHeaderGroups().map(headerGroup => (
@@ -95,9 +102,9 @@ export function TargetBranchDataTable<TData, TValue>({
                     )}
                     {isCanAddRow && meta?.addRow ? (
                         <TableRow>
-                            <TableCell colSpan={columns.length} className="text-end">
+                            <TableCell colSpan={columns.length} className="text-start">
                                 <Button onClick={meta.addRow} variant="success">
-                                    <Plus className="mr-2" /> เพิ่ม Group
+                                    <Plus className="mr-2" /> {meta?.addRowTitle}
                                 </Button>
                             </TableCell>
                         </TableRow>

@@ -39,15 +39,15 @@ export const targetDeptColumns: ColumnDef<TargetDept>[] = [
         header: ({ column }) => <DataTableColumnHeader column={column} title="Dept Pool" className="text-start" />,
         cell: ({ row, table }) => {
             if (row.getValue('subDepartmentPool') === undefined) {
-                if (table.options.meta?.selectedBrand) {
+                if (table.options.meta?.selectedSubDepartmentPool) {
                     return (
                         <div className="flex">
                             <Button
                                 variant="outline"
                                 className="border-dotted border-2"
                                 onClick={() => {
-                                    if (table.options.meta?.selectedBrand) {
-                                        table.options.meta?.selectedBrand(row.index);
+                                    if (table.options.meta?.selectedSubDepartmentPool) {
+                                        table.options.meta?.selectedSubDepartmentPool(row.index);
                                     }
                                 }}
                             >
@@ -72,8 +72,8 @@ export const targetDeptColumns: ColumnDef<TargetDept>[] = [
                         variant="outline"
                         className="border-dotted border-2"
                         onClick={() => {
-                            if (table.options.meta?.selectedBrand) {
-                                table.options.meta?.selectedBrand(row.index);
+                            if (table.options.meta?.selectedSubDepartmentPool) {
+                                table.options.meta?.selectedSubDepartmentPool(row.index);
                             }
                         }}
                     >
