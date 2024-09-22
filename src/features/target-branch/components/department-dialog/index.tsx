@@ -19,10 +19,13 @@ const DepartmentDialog = ({ departmentList, onSelected, onCloseDialog }: Departm
 
     const departmentOptions = useMemo(() => {
         const departmentUniqueNameList = _.unionBy(departmentList, 'departmentName');
-        return departmentUniqueNameList?.filter(
-            department =>
-                department.departmentCode.includes(departmentOptionSearch) ||
-                department.departmentName.toLowerCase().includes(departmentOptionSearch.toLowerCase()),
+        return _.sortBy(
+            departmentUniqueNameList?.filter(
+                department =>
+                    department.departmentCode.includes(departmentOptionSearch) ||
+                    department.departmentName.toLowerCase().includes(departmentOptionSearch.toLowerCase()),
+            ),
+            'departmentCode',
         );
     }, [departmentList, departmentOptionSearch]);
 

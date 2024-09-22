@@ -14,7 +14,7 @@ const TargetDeptTabContent = () => {
 
     const { targetCommission, targetDeptList, setTargetDeptList } = useTargetBranchStore();
 
-    const { data: subDeparmentList } = useFetchSubDepartment();
+    const { data: subDeparmentList } = useFetchSubDepartment({});
 
     const handleSubDepartmentChecked = useCallback(
         (subDepartmentSelected: SubDepartment[] | undefined) => {

@@ -1,6 +1,6 @@
 import { Card } from '@/components/ui/card';
 import { TargetBranchDataTable } from '../target-branch-data-table';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import _ from 'lodash';
 import { useTargetBranchStore } from '../../api/use-target-branch-store';
 import { Input } from '@/components/ui/input';
@@ -9,42 +9,73 @@ import { targetDMMDSMSMMColumns, TargetSMMDSM } from './constants/target-dmm-dsm
 import { useFetchDepartment } from '@/features/department/api/use-fetch-department';
 import DepartmentDialog from '../department-dialog';
 import { Department } from '@/features/department/models/department';
+import SubDepartmentDialog from '../sub-department-dialog';
+import { useFetchSubDepartment } from '@/features/sub-department/api/use-fetch-sub-department';
+import { SubDepartment } from '@/features/sub-department/models/sub-department';
 
 const TargetDMMDSMSMMTabContent = () => {
     const [departmentDialogOpen, setDepartmentDialogOpen] = useState(false);
-    const [currentRowIndex, setCurrentRowIndex] = useState<number | null>(null);
+    const [subDepartmentDialogOpen, setSubDepartmentDialogOpen] = useState(false);
 
-    const { targetCommission, targetDeptList, setTargetDeptList } = useTargetBranchStore();
+    const [currentRowIndex, setCurrentRowIndex] = useState<number>(0);
+
+    const { targetCommission, targetSMMDSMList, setTargetSMMDSMList } = useTargetBranchStore();
 
     const { data: departmentList } = useFetchDepartment();
+    const { data: subDepartmentList, refetch: refetchSubDepartmentList } = useFetchSubDepartment({
+        departmentId: targetSMMDSMList[currentRowIndex]?.department?.id,
+    });
+
+    useEffect(() => {
+        refetchSubDepartmentList();
+    }, [targetSMMDSMList[currentRowIndex]?.department?.id]);
 
     const onDepartmentSelectedHandler = useCallback(
-        (brandSelected: Department | undefined) => {
-            if (!brandSelected || currentRowIndex === null) return;
-            // setTargetInHouseList(prevTargetInHouseList => {
-            //     return prevTargetInHouseList.map((row, index) => {
-            //         if (index === currentRowIndex) {
-            //             return {
-            //                 ...prevTargetInHouseList[currentRowIndex]!,
-            //                 departmentCode: brandSelected.departmentCode,
-            //                 departmentName: brandSelected.departmentName,
-            //                 subDepartmentCode: brandSelected.subDepartmentCode,
-            //                 subDepartmentName: brandSelected.subDepartmentName,
-            //                 brandId: brandSelected.id,
-            //                 brandName: brandSelected.brandName,
-            //             };
-            //         }
-            //         return row;
-            //     });
-            // });
+        (departmentSelected: Department | undefined) => {
+            if (!departmentSelected || currentRowIndex === null) return;
+            setTargetSMMDSMList(prevTargetSMMDSMList => {
+                return prevTargetSMMDSMList.map((row, index) => {
+                    if (index === currentRowIndex) {
+                        return {
+                            ...prevTargetSMMDSMList[currentRowIndex]!,
+                            department: departmentSelected,
+                        };
+                    }
+                    return row;
+                });
+            });
             setDepartmentDialogOpen(false);
         },
         [currentRowIndex],
     );
 
-    const openBrandDialog = useCallback((rowIndex: number) => {
+    const onSubDepartmentSelectedHandler = useCallback(
+        (subDepartmentSelected: SubDepartment | undefined) => {
+            if (!subDepartmentSelected || currentRowIndex === null) return;
+            setTargetSMMDSMList(prevTargetSMMDSMList => {
+                return prevTargetSMMDSMList.map((row, index) => {
+                    if (index === currentRowIndex) {
+                        return {
+                            ...prevTargetSMMDSMList[currentRowIndex]!,
+                            subDepartment: subDepartmentSelected,
+                        };
+                    }
+                    return row;
+                });
+            });
+            setSubDepartmentDialogOpen(false);
+        },
+        [currentRowIndex],
+    );
+
+    const openDepartmentDialog = useCallback((rowIndex: number) => {
         setCurrentRowIndex(rowIndex);
         setDepartmentDialogOpen(true);
+    }, []);
+
+    const openSubDepartmentDialog = useCallback((rowIndex: number) => {
+        setCurrentRowIndex(rowIndex);
+        setSubDepartmentDialogOpen(true);
     }, []);
 
     return (
@@ -58,12 +89,12 @@ const TargetDMMDSMSMMTabContent = () => {
 
             <TargetBranchDataTable
                 columns={targetDMMDSMSMMColumns}
-                data={targetDeptList.map((target, index) => ({ ...target, id: index + 1 })) ?? []}
+                data={targetSMMDSMList.map((target, index) => ({ ...target, id: index + 1 })) ?? []}
                 isCanAddRow={!_.isEmpty(targetCommission)}
                 className="max-h-[300px]"
                 meta={{
                     updateData: (rowIndex, columnId, value) => {
-                        setTargetDeptList(old =>
+                        setTargetSMMDSMList(old =>
                             old.map((row, index) => {
                                 if (index === rowIndex) {
                                     return {
@@ -79,19 +110,23 @@ const TargetDMMDSMSMMTabContent = () => {
                     addRow: () => {
                         const newRow = {
                             id: undefined,
-                            groupDept: '',
-                            subDepartmentPool: [],
-                            goalDept: undefined,
-                            actualSalesIDLastYear: undefined,
+                            smmId: '',
+                            department: undefined,
+                            subDepartment: undefined,
+                            goalDept: '',
+                            actualSalesLastYear: '',
+                            goalId: '',
+                            actualSalesIDLastYear: '',
                         };
-                        setTargetDeptList((old: TargetSMMDSM[]) => [...old, newRow]);
+                        setTargetSMMDSMList((old: TargetSMMDSM[]) => [...old, newRow]);
                     },
                     removeRow: (rowIndex: number) => {
-                        setTargetDeptList((old: TargetSMMDSM[]) =>
+                        setTargetSMMDSMList((old: TargetSMMDSM[]) =>
                             old.filter((_row: TargetSMMDSM, index: number) => index !== rowIndex),
                         );
                     },
-                    selectedBrand: openBrandDialog,
+                    selectedDepartment: openDepartmentDialog,
+                    selectedSubDepartment: openSubDepartmentDialog,
                 }}
             />
 
@@ -100,6 +135,14 @@ const TargetDMMDSMSMMTabContent = () => {
                     departmentList={departmentList}
                     onSelected={onDepartmentSelectedHandler}
                     onCloseDialog={() => setDepartmentDialogOpen(false)}
+                />
+            )}
+
+            {subDepartmentDialogOpen && (
+                <SubDepartmentDialog
+                    subSubDepartmentList={subDepartmentList}
+                    onSelected={onSubDepartmentSelectedHandler}
+                    onCloseDialog={() => setSubDepartmentDialogOpen(false)}
                 />
             )}
         </Card>

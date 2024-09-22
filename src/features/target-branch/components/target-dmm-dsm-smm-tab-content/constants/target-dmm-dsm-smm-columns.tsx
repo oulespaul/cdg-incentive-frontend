@@ -42,16 +42,17 @@ export const targetDMMDSMSMMColumns: ColumnDef<TargetSMMDSM>[] = [
         accessorKey: 'department',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Department" className="text-start" />,
         cell: ({ row, table }) => {
-            if (row.getValue('department') === undefined) {
-                if (table.options.meta?.selectedBrand) {
+            const departmentValue = row.getValue('department') as Department;
+            if (departmentValue === undefined) {
+                if (table.options.meta?.selectedDepartment) {
                     return (
                         <div className="flex">
                             <Button
                                 variant="outline"
                                 className="border-dotted border-2"
                                 onClick={() => {
-                                    if (table.options.meta?.selectedBrand) {
-                                        table.options.meta?.selectedBrand(row.index);
+                                    if (table.options.meta?.selectedDepartment) {
+                                        table.options.meta?.selectedDepartment(row.index);
                                     }
                                 }}
                             >
@@ -62,28 +63,11 @@ export const targetDMMDSMSMMColumns: ColumnDef<TargetSMMDSM>[] = [
                 }
             }
             return (
-                <div className="text-start flex items-center w-[300px] overflow-auto">
-                    {(row.getValue('department') as SubDepartment[]).map(subDepartment => {
-                        return (
-                            <Card className="flex items-center bg-white mx-1 px-2 h-[31px]">
-                                <p className="truncate text-center">
-                                    {subDepartment.subDepartmentCode} - {subDepartment.subDepartmentName}
-                                </p>
-                            </Card>
-                        );
-                    })}
-                    <Button
-                        variant="outline"
-                        className="border-dotted border-2"
-                        onClick={() => {
-                            if (table.options.meta?.selectedBrand) {
-                                table.options.meta?.selectedBrand(row.index);
-                            }
-                        }}
-                    >
-                        <Plus /> เลือก Sub Dept
-                    </Button>
-                </div>
+                <Card className="flex items-center bg-white mx-1 px-2 h-[31px]">
+                    <p className="truncate text-center">
+                        {departmentValue.departmentCode} - {departmentValue.departmentName}
+                    </p>
+                </Card>
             );
         },
         footer: () => 'รวม',
@@ -95,16 +79,17 @@ export const targetDMMDSMSMMColumns: ColumnDef<TargetSMMDSM>[] = [
         accessorKey: 'subDepartment',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Sub Department" className="text-start" />,
         cell: ({ row, table }) => {
-            if (row.getValue('subDepartment') === undefined) {
-                if (table.options.meta?.selectedBrand) {
+            const subDepartmentValue = row.getValue('subDepartment') as SubDepartment;
+            if (subDepartmentValue === undefined) {
+                if (table.options.meta?.selectedSubDepartment) {
                     return (
                         <div className="flex">
                             <Button
                                 variant="outline"
                                 className="border-dotted border-2"
                                 onClick={() => {
-                                    if (table.options.meta?.selectedBrand) {
-                                        table.options.meta?.selectedBrand(row.index);
+                                    if (table.options.meta?.selectedSubDepartment) {
+                                        table.options.meta?.selectedSubDepartment(row.index);
                                     }
                                 }}
                             >
@@ -115,28 +100,11 @@ export const targetDMMDSMSMMColumns: ColumnDef<TargetSMMDSM>[] = [
                 }
             }
             return (
-                <div className="text-start flex items-center w-[300px] overflow-auto">
-                    {(row.getValue('subDepartment') as SubDepartment[]).map(subDepartment => {
-                        return (
-                            <Card className="flex items-center bg-white mx-1 px-2 h-[31px]">
-                                <p className="truncate text-center">
-                                    {subDepartment.subDepartmentCode} - {subDepartment.subDepartmentName}
-                                </p>
-                            </Card>
-                        );
-                    })}
-                    <Button
-                        variant="outline"
-                        className="border-dotted border-2"
-                        onClick={() => {
-                            if (table.options.meta?.selectedBrand) {
-                                table.options.meta?.selectedBrand(row.index);
-                            }
-                        }}
-                    >
-                        <Plus /> เลือก Sub Dept
-                    </Button>
-                </div>
+                <Card className="flex items-center bg-white mx-1 px-2 h-[31px]">
+                    <p className="truncate text-center">
+                        {subDepartmentValue.subDepartmentCode} - {subDepartmentValue.subDepartmentName}
+                    </p>
+                </Card>
             );
         },
         enableSorting: false,
