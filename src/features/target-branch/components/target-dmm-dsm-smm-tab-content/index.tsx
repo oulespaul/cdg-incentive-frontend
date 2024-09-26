@@ -10,7 +10,6 @@ import TargetDMMList from './components/TargetDMMList';
 
 const TargetDMMDSMSMMTabContent = () => {
     const { targetCommission, targetSMMDSMList, setTargetSMMDSMList } = useTargetBranchStore();
-    console.log("🚀 ~ TargetDMMDSMSMMTabContent ~ targetSMMDSMList:", targetSMMDSMList)
 
     return (
         <Card className="p-4">

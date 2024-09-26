@@ -15,11 +15,27 @@ export interface TargetDeptRequest {
     actualSalesIDLastYear?: string;
 }
 
+export interface TargetDSMRequest {
+    dsmId?: string;
+    departmentId?: number;
+    subDepartmentId?: number;
+    goalDept?: string;
+    actualSalesLastYear?: string;
+    goalId?: string;
+    actualSalesIDLastYear?: string;
+}
+
+export interface TargetSMMDSMRequest {
+    smmId?: string;
+    targetDSMList?: TargetDSMRequest[];
+}
+
 export interface CreateTargetBranchRequest {
     targetCommissionId?: number;
     branchId?: number;
     targetInHouseList: TargetInhouseRequest[];
     targetDeptList: TargetDeptRequest[];
+    targetSMMDSMList: TargetSMMDSMRequest[];
 }
 
 const createTargetBranch = async (data: CreateTargetBranchRequest) => {

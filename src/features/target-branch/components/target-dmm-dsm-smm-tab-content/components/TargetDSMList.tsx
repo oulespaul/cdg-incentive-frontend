@@ -117,7 +117,7 @@ const TargetDSMSMMList: React.FC<TargetDSMSMMListProps> = ({ smmRowIndex }) => {
             <div className="flex text-start mb-2">
                 <div className="grid w-full max-w-sm items-center gap-1.5">
                     <Label>รหัสพนักงาน SMM</Label>
-                    <Input id="smm_id" onChange={handleSMMIdChange} />
+                    <Input id="smm_id" onChange={handleSMMIdChange} value={targetSMMDSMList[smmRowIndex].smmId} />
                 </div>
             </div>
 

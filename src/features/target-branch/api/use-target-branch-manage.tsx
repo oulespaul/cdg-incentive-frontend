@@ -9,13 +9,19 @@ import {
 import { useCallback, useEffect, useState } from 'react';
 import { useTargetBranchStore } from './use-target-branch-store';
 import { TargetInHouse } from '../components/target-inhouse-tab-content/constants/target-in-house-columns';
-import { TargetDeptRequest, TargetInhouseRequest, useCreateTargetBranch } from './use-create-target-branch';
+import {
+    TargetDeptRequest,
+    TargetInhouseRequest,
+    TargetSMMDSMRequest,
+    useCreateTargetBranch,
+} from './use-create-target-branch';
 import { useFetchTargetBranchDetail } from './use-fetch-target-branch-detail';
 import { useModalContext } from '@/app/providers/modal-provider';
 import { InfoCircledIcon } from '@radix-ui/react-icons';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { TargetDept } from '../components/target-dept-tab-content/constants/target-dept-columns';
+import { TargetSMMDSM } from '../components/target-dmm-dsm-smm-tab-content/constants/target-dsm-smm-columns';
 
 const initialFilterParams = {
     year: undefined,
@@ -32,6 +38,8 @@ export const useTargetBranchManage = () => {
         setTargetInHouseList,
         targetDeptList,
         setTargetDeptList,
+        targetSMMDSMList,
+        setTargetSMMDSMList,
     } = useTargetBranchStore();
 
     const { data: yearFilterOptions } = useFetchTargetCommissionYearFilter({ branchId: currentBranchId });
@@ -56,6 +64,7 @@ export const useTargetBranchManage = () => {
         );
         setTargetInHouseList(() => []);
         setTargetDeptList(() => []);
+        setTargetSMMDSMList(() => []);
         setTargetCommission(undefined);
         navigate('/app/target-branch');
     };
@@ -88,6 +97,7 @@ export const useTargetBranchManage = () => {
     useEffect(() => {
         setTargetInHouseList(() => []);
         setTargetDeptList(() => []);
+        setTargetSMMDSMList(() => []);
         if (targetCommission?.id) {
             fetchTargetBranchDetail().then(result => {
                 if (result.data && result.data.targetInHouseList?.length > 0) {
@@ -95,6 +105,9 @@ export const useTargetBranchManage = () => {
                 }
                 if (result.data && result.data.targetDeptList?.length > 0) {
                     setTargetDeptList(() => result.data.targetDeptList);
+                }
+                if (result.data && result.data.targetSMMDSMList?.length > 0) {
+                    setTargetSMMDSMList(() => result.data.targetSMMDSMList);
                 }
             });
         }
@@ -125,6 +138,21 @@ export const useTargetBranchManage = () => {
         };
     };
 
+    const transformToTargetSMMDSMListRequestFormat = (targetSMMDSM: TargetSMMDSM): TargetSMMDSMRequest => {
+        return {
+            smmId: targetSMMDSM.smmId,
+            targetDSMList: targetSMMDSM.targetDSMList.map(targetDSM => ({
+                dsmId: targetDSM.dsmId,
+                departmentId: targetDSM.department?.id,
+                subDepartmentId: targetDSM.subDepartment?.id,
+                goalDept: targetDSM.goalDept,
+                actualSalesLastYear: targetDSM.actualSalesLastYear,
+                goalId: targetDSM.goalId,
+                actualSalesIDLastYear: targetDSM.actualSalesIDLastYear,
+            })),
+        };
+    };
+
     const onSaveTargetHandler = useCallback(() => {
         openModal({
             title: (
@@ -140,11 +168,12 @@ export const useTargetBranchManage = () => {
                     branchId: currentBranchId,
                     targetInHouseList: targetInHouseList.map(transformToRequestFormat),
                     targetDeptList: targetDeptList.map(transformToTargetDeptRequestFormat),
+                    targetSMMDSMList: targetSMMDSMList.map(transformToTargetSMMDSMListRequestFormat),
                 });
                 closeModal();
             },
         });
-    }, [JSON.stringify(targetInHouseList), JSON.stringify(targetDeptList)]);
+    }, [JSON.stringify(targetInHouseList), JSON.stringify(targetDeptList), JSON.stringify(targetSMMDSMList)]);
 
     const onCancelTargetHandler = useCallback(() => {
         openModal({
@@ -163,21 +192,24 @@ export const useTargetBranchManage = () => {
                     branchId: currentBranchId,
                     targetInHouseList: targetInHouseList.map(transformToRequestFormat),
                     targetDeptList: targetDeptList.map(transformToTargetDeptRequestFormat),
+                    targetSMMDSMList: targetSMMDSMList.map(transformToTargetSMMDSMListRequestFormat),
                 });
                 setTargetInHouseList(() => []);
                 setTargetDeptList(() => []);
+                setTargetSMMDSMList(() => []);
                 setTargetCommission(undefined);
                 closeModal();
             },
             onSecondaryActionClick: () => {
                 setTargetInHouseList(() => []);
                 setTargetDeptList(() => []);
+                setTargetSMMDSMList(() => []);
                 setTargetCommission(undefined);
                 closeModal();
                 navigate('/app/target-branch');
             },
         });
-    }, [JSON.stringify(targetInHouseList), JSON.stringify(targetDeptList)]);
+    }, [JSON.stringify(targetInHouseList), JSON.stringify(targetDeptList), JSON.stringify(targetSMMDSMList)]);
 
     return {
         filterParams,
