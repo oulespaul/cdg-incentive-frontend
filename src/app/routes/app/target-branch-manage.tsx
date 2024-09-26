@@ -45,7 +45,7 @@ export const TargetBranchManagePage = () => {
                     <p className="text-lg font-medium text-end self-center ml-2">
                         เป้า commission (เป้าสาขา):{' '}
                         {!_.isEmpty(targetCommission) && (
-                            <span className="text-blue-500">
+                            <span className="text-primaryLight">
                                 {formatThaiCurrency(targetCommission.targetCommission, ' บาท')}
                             </span>
                         )}

@@ -2,7 +2,7 @@ import { TargetCommission } from '@/features/target-commission/models/target-com
 import { create } from 'zustand';
 import { TargetInHouse } from '../components/target-inhouse-tab-content/constants/target-in-house-columns';
 import { TargetDept } from '../components/target-dept-tab-content/constants/target-dept-columns';
-import { TargetSMMDSM } from '../components/target-dmm-dsm-smm-tab-content/constants/target-dmm-dsm-smm-columns';
+import { TargetSMMDSM } from '../components/target-dmm-dsm-smm-tab-content/constants/target-dsm-smm-columns';
 
 interface TargetBranchState {
     currentBranchId: number | undefined;
@@ -14,7 +14,7 @@ interface TargetBranchState {
     setTargetCommission: (commission?: TargetCommission) => void;
     setTargetInHouseList: (updateFn: (prevState: TargetInHouse[]) => TargetInHouse[]) => void;
     setTargetDeptList: (updateFn: (prevState: TargetDept[]) => TargetDept[]) => void;
-    setTargetSMMDSMList: (updateFn: (prevState: TargetSMMDSM[]) => TargetDept[]) => void;
+    setTargetSMMDSMList: (updateFn: (prevState: TargetSMMDSM[]) => TargetSMMDSM[]) => void;
 }
 
 export const useTargetBranchStore = create<TargetBranchState>(set => ({
@@ -22,7 +22,13 @@ export const useTargetBranchStore = create<TargetBranchState>(set => ({
     targetCommission: undefined,
     targetInHouseList: [],
     targetDeptList: [],
-    targetSMMDSMList: [],
+    targetSMMDSMList: [
+        {
+            id: undefined,
+            smmId: '',
+            targetDSMList: [],
+        },
+    ],
     setCurrentBranchId: (branchId: number) => set({ currentBranchId: branchId }),
     setTargetCommission: (targetCommission?: TargetCommission) => set({ targetCommission }),
     setTargetInHouseList: (updateFn: (prevState: TargetInHouse[]) => TargetInHouse[]) => {

@@ -11,6 +11,12 @@ import { Department } from '@/features/department/models/department';
 export type TargetSMMDSM = {
     id?: number;
     smmId?: string;
+    targetDSMList: TargetDSM[]
+};
+
+export type TargetDSM = {
+    id?: number;
+    dsmId?: string;
     department?: Department;
     subDepartment?: SubDepartment;
     goalDept?: string;
@@ -19,7 +25,7 @@ export type TargetSMMDSM = {
     actualSalesIDLastYear?: string;
 };
 
-export const targetDMMDSMSMMColumns: ColumnDef<TargetSMMDSM>[] = [
+export const targetDMMColumns: ColumnDef<TargetDSM>[] = [
     {
         accessorKey: 'id',
         header: ({ column }) => <DataTableColumnHeader column={column} title="ลำดับ" className="text-center" />,
@@ -29,10 +35,10 @@ export const targetDMMDSMSMMColumns: ColumnDef<TargetSMMDSM>[] = [
         enableHiding: false,
     },
     {
-        id: 'smmId',
-        accessorKey: 'smmId',
+        id: 'dsmId',
+        accessorKey: 'dsmId',
         header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="รหัสพนักงาน DSM" className="text-start w-[100px]" />
+            <DataTableColumnHeader column={column} title="รหัสพนักงาน DMM" className="text-start w-[100px]" />
         ),
         enableSorting: false,
         enableHiding: false,
