@@ -8,15 +8,9 @@ import { Card } from '@/components/ui/card';
 import { formatThaiCurrency } from '@/lib/number-utils';
 import { Department } from '@/features/department/models/department';
 
-export type TargetSMMDSM = {
+export type TargetDMM = {
     id?: number;
-    smmId?: string;
-    targetDSMList: TargetDSM[]
-};
-
-export type TargetDSM = {
-    id?: number;
-    dsmId?: string;
+    dmmId?: string;
     department?: Department;
     subDepartment?: SubDepartment;
     goalDept?: string;
@@ -25,7 +19,7 @@ export type TargetDSM = {
     actualSalesIDLastYear?: string;
 };
 
-export const targetDMMColumns: ColumnDef<TargetDSM>[] = [
+export const targetDMMColumns: ColumnDef<TargetDMM>[] = [
     {
         accessorKey: 'id',
         header: ({ column }) => <DataTableColumnHeader column={column} title="ลำดับ" className="text-center" />,
@@ -35,8 +29,8 @@ export const targetDMMColumns: ColumnDef<TargetDSM>[] = [
         enableHiding: false,
     },
     {
-        id: 'dsmId',
-        accessorKey: 'dsmId',
+        id: 'dmmId',
+        accessorKey: 'dmmId',
         header: ({ column }) => (
             <DataTableColumnHeader column={column} title="รหัสพนักงาน DMM" className="text-start w-[100px]" />
         ),

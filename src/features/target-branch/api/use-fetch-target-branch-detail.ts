@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { TargetInHouse } from '../components/target-inhouse-tab-content/constants/target-in-house-columns';
 import { TargetDept } from '../components/target-dept-tab-content/constants/target-dept-columns';
 import { TargetSMMDSM } from '../components/target-dmm-dsm-smm-tab-content/constants/target-dsm-smm-columns';
+import { TargetDMM } from '../components/target-dmm-dsm-smm-tab-content/constants/target-dmm-columns';
 
 export interface TargetBranch {
     id: number;
@@ -21,6 +22,7 @@ export interface TargetBranch {
     targetInHouseList: TargetInHouse[];
     targetDeptList: TargetDept[];
     targetSMMDSMList: TargetSMMDSM[];
+    targetDMMList: TargetDMM[];
 }
 
 const fetchTargetBranchDetail = async (targetCommissionId?: number) => {

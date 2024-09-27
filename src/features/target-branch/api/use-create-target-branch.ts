@@ -30,12 +30,23 @@ export interface TargetSMMDSMRequest {
     targetDSMList?: TargetDSMRequest[];
 }
 
+export interface TargetDMMRequest {
+    dmmId?: string;
+    departmentId?: number;
+    subDepartmentId?: number;
+    goalDept?: string;
+    actualSalesLastYear?: string;
+    goalId?: string;
+    actualSalesIDLastYear?: string;
+}
+
 export interface CreateTargetBranchRequest {
     targetCommissionId?: number;
     branchId?: number;
     targetInHouseList: TargetInhouseRequest[];
     targetDeptList: TargetDeptRequest[];
     targetSMMDSMList: TargetSMMDSMRequest[];
+    targetDMMList: TargetDMMRequest[];
 }
 
 const createTargetBranch = async (data: CreateTargetBranchRequest) => {

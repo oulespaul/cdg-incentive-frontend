@@ -11,6 +11,7 @@ import { useTargetBranchStore } from './use-target-branch-store';
 import { TargetInHouse } from '../components/target-inhouse-tab-content/constants/target-in-house-columns';
 import {
     TargetDeptRequest,
+    TargetDMMRequest,
     TargetInhouseRequest,
     TargetSMMDSMRequest,
     useCreateTargetBranch,
@@ -22,6 +23,7 @@ import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { TargetDept } from '../components/target-dept-tab-content/constants/target-dept-columns';
 import { TargetSMMDSM } from '../components/target-dmm-dsm-smm-tab-content/constants/target-dsm-smm-columns';
+import { TargetDMM } from '../components/target-dmm-dsm-smm-tab-content/constants/target-dmm-columns';
 
 const initialFilterParams = {
     year: undefined,
@@ -40,7 +42,10 @@ export const useTargetBranchManage = () => {
         setTargetDeptList,
         targetSMMDSMList,
         setTargetSMMDSMList,
+        targetDMMList,
+        setTargetDMMList,
     } = useTargetBranchStore();
+    console.log('🚀 ~ useTargetBranchManage ~ targetDMMList:', targetDMMList);
 
     const { data: yearFilterOptions } = useFetchTargetCommissionYearFilter({ branchId: currentBranchId });
     const { data: monthFilterOptions } = useFetchTargetCommissionMonthFilter({ branchId: currentBranchId });
@@ -65,6 +70,7 @@ export const useTargetBranchManage = () => {
         setTargetInHouseList(() => []);
         setTargetDeptList(() => []);
         setTargetSMMDSMList(() => []);
+        setTargetDMMList(() => []);
         setTargetCommission(undefined);
         navigate('/app/target-branch');
     };
@@ -98,6 +104,7 @@ export const useTargetBranchManage = () => {
         setTargetInHouseList(() => []);
         setTargetDeptList(() => []);
         setTargetSMMDSMList(() => []);
+        setTargetDMMList(() => []);
         if (targetCommission?.id) {
             fetchTargetBranchDetail().then(result => {
                 if (result.data && result.data.targetInHouseList?.length > 0) {
@@ -108,6 +115,9 @@ export const useTargetBranchManage = () => {
                 }
                 if (result.data && result.data.targetSMMDSMList?.length > 0) {
                     setTargetSMMDSMList(() => result.data.targetSMMDSMList);
+                }
+                if (result.data && result.data.targetDMMList?.length > 0) {
+                    setTargetDMMList(() => result.data.targetDMMList);
                 }
             });
         }
@@ -153,6 +163,18 @@ export const useTargetBranchManage = () => {
         };
     };
 
+    const transformToTargetDMMListRequestFormat = (targetDMM: TargetDMM): TargetDMMRequest => {
+        return {
+            dmmId: targetDMM.dmmId,
+            departmentId: targetDMM.department?.id,
+            subDepartmentId: targetDMM.subDepartment?.id,
+            goalDept: targetDMM.goalDept,
+            actualSalesLastYear: targetDMM.actualSalesLastYear,
+            goalId: targetDMM.goalId,
+            actualSalesIDLastYear: targetDMM.actualSalesIDLastYear,
+        };
+    };
+
     const onSaveTargetHandler = useCallback(() => {
         openModal({
             title: (
@@ -169,11 +191,17 @@ export const useTargetBranchManage = () => {
                     targetInHouseList: targetInHouseList.map(transformToRequestFormat),
                     targetDeptList: targetDeptList.map(transformToTargetDeptRequestFormat),
                     targetSMMDSMList: targetSMMDSMList.map(transformToTargetSMMDSMListRequestFormat),
+                    targetDMMList: targetDMMList.map(transformToTargetDMMListRequestFormat),
                 });
                 closeModal();
             },
         });
-    }, [JSON.stringify(targetInHouseList), JSON.stringify(targetDeptList), JSON.stringify(targetSMMDSMList)]);
+    }, [
+        JSON.stringify(targetInHouseList),
+        JSON.stringify(targetDeptList),
+        JSON.stringify(targetSMMDSMList),
+        JSON.stringify(targetDMMList),
+    ]);
 
     const onCancelTargetHandler = useCallback(() => {
         openModal({
@@ -193,10 +221,12 @@ export const useTargetBranchManage = () => {
                     targetInHouseList: targetInHouseList.map(transformToRequestFormat),
                     targetDeptList: targetDeptList.map(transformToTargetDeptRequestFormat),
                     targetSMMDSMList: targetSMMDSMList.map(transformToTargetSMMDSMListRequestFormat),
+                    targetDMMList: targetDMMList.map(transformToTargetDMMListRequestFormat),
                 });
                 setTargetInHouseList(() => []);
                 setTargetDeptList(() => []);
                 setTargetSMMDSMList(() => []);
+                setTargetDMMList(() => []);
                 setTargetCommission(undefined);
                 closeModal();
             },
@@ -204,12 +234,18 @@ export const useTargetBranchManage = () => {
                 setTargetInHouseList(() => []);
                 setTargetDeptList(() => []);
                 setTargetSMMDSMList(() => []);
+                setTargetDMMList(() => []);
                 setTargetCommission(undefined);
                 closeModal();
                 navigate('/app/target-branch');
             },
         });
-    }, [JSON.stringify(targetInHouseList), JSON.stringify(targetDeptList), JSON.stringify(targetSMMDSMList)]);
+    }, [
+        JSON.stringify(targetInHouseList),
+        JSON.stringify(targetDeptList),
+        JSON.stringify(targetSMMDSMList),
+        JSON.stringify(targetDMMList),
+    ]);
 
     return {
         filterParams,

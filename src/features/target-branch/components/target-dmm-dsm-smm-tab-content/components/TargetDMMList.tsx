@@ -8,134 +8,117 @@ import { useState, useEffect, useCallback } from 'react';
 import DepartmentDialog from '../../department-dialog';
 import SubDepartmentDialog from '../../sub-department-dialog';
 import { TargetBranchDataTable } from '../../target-branch-data-table';
-import { TargetDSM } from '../constants/target-dsm-smm-columns';
-import { targetDMMColumns } from '../constants/target-dmm-columns';
+import { TargetDMM, targetDMMColumns } from '../constants/target-dmm-columns';
 
 const TargetDMMList = () => {
-    const [departmentDialogOpen, setDepartmentDialogOpen] = useState(false);
-    const [subDepartmentDialogOpen, setSubDepartmentDialogOpen] = useState(false);
-    const [smmId, setSMMId] = useState('');
-    const [targetDSMList, setTargetDSMList] = useState<TargetDSM[]>([]);
-
+    const [dialogsOpen, setDialogsOpen] = useState({ department: false, subDepartment: false });
     const [currentRowIndex, setCurrentRowIndex] = useState<number>(0);
 
-    const { targetCommission } = useTargetBranchStore();
-
+    const { targetCommission, targetDMMList, setTargetDMMList } = useTargetBranchStore();
+    const currentDepartmentId = targetDMMList[currentRowIndex]?.department?.id;
     const { data: departmentList } = useFetchDepartment();
     const { data: subDepartmentList, refetch: refetchSubDepartmentList } = useFetchSubDepartment({
-        departmentId: targetDSMList[currentRowIndex]?.department?.id,
+        departmentId: currentDepartmentId,
     });
 
     useEffect(() => {
-        refetchSubDepartmentList();
-    }, [targetDSMList[currentRowIndex]?.department?.id]);
+        if (currentDepartmentId) {
+            refetchSubDepartmentList();
+        }
+    }, [currentDepartmentId, refetchSubDepartmentList]);
 
-    const onDepartmentSelectedHandler = useCallback(
+    const onDepartmentSelected = useCallback(
         (departmentSelected: Department | undefined) => {
-            if (!departmentSelected || currentRowIndex === null) return;
-            setTargetDSMList(prevTargetSMMDSMList => {
-                return prevTargetSMMDSMList.map((row, index) => {
-                    if (index === currentRowIndex) {
-                        return {
-                            ...prevTargetSMMDSMList[currentRowIndex]!,
-                            department: departmentSelected,
-                        };
-                    }
-                    return row;
-                });
-            });
-            setDepartmentDialogOpen(false);
+            if (departmentSelected) {
+                updateData(currentRowIndex, 'department', departmentSelected);
+                setDialogsOpen(prev => ({ ...prev, department: false }));
+            }
         },
         [currentRowIndex],
     );
 
-    const onSubDepartmentSelectedHandler = useCallback(
+    const onSubDepartmentSelected = useCallback(
         (subDepartmentSelected: SubDepartment | undefined) => {
-            if (!subDepartmentSelected || currentRowIndex === null) return;
-            setTargetDSMList(prevTargetSMMDSMList => {
-                return prevTargetSMMDSMList.map((row, index) => {
-                    if (index === currentRowIndex) {
-                        return {
-                            ...prevTargetSMMDSMList[currentRowIndex]!,
-                            subDepartment: subDepartmentSelected,
-                        };
-                    }
-                    return row;
-                });
-            });
-            setSubDepartmentDialogOpen(false);
+            if (subDepartmentSelected) {
+                updateData(currentRowIndex, 'subDepartment', subDepartmentSelected);
+                setDialogsOpen(prev => ({ ...prev, subDepartment: false }));
+            }
         },
         [currentRowIndex],
     );
 
-    const openDepartmentDialog = useCallback((rowIndex: number) => {
+    const openDialog = useCallback((dialogType: 'department' | 'subDepartment', rowIndex: number) => {
         setCurrentRowIndex(rowIndex);
-        setDepartmentDialogOpen(true);
+        setDialogsOpen(prev => ({ ...prev, [dialogType]: true }));
     }, []);
 
-    const openSubDepartmentDialog = useCallback((rowIndex: number) => {
-        setCurrentRowIndex(rowIndex);
-        setSubDepartmentDialogOpen(true);
-    }, []);
+    const addRow = () => {
+        const newRow = {
+            id: undefined,
+            dmmId: '',
+            department: undefined,
+            subDepartment: undefined,
+            goalDept: '',
+            actualSalesLastYear: '',
+            goalId: '',
+            actualSalesIDLastYear: '',
+        };
+        setTargetDMMList((old: TargetDMM[]) => [...old, newRow]);
+    };
+
+    const updateData = (rowIndex: number, columnId: string, value: any) => {
+        setTargetDMMList(old =>
+            old.map((row, index) => {
+                if (index === rowIndex) {
+                    return {
+                        ...old[rowIndex]!,
+                        [columnId]: value,
+                    };
+                }
+                return row;
+            }),
+        );
+    };
+
+    const removeRow = (rowIndex: number) => {
+        setTargetDMMList((old: TargetDMM[]) => old.filter((_row: TargetDMM, index: number) => index !== rowIndex));
+    };
 
     return (
         <>
             <TargetBranchDataTable
                 columns={targetDMMColumns}
-                data={targetDSMList.map((target, index) => ({ ...target, id: index + 1 })) ?? []}
+                data={
+                    targetDMMList?.map((target, index) => ({
+                        ...target,
+                        id: index + 1,
+                    })) ?? []
+                }
                 isCanAddRow={!_.isEmpty(targetCommission)}
                 className="max-h-[300px]"
                 meta={{
-                    updateData: (rowIndex, columnId, value) => {
-                        setTargetDSMList(old =>
-                            old.map((row, index) => {
-                                if (index === rowIndex) {
-                                    return {
-                                        ...old[rowIndex]!,
-                                        [columnId]: value,
-                                    };
-                                }
-                                return row;
-                            }),
-                        );
-                    },
+                    updateData,
                     addRowTitle: 'เพิ่มพนักงาน DMM',
-                    addRow: () => {
-                        const newRow = {
-                            id: undefined,
-                            dsmId: '',
-                            department: undefined,
-                            subDepartment: undefined,
-                            goalDept: '',
-                            actualSalesLastYear: '',
-                            goalId: '',
-                            actualSalesIDLastYear: '',
-                        };
-                        setTargetDSMList((old: TargetDSM[]) => [...old, newRow]);
-                    },
-                    removeRow: (rowIndex: number) => {
-                        setTargetDSMList((old: TargetDSM[]) =>
-                            old.filter((_row: TargetDSM, index: number) => index !== rowIndex),
-                        );
-                    },
-                    selectedDepartment: openDepartmentDialog,
-                    selectedSubDepartment: openSubDepartmentDialog,
+                    addRow,
+                    removeRow,
+                    selectedDepartment: rowIndex => openDialog('department', rowIndex),
+                    selectedSubDepartment: rowIndex => openDialog('subDepartment', rowIndex),
                 }}
             />
 
-            {departmentDialogOpen && (
+            {dialogsOpen.department && (
                 <DepartmentDialog
                     departmentList={departmentList}
-                    onSelected={onDepartmentSelectedHandler}
-                    onCloseDialog={() => setDepartmentDialogOpen(false)}
+                    onSelected={onDepartmentSelected}
+                    onCloseDialog={() => setDialogsOpen(prev => ({ ...prev, department: false }))}
                 />
             )}
 
-            {subDepartmentDialogOpen && (
+            {dialogsOpen.subDepartment && (
                 <SubDepartmentDialog
                     subSubDepartmentList={subDepartmentList}
-                    onSelected={onSubDepartmentSelectedHandler}
-                    onCloseDialog={() => setSubDepartmentDialogOpen(false)}
+                    onSelected={onSubDepartmentSelected}
+                    onCloseDialog={() => setDialogsOpen(prev => ({ ...prev, subDepartment: false }))}
                 />
             )}
         </>
