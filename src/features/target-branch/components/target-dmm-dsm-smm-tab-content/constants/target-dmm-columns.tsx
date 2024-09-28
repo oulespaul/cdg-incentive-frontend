@@ -150,7 +150,7 @@ export const targetDMMColumns: ColumnDef<TargetDMM>[] = [
         id: 'goalId',
         accessorKey: 'goalId',
         header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Goal Dept (บาท)" className="text-start w-[100px]" />
+            <DataTableColumnHeader column={column} title="Goal ID (บาท)" className="text-start w-[100px]" />
         ),
         footer: info => {
             return formatThaiCurrency(

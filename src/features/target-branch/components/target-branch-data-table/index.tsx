@@ -2,7 +2,7 @@ import { ColumnDef, flexRender, getCoreRowModel, RowData, TableMeta, useReactTab
 
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useEffect, useState } from 'react';
-import { Input } from '@/components/ui/input';
+import CurrencyInput from 'react-currency-input-field';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -33,7 +33,18 @@ const defaultColumn: Partial<ColumnDef<any>> = {
             setValue(initialValue);
         }, [initialValue]);
 
-        return <Input value={value as string} onChange={e => setValue(e.target.value)} onBlur={onBlur} />;
+        return (
+            <CurrencyInput
+                id="input-example"
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                placeholder="Please enter a number"
+                defaultValue={1000}
+                value={value as string}
+                decimalsLimit={2}
+                onValueChange={value => setValue(value)}
+                onBlur={onBlur}
+            />
+        );
     },
 };
 

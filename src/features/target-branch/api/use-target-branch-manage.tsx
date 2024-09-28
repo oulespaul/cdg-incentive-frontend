@@ -45,7 +45,6 @@ export const useTargetBranchManage = () => {
         targetDMMList,
         setTargetDMMList,
     } = useTargetBranchStore();
-    console.log('🚀 ~ useTargetBranchManage ~ targetDMMList:', targetDMMList);
 
     const { data: yearFilterOptions } = useFetchTargetCommissionYearFilter({ branchId: currentBranchId });
     const { data: monthFilterOptions } = useFetchTargetCommissionMonthFilter({ branchId: currentBranchId });

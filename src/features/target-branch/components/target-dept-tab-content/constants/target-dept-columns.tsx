@@ -61,7 +61,7 @@ export const targetDeptColumns: ColumnDef<TargetDept>[] = [
                 <div className="text-start flex items-center w-[300px] overflow-auto">
                     {(row.getValue('subDepartmentPool') as SubDepartment[]).map(subDepartment => {
                         return (
-                            <Card className="flex items-center bg-white mx-1 px-2 h-[31px]">
+                            <Card className="flex items-center bg-white mx-1 px-2 h-[31px]" key={subDepartment.id}>
                                 <p className="truncate text-center">
                                     {subDepartment.subDepartmentCode} - {subDepartment.subDepartmentName}
                                 </p>
@@ -113,7 +113,9 @@ export const targetDeptColumns: ColumnDef<TargetDept>[] = [
         ),
         footer: info => {
             return formatThaiCurrency(
-                info.table.getFilteredRowModel().rows.reduce((sum, row) => sum + +(row.original.actualSalesIDLastYear ?? 0), 0),
+                info.table
+                    .getFilteredRowModel()
+                    .rows.reduce((sum, row) => sum + +(row.original.actualSalesIDLastYear ?? 0), 0),
                 '',
             );
         },
