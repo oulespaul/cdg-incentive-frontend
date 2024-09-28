@@ -78,7 +78,7 @@ export const TargetBranchPage = () => {
                     <div className="flex w-1/2 justify-end">
                         <Button
                             className="bg-gradient-to-l from-cyan-500 to-blue-500"
-                            onClick={() => navigate('/app/target-branch/create')}
+                            onClick={() => navigate('/app/target-branch/manage')}
                         >
                             <Plus className="mr-2 h-4 w-4" />
                             สร้าง Target

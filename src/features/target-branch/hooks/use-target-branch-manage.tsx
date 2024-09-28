@@ -7,7 +7,7 @@ import {
     useFetchTargetCommissionMonthFilter,
 } from '@/features/target-commission/api/use-fetch-target-commission-filters';
 import { useCallback, useEffect, useState } from 'react';
-import { useTargetBranchStore } from './use-target-branch-store';
+import { useTargetBranchStore } from '../api/use-target-branch-store';
 import { TargetInHouse } from '../components/target-inhouse-tab-content/constants/target-in-house-columns';
 import {
     TargetDeptRequest,
@@ -15,23 +15,20 @@ import {
     TargetInhouseRequest,
     TargetSMMDSMRequest,
     useCreateTargetBranch,
-} from './use-create-target-branch';
-import { useFetchTargetBranchDetail } from './use-fetch-target-branch-detail';
+} from '../api/use-create-target-branch';
+import { useFetchTargetBranchDetail } from '../api/use-fetch-target-branch-detail';
 import { useModalContext } from '@/app/providers/modal-provider';
 import { InfoCircledIcon } from '@radix-ui/react-icons';
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { TargetDept } from '../components/target-dept-tab-content/constants/target-dept-columns';
 import { TargetSMMDSM } from '../components/target-dmm-dsm-smm-tab-content/constants/target-dsm-smm-columns';
 import { TargetDMM } from '../components/target-dmm-dsm-smm-tab-content/constants/target-dmm-columns';
-
-const initialFilterParams = {
-    year: undefined,
-    month: undefined,
-};
+import _ from 'lodash';
 
 export const useTargetBranchManage = () => {
-    const [filterParams, setFilterParams] = useState<TargetCommissionDetailFilterParams>(initialFilterParams);
+    const { year, month } = useParams();
+    const [filterParams, setFilterParams] = useState<TargetCommissionDetailFilterParams>({ year, month });
     const {
         currentBranchId,
         targetCommission,
@@ -60,7 +57,19 @@ export const useTargetBranchManage = () => {
         if (targetBranchDetail) {
             setTargetInHouseList(() => targetBranchDetail.targetInHouseList);
             setTargetDeptList(() => targetBranchDetail.targetDeptList);
-            setTargetSMMDSMList(() => targetBranchDetail.targetSMMDSMList);
+            setTargetSMMDSMList(() => {
+                if (targetBranchDetail.targetSMMDSMList.length === 0) {
+                    return [
+                        {
+                            id: undefined,
+                            smmId: '',
+                            targetDSMList: [],
+                        },
+                    ];
+                }
+
+                return targetBranchDetail.targetSMMDSMList;
+            });
             setTargetDMMList(() => targetBranchDetail.targetDMMList);
             setTargetWorkflow({
                 status: targetBranchDetail.status,
@@ -255,5 +264,6 @@ export const useTargetBranchManage = () => {
         onFilterSelectHandler,
         onSaveTargetHandler,
         onCancelTargetHandler,
+        isEditMode: !_.isUndefined(year) && !_.isUndefined(month),
     };
 };

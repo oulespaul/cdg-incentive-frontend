@@ -1,4 +1,4 @@
-import { ColumnDef, flexRender, getCoreRowModel, RowData, TableMeta, useReactTable } from '@tanstack/react-table';
+import { ColumnDef, flexRender, getCoreRowModel, TableMeta, useReactTable } from '@tanstack/react-table';
 
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useEffect, useState } from 'react';
@@ -7,19 +7,6 @@ import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Spinner } from '@/components/spinner';
-
-declare module '@tanstack/react-table' {
-    interface TableMeta<TData extends RowData> {
-        updateData: (rowIndex: number, columnId: string, value: unknown) => void;
-        addRowTitle: string;
-        addRow: () => void;
-        removeRow: (rowIndex: number) => void;
-        selectedBrand?: (rowIndex: number) => void;
-        selectedSubDepartmentPool?: (rowIndex: number) => void;
-        selectedDepartment?: (rowIndex: number) => void;
-        selectedSubDepartment?: (rowIndex: number) => void;
-    }
-}
 
 const defaultColumn: Partial<ColumnDef<any>> = {
     cell: ({ getValue, row: { index }, column: { id }, table }) => {

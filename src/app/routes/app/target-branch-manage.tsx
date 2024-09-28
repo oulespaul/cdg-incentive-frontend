@@ -5,11 +5,11 @@ import FilterSelect from '@/components/select';
 import { TargetBranchTabs } from '@/features/target-branch/components/TargetBranchTabs';
 import { formatThaiCurrency } from '@/lib/number-utils';
 import _ from 'lodash';
-import { useTargetBranchManage } from '@/features/target-branch/api/use-target-branch-manage';
 import { TimelineLayout } from '@/components/timeline/timeline-layout';
 import { useTargetBranchStore } from '@/features/target-branch/api/use-target-branch-store';
 import { getStatusColorClass } from '@/lib/status-color-utils';
 import { cn } from '@/lib/utils';
+import { useTargetBranchManage } from '@/features/target-branch/hooks/use-target-branch-manage';
 
 export const TargetBranchManagePage = () => {
     const {
@@ -20,6 +20,7 @@ export const TargetBranchManagePage = () => {
         targetCommission,
         onSaveTargetHandler,
         onCancelTargetHandler,
+        isEditMode,
     } = useTargetBranchManage();
     const { targetWorkflow, isTargetBranchLoading } = useTargetBranchStore();
 
@@ -37,12 +38,14 @@ export const TargetBranchManagePage = () => {
                         options={yearFilterOptions}
                         placeholder="ปี"
                         onChange={value => onFilterSelectHandler('year', value)}
+                        disabled={isEditMode}
                     />
                     <FilterSelect
                         value={filterParams.month}
                         options={monthFilterOptions}
                         placeholder="เดือน"
                         onChange={value => onFilterSelectHandler('month', value)}
+                        disabled={isEditMode}
                     />
                 </div>
                 <div className="flex w-1/3">

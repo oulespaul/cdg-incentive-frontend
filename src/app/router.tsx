@@ -36,7 +36,7 @@ export const createAppRouter = () =>
                     },
                 },
                 {
-                    path: 'target-branch/create',
+                    path: 'target-branch/manage/:year?/:month?',
                     lazy: async () => {
                         const { TargetBranchManagePage } = await import('./routes/app/target-branch-manage');
                         return { Component: TargetBranchManagePage };

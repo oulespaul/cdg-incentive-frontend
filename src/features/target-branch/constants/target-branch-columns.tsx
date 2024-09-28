@@ -1,9 +1,10 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { DataTableColumnHeader } from '../../../components/data-table/ColumnHeader';
-import { Button } from '@/components/ui/button';
-import { Ellipsis } from 'lucide-react';
 import { formatThaiCurrency } from '@/lib/number-utils';
 import { TargetBranchDetail } from '../api/use-fetch-target-branch-detail-list';
+import TargetBranchActionMenus from '../components/action-menus';
+import { cn } from '@/lib/utils';
+import { getStatusColorClass } from '@/lib/status-color-utils';
 
 export const targetBranchColumns: ColumnDef<TargetBranchDetail>[] = [
     {
@@ -94,7 +95,11 @@ export const targetBranchColumns: ColumnDef<TargetBranchDetail>[] = [
     {
         accessorKey: 'status',
         header: ({ column }) => <DataTableColumnHeader column={column} title="สถานะ" className="text-center" />,
-        cell: ({ row }) => <div className="text-blue-600 font-bold text-center">{row.getValue('status')}</div>,
+        cell: ({ row }) => (
+            <div className={cn('font-bold text-center', getStatusColorClass(row.getValue('status'), 'text'))}>
+                {row.getValue('status')}
+            </div>
+        ),
         size: 200,
         enableSorting: false,
         enableHiding: false,
@@ -102,11 +107,9 @@ export const targetBranchColumns: ColumnDef<TargetBranchDetail>[] = [
     {
         accessorKey: 'action',
         header: ({ column }) => <DataTableColumnHeader column={column} title="การกระทำ" className="text-center" />,
-        cell: () => (
-            <Button variant="ghost" size="sm">
-                <Ellipsis />
-            </Button>
-        ),
+        cell: ({ row }) => {
+            return <TargetBranchActionMenus targetBranchDetail={row.original} />;
+        },
         size: 200,
         enableSorting: false,
         enableHiding: false,
