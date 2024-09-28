@@ -8,7 +8,7 @@ Timeline.displayName = 'Timeline';
 
 const TimelineItem = React.forwardRef<HTMLLIElement, React.LiHTMLAttributes<HTMLLIElement>>(
     ({ className, ...props }, ref) => (
-        <li ref={ref} className={cn('relative flex flex-col p-6 pt-0 [&>*]:mb-3', className)} {...props} />
+        <li ref={ref} className={cn('relative flex flex-col p-4 pt-0 [&>*]:mb-3', className)} {...props} />
     ),
 );
 TimelineItem.displayName = 'TimelineItem';
@@ -32,7 +32,7 @@ const TimelineConnector = React.forwardRef<HTMLDivElement, React.HTMLAttributes<
         <div
             ref={ref}
             className={cn(
-                'absolute top-[5px] left-[30px] -translate-x-1/2 translate-y-2 h-full w-px bg-primary',
+                'absolute top-[15px] left-[28px] -translate-x-1/2 translate-y-2 h-2/3 w-px bg-gray-300 mt-2',
                 className,
             )}
             {...props}

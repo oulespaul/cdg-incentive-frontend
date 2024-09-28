@@ -20,7 +20,7 @@ const TargetDSMSMMList: React.FC<TargetDSMSMMListProps> = ({ smmRowIndex }) => {
     const [dialogsOpen, setDialogsOpen] = useState({ department: false, subDepartment: false });
     const [currentRowIndex, setCurrentRowIndex] = useState<number>(0);
 
-    const { targetCommission, targetSMMDSMList, setTargetSMMDSMList } = useTargetBranchStore();
+    const { targetCommission, targetSMMDSMList, setTargetSMMDSMList, isTargetBranchLoading } = useTargetBranchStore();
     const currentDepartmentId = targetSMMDSMList[smmRowIndex]?.targetDSMList[currentRowIndex]?.department?.id;
     const { data: departmentList } = useFetchDepartment();
     const { data: subDepartmentList, refetch: refetchSubDepartmentList } = useFetchSubDepartment({
@@ -131,6 +131,7 @@ const TargetDSMSMMList: React.FC<TargetDSMSMMListProps> = ({ smmRowIndex }) => {
                 }
                 isCanAddRow={!_.isEmpty(targetCommission)}
                 className="max-h-[300px]"
+                isLoading={isTargetBranchLoading}
                 meta={{
                     updateData,
                     addRowTitle: 'เพิ่มพนักงาน DSM',

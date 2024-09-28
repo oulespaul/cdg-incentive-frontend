@@ -26,6 +26,7 @@ export const TargetBranchTabs = () => {
                     Summary
                 </TabsTrigger>
             </TabsList>
+
             <TabsContent value="target-in-house">
                 <TargetInHouseTabContent />
             </TabsContent>

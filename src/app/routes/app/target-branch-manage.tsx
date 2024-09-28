@@ -6,7 +6,10 @@ import { TargetBranchTabs } from '@/features/target-branch/components/TargetBran
 import { formatThaiCurrency } from '@/lib/number-utils';
 import _ from 'lodash';
 import { useTargetBranchManage } from '@/features/target-branch/api/use-target-branch-manage';
-// import { timelineData, TimelineLayout } from '@/components/timeline/timeline-layout';
+import { TimelineLayout } from '@/components/timeline/timeline-layout';
+import { useTargetBranchStore } from '@/features/target-branch/api/use-target-branch-store';
+import { getStatusColorClass } from '@/lib/status-color-utils';
+import { cn } from '@/lib/utils';
 
 export const TargetBranchManagePage = () => {
     const {
@@ -18,6 +21,7 @@ export const TargetBranchManagePage = () => {
         onSaveTargetHandler,
         onCancelTargetHandler,
     } = useTargetBranchManage();
+    const { targetWorkflow, isTargetBranchLoading } = useTargetBranchStore();
 
     return (
         <div className="flex flex-col">
@@ -73,12 +77,24 @@ export const TargetBranchManagePage = () => {
                     </div>
                 </div>
                 <div className="w-1/5">
-                    <Card className="p-4 text-start">
-                        <h1 className="text-lg font-medium mb-4 text-end">
-                            สถานะ: {!_.isEmpty(targetCommission) && <span className="text-blue-500">New</span>}
-                        </h1>
-                        {/* <TimelineLayout items={timelineData} /> */}
-                    </Card>
+                    {!_.isEmpty(targetCommission) && targetWorkflow && !isTargetBranchLoading && (
+                        <Card className="p-4">
+                            <div className="flex text-lg justify-end mb-4 align-middle">
+                                <h1 className="mr-2">สถานะ:</h1>
+
+                                <h1
+                                    className={cn(
+                                        'font-bold',
+                                        getStatusColorClass(targetWorkflow.status || 'Default', 'text'),
+                                    )}
+                                >
+                                    {targetWorkflow.status}
+                                </h1>
+                            </div>
+
+                            <TimelineLayout targetWorkflow={targetWorkflow} />
+                        </Card>
+                    )}
                 </div>
             </div>
         </div>

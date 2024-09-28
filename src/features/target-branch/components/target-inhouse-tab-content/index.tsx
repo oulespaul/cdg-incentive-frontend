@@ -13,7 +13,7 @@ const TargetInHouseTabContent = () => {
     const [brandDialogOpen, setBrandDialogOpen] = useState(false);
     const [currentRowIndex, setCurrentRowIndex] = useState<number | null>(null);
 
-    const { targetCommission, targetInHouseList, setTargetInHouseList } = useTargetBranchStore();
+    const { targetCommission, targetInHouseList, setTargetInHouseList, isTargetBranchLoading } = useTargetBranchStore();
 
     const { data: brandList } = useFetchBrand();
 
@@ -63,6 +63,7 @@ const TargetInHouseTabContent = () => {
                 columns={targetInHouseColumns}
                 data={targetInHouseList.map((target, index) => ({ ...target, id: index + 1 })) ?? []}
                 isCanAddRow={!_.isEmpty(targetCommission)}
+                isLoading={isTargetBranchLoading}
                 meta={{
                     updateData: (rowIndex, columnId, value) => {
                         setTargetInHouseList(old =>

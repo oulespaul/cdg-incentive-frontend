@@ -6,6 +6,7 @@ import CurrencyInput from 'react-currency-input-field';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Spinner } from '@/components/spinner';
 
 declare module '@tanstack/react-table' {
     interface TableMeta<TData extends RowData> {
@@ -37,8 +38,6 @@ const defaultColumn: Partial<ColumnDef<any>> = {
             <CurrencyInput
                 id="input-example"
                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                placeholder="Please enter a number"
-                defaultValue={1000}
                 value={value as string}
                 decimalsLimit={2}
                 onValueChange={value => setValue(value)}
@@ -54,6 +53,7 @@ interface TargetBranchDataTableProps<TData, TValue> {
     meta?: TableMeta<any> | undefined;
     isCanAddRow?: boolean;
     className?: string | undefined;
+    isLoading: boolean;
 }
 
 export function TargetBranchDataTable<TData, TValue>({
@@ -62,6 +62,7 @@ export function TargetBranchDataTable<TData, TValue>({
     meta,
     isCanAddRow,
     className,
+    isLoading,
 }: TargetBranchDataTableProps<TData, TValue>) {
     const table = useReactTable({
         data,
@@ -89,38 +90,52 @@ export function TargetBranchDataTable<TData, TValue>({
                         </TableRow>
                     ))}
                 </TableHeader>
+
                 <TableBody>
-                    {table.getRowModel().rows?.length ? (
-                        table.getRowModel().rows.map((row, index) => (
-                            <TableRow
-                                key={row.id}
-                                data-state={row.getIsSelected() && 'selected'}
-                                className={`${index % 2 === 0 ? 'bg-[#f3f8fc]' : ''}`}
-                            >
-                                {row.getVisibleCells().map(cell => (
-                                    <TableCell key={cell.id}>
-                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                    </TableCell>
-                                ))}
-                            </TableRow>
-                        ))
-                    ) : (
+                    {isLoading ? (
                         <TableRow>
                             <TableCell colSpan={columns.length} className="h-24 text-center">
-                                ไม่พบข้อมูล
+                                <div className="flex justify-center">
+                                    <Spinner className="text-primaryLight" />
+                                </div>
                             </TableCell>
                         </TableRow>
+                    ) : (
+                        <>
+                            {table.getRowModel().rows?.length ? (
+                                table.getRowModel().rows.map((row, index) => (
+                                    <TableRow
+                                        key={row.id}
+                                        data-state={row.getIsSelected() && 'selected'}
+                                        className={`${index % 2 === 0 ? 'bg-[#f3f8fc]' : ''}`}
+                                    >
+                                        {row.getVisibleCells().map(cell => (
+                                            <TableCell key={cell.id}>
+                                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                            </TableCell>
+                                        ))}
+                                    </TableRow>
+                                ))
+                            ) : (
+                                <TableRow>
+                                    <TableCell colSpan={columns.length} className="h-24 text-center">
+                                        ไม่พบข้อมูล
+                                    </TableCell>
+                                </TableRow>
+                            )}
+                            {isCanAddRow && meta?.addRow ? (
+                                <TableRow>
+                                    <TableCell colSpan={columns.length} className="text-start">
+                                        <Button onClick={meta.addRow} variant="success">
+                                            <Plus className="mr-2" /> {meta?.addRowTitle}
+                                        </Button>
+                                    </TableCell>
+                                </TableRow>
+                            ) : null}
+                        </>
                     )}
-                    {isCanAddRow && meta?.addRow ? (
-                        <TableRow>
-                            <TableCell colSpan={columns.length} className="text-start">
-                                <Button onClick={meta.addRow} variant="success">
-                                    <Plus className="mr-2" /> {meta?.addRowTitle}
-                                </Button>
-                            </TableCell>
-                        </TableRow>
-                    ) : null}
                 </TableBody>
+
                 <TableFooter>
                     {table.getFooterGroups().map(footerGroup => (
                         <TableRow key={footerGroup.id}>

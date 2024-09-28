@@ -6,25 +6,59 @@ import { TargetSMMDSM } from '../components/target-dmm-dsm-smm-tab-content/const
 import { TargetDMM } from '../components/target-dmm-dsm-smm-tab-content/constants/target-dmm-columns';
 import { TargetBranchSummary } from '../components/target-branch-summary';
 import { sumAttribute, sumNestedAttribute } from '@/lib/number-utils';
+import { Status } from '@/lib/status-color-utils';
 
+export interface TargetBranchWorkflow {
+    status: Status | undefined;
+    requestedAt: Date | undefined;
+    requestedBy: string | undefined;
+    approvedAt: Date | undefined;
+    approvedBy: string | undefined;
+    rejectedAt: Date | undefined;
+    rejectedBy: string | undefined;
+    rejectedReason: string | undefined;
+    calculatedAt: Date | undefined;
+    calculatedBy: string | undefined;
+    createdAt: Date | undefined;
+    createdBy: string | undefined;
+}
 interface TargetBranchState {
     currentBranchId: number | undefined;
+    targetWorkflow: TargetBranchWorkflow | undefined;
     targetCommission: TargetCommission | undefined;
     targetInHouseList: TargetInHouse[];
     targetDeptList: TargetDept[];
     targetSMMDSMList: TargetSMMDSM[];
     targetDMMList: TargetDMM[];
     targetSummary: () => TargetBranchSummary;
+    isTargetBranchLoading: boolean;
     setCurrentBranchId: (branchId: number) => void;
     setTargetCommission: (commission?: TargetCommission) => void;
     setTargetInHouseList: (updateFn: (prevState: TargetInHouse[]) => TargetInHouse[]) => void;
     setTargetDeptList: (updateFn: (prevState: TargetDept[]) => TargetDept[]) => void;
     setTargetSMMDSMList: (updateFn: (prevState: TargetSMMDSM[]) => TargetSMMDSM[]) => void;
     setTargetDMMList: (updateFn: (prevState: TargetDMM[]) => TargetDMM[]) => void;
+    setTargetWorkflow: (targetWorkflow?: TargetBranchWorkflow) => void;
+    resetState: () => void;
+    setIsTargetBranchLoading: (isLoading: boolean) => void;
 }
 
 export const useTargetBranchStore = create<TargetBranchState>((set, get) => ({
     currentBranchId: 1,
+    targetWorkflow: {
+        status: undefined,
+        requestedAt: undefined,
+        requestedBy: undefined,
+        approvedAt: undefined,
+        approvedBy: undefined,
+        rejectedAt: undefined,
+        rejectedBy: undefined,
+        rejectedReason: undefined,
+        calculatedAt: undefined,
+        calculatedBy: undefined,
+        createdAt: undefined,
+        createdBy: undefined,
+    },
     targetCommission: undefined,
     targetInHouseList: [],
     targetDeptList: [],
@@ -62,7 +96,7 @@ export const useTargetBranchStore = create<TargetBranchState>((set, get) => ({
             totalGoalIDLastYear: totalGoalIDLastYearInhouse + totalGoalIDLastYearDept,
         };
     },
-
+    isTargetBranchLoading: false,
     setCurrentBranchId: (branchId: number) => set({ currentBranchId: branchId }),
     setTargetCommission: (targetCommission?: TargetCommission) => set({ targetCommission }),
     setTargetInHouseList: (updateFn: (prevState: TargetInHouse[]) => TargetInHouse[]) => {
@@ -85,4 +119,37 @@ export const useTargetBranchStore = create<TargetBranchState>((set, get) => ({
             return { targetDMMList: updateFn(state.targetDMMList) };
         });
     },
+    setTargetWorkflow: (targetWorkflow?: TargetBranchWorkflow) => set({ targetWorkflow }),
+    resetState: () => {
+        return set(() => {
+            return {
+                targetWorkflow: {
+                    status: undefined,
+                    requestedAt: undefined,
+                    requestedBy: undefined,
+                    approvedAt: undefined,
+                    approvedBy: undefined,
+                    rejectedAt: undefined,
+                    rejectedBy: undefined,
+                    rejectedReason: undefined,
+                    calculatedAt: undefined,
+                    calculatedBy: undefined,
+                    createdAt: undefined,
+                    createdBy: undefined,
+                },
+                targetCommission: undefined,
+                targetInHouseList: [],
+                targetDeptList: [],
+                targetSMMDSMList: [
+                    {
+                        id: undefined,
+                        smmId: '',
+                        targetDSMList: [],
+                    },
+                ],
+                targetDMMList: [],
+            };
+        });
+    },
+    setIsTargetBranchLoading: (isTargetBranchLoading: boolean) => set({ isTargetBranchLoading }),
 }));

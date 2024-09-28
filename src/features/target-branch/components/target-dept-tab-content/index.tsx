@@ -12,7 +12,7 @@ const TargetDeptTabContent = () => {
     const [subDepartmentDialogOpen, setSubDepartmentDialogOpen] = useState(false);
     const [currentRowIndex, setCurrentRowIndex] = useState<number | null>(null);
 
-    const { targetCommission, targetDeptList, setTargetDeptList } = useTargetBranchStore();
+    const { targetCommission, targetDeptList, setTargetDeptList, isTargetBranchLoading } = useTargetBranchStore();
 
     const { data: subDeparmentList } = useFetchSubDepartment({});
 
@@ -46,6 +46,7 @@ const TargetDeptTabContent = () => {
                 columns={targetDeptColumns}
                 data={targetDeptList.map((target, index) => ({ ...target, id: index + 1 })) ?? []}
                 isCanAddRow={!_.isEmpty(targetCommission)}
+                isLoading={isTargetBranchLoading}
                 meta={{
                     updateData: (rowIndex, columnId, value) => {
                         setTargetDeptList(old =>

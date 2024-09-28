@@ -1,6 +1,7 @@
 import { Separator } from '@/components/ui/separator';
-import { formatThaiCurrency } from '@/lib/number-utils';
+import { formatThaiCurrency, handleFalsyOrInfinite } from '@/lib/number-utils';
 import { useTargetBranchStore } from '../../api/use-target-branch-store';
+import { Spinner } from '@/components/spinner';
 
 export interface TargetBranchSummary {
     totalCommission: number;
@@ -13,6 +14,8 @@ const TargetBranchSummaryTabContent = () => {
     const { totalCommission, totalActualSalesLastYear, totalGoalID, totalGoalIDLastYear } = useTargetBranchStore(
         state => state.targetSummary(),
     );
+
+    const { isTargetBranchLoading } = useTargetBranchStore();
 
     const changeCommissionTotalPercentage =
         ((totalCommission - totalActualSalesLastYear) / totalActualSalesLastYear) * 100 || 0;
@@ -45,7 +48,7 @@ const TargetBranchSummaryTabContent = () => {
             description: '% Change Commission Total',
             total: (
                 <p className={`${changeCommissionTotalPercentage < 0 ? 'text-red-500' : ''}`}>
-                    {formatThaiCurrency(changeCommissionTotalPercentage, ' %')}
+                    {formatThaiCurrency(handleFalsyOrInfinite(changeCommissionTotalPercentage, 0), ' %')}
                 </p>
             ),
         },
@@ -54,11 +57,19 @@ const TargetBranchSummaryTabContent = () => {
             description: '% Change ID Total',
             total: (
                 <p className={`${changeIDTotalPercentage < 0 ? 'text-red-500' : ''}`}>
-                    {formatThaiCurrency(changeIDTotalPercentage, ' %')}
+                    {formatThaiCurrency(handleFalsyOrInfinite(changeIDTotalPercentage, 0), ' %')}
                 </p>
             ),
         },
     ];
+
+    if (isTargetBranchLoading) {
+        return (
+            <div className="flex justify-center mt-32">
+                <Spinner className="text-primaryLight" />
+            </div>
+        );
+    }
 
     return (
         <div className="flex flex-col justify-start p-4">

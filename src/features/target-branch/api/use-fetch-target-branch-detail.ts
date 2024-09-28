@@ -1,23 +1,26 @@
 import { TargetCommission } from '@/features/target-commission/models/target-commission-response';
 import { apiClient } from '@/lib/api-client';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { TargetInHouse } from '../components/target-inhouse-tab-content/constants/target-in-house-columns';
 import { TargetDept } from '../components/target-dept-tab-content/constants/target-dept-columns';
 import { TargetSMMDSM } from '../components/target-dmm-dsm-smm-tab-content/constants/target-dsm-smm-columns';
 import { TargetDMM } from '../components/target-dmm-dsm-smm-tab-content/constants/target-dmm-columns';
+import { Status } from '@/lib/status-color-utils';
 
 export interface TargetBranch {
     id: number;
-    status: string;
-    requestedAt: string;
+    status: Status;
+    requestedAt: Date;
     requestedBy: string;
-    approvedAt: string;
+    approvedAt: Date;
     approvedBy: string;
-    rejectedAt: string;
+    rejectedAt: Date;
     rejectedBy: string;
     rejectedReason: string;
-    calculatedAt: string;
+    calculatedAt: Date;
     calculatedBy: string;
+    createdAt: Date;
+    createdBy: string;
     targetCommission: TargetCommission;
     targetInHouseList: TargetInHouse[];
     targetDeptList: TargetDept[];
@@ -25,18 +28,18 @@ export interface TargetBranch {
     targetDMMList: TargetDMM[];
 }
 
-const fetchTargetBranchDetail = async (targetCommissionId?: number) => {
-    if (!targetCommissionId) return { data: null };
-    return await apiClient.get(`target-branch/target-commission/${targetCommissionId}`);
+const fetchTargetBranchDetail = async (targetCommissionId: number) => {
+    const { data } = await apiClient.get(`target-branch/target-commission/${targetCommissionId}`);
+    return data;
 };
 
-export const useFetchTargetBranchDetail = (targetCommissionId?: number) => {
-    return useQuery<TargetBranch, number>({
-        queryFn: async () => {
-            const { data } = await fetchTargetBranchDetail(targetCommissionId);
-            return data;
-        },
-        queryKey: ['target-branch-detail'],
-        enabled: false,
+interface UseFetchTargetBranchDetailProps {
+    onSuccess: (data: any) => void;
+}
+
+export const useFetchTargetBranchDetail = ({ onSuccess }: UseFetchTargetBranchDetailProps) => {
+    return useMutation({
+        mutationFn: (targetCommissionId: number) => fetchTargetBranchDetail(targetCommissionId),
+        onSuccess,
     });
 };

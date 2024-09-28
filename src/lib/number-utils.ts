@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 export const formatThaiCurrency = (amount: number, suffix: string = ''): string => {
     const formattedNumber = new Intl.NumberFormat('th-TH', {
         style: 'currency',
@@ -24,4 +26,12 @@ export const sumNestedAttribute = (list: any[], nestedListKey: string, attribute
             )
         );
     }, 0);
+};
+
+export const handleFalsyOrInfinite = (value: number, defaultValue: number) => {
+    if (!_.isFinite(value) || _.defaultTo(value, null) === null) {
+        return defaultValue;
+    }
+
+    return value;
 };

@@ -44,17 +44,45 @@ export const useTargetBranchManage = () => {
         setTargetSMMDSMList,
         targetDMMList,
         setTargetDMMList,
+        setTargetWorkflow,
+        resetState,
+        setIsTargetBranchLoading,
     } = useTargetBranchStore();
 
     const { data: yearFilterOptions } = useFetchTargetCommissionYearFilter({ branchId: currentBranchId });
     const { data: monthFilterOptions } = useFetchTargetCommissionMonthFilter({ branchId: currentBranchId });
-
     const { refetch: fetchTargetCommissionDetail } = useFetchTargetCommissionDetail({
         branchId: currentBranchId,
         ...filterParams,
     });
 
-    const { refetch: fetchTargetBranchDetail } = useFetchTargetBranchDetail(targetCommission?.id);
+    const onFetchTargetBranchDetailSuccess = (targetBranchDetail: any) => {
+        if (targetBranchDetail) {
+            setTargetInHouseList(() => targetBranchDetail.targetInHouseList);
+            setTargetDeptList(() => targetBranchDetail.targetDeptList);
+            setTargetSMMDSMList(() => targetBranchDetail.targetSMMDSMList);
+            setTargetDMMList(() => targetBranchDetail.targetDMMList);
+            setTargetWorkflow({
+                status: targetBranchDetail.status,
+                requestedAt: targetBranchDetail.requestedAt,
+                requestedBy: targetBranchDetail.requestedBy,
+                approvedAt: targetBranchDetail.approvedAt,
+                approvedBy: targetBranchDetail.approvedBy,
+                rejectedAt: targetBranchDetail.rejectedAt,
+                rejectedBy: targetBranchDetail.rejectedBy,
+                rejectedReason: targetBranchDetail.rejectedReason,
+                calculatedAt: targetBranchDetail.calculatedAt,
+                calculatedBy: targetBranchDetail.calculatedBy,
+                createdAt: targetBranchDetail.createdAt,
+                createdBy: targetBranchDetail.createdBy,
+            });
+        }
+        setIsTargetBranchLoading(false);
+    };
+
+    const { mutate: fetchTargetBranchDetail } = useFetchTargetBranchDetail({
+        onSuccess: onFetchTargetBranchDetailSuccess,
+    });
 
     const navigate = useNavigate();
 
@@ -66,11 +94,7 @@ export const useTargetBranchManage = () => {
             </div>,
             { position: 'bottom-right' },
         );
-        setTargetInHouseList(() => []);
-        setTargetDeptList(() => []);
-        setTargetSMMDSMList(() => []);
-        setTargetDMMList(() => []);
-        setTargetCommission(undefined);
+        resetState();
         navigate('/app/target-branch');
     };
 
@@ -92,35 +116,20 @@ export const useTargetBranchManage = () => {
         setTargetCommission(undefined);
         if (currentBranchId && filterParams.year && filterParams.month) {
             fetchTargetCommissionDetail().then(result => {
+                setTargetInHouseList(() => []);
+                setTargetDeptList(() => []);
+                setTargetSMMDSMList(() => []);
+                setTargetDMMList(() => []);
+                setTargetWorkflow(undefined);
+
                 if (result.data) {
                     setTargetCommission(result.data);
+                    setIsTargetBranchLoading(true);
+                    fetchTargetBranchDetail(result.data.id);
                 }
             });
         }
     }, [currentBranchId, filterParams.year, filterParams.month, fetchTargetBranchDetail, setTargetCommission]);
-
-    useEffect(() => {
-        setTargetInHouseList(() => []);
-        setTargetDeptList(() => []);
-        setTargetSMMDSMList(() => []);
-        setTargetDMMList(() => []);
-        if (targetCommission?.id) {
-            fetchTargetBranchDetail().then(result => {
-                if (result.data && result.data.targetInHouseList?.length > 0) {
-                    setTargetInHouseList(() => result.data.targetInHouseList);
-                }
-                if (result.data && result.data.targetDeptList?.length > 0) {
-                    setTargetDeptList(() => result.data.targetDeptList);
-                }
-                if (result.data && result.data.targetSMMDSMList?.length > 0) {
-                    setTargetSMMDSMList(() => result.data.targetSMMDSMList);
-                }
-                if (result.data && result.data.targetDMMList?.length > 0) {
-                    setTargetDMMList(() => result.data.targetDMMList);
-                }
-            });
-        }
-    }, [targetCommission?.id]);
 
     const onFilterSelectHandler = (key: string, value: string) => {
         setFilterParams(prevFilters => ({
@@ -222,19 +231,11 @@ export const useTargetBranchManage = () => {
                     targetSMMDSMList: targetSMMDSMList.map(transformToTargetSMMDSMListRequestFormat),
                     targetDMMList: targetDMMList.map(transformToTargetDMMListRequestFormat),
                 });
-                setTargetInHouseList(() => []);
-                setTargetDeptList(() => []);
-                setTargetSMMDSMList(() => []);
-                setTargetDMMList(() => []);
-                setTargetCommission(undefined);
+                resetState();
                 closeModal();
             },
             onSecondaryActionClick: () => {
-                setTargetInHouseList(() => []);
-                setTargetDeptList(() => []);
-                setTargetSMMDSMList(() => []);
-                setTargetDMMList(() => []);
-                setTargetCommission(undefined);
+                resetState();
                 closeModal();
                 navigate('/app/target-branch');
             },

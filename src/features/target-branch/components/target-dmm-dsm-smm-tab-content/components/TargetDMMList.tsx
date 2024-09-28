@@ -14,7 +14,7 @@ const TargetDMMList = () => {
     const [dialogsOpen, setDialogsOpen] = useState({ department: false, subDepartment: false });
     const [currentRowIndex, setCurrentRowIndex] = useState<number>(0);
 
-    const { targetCommission, targetDMMList, setTargetDMMList } = useTargetBranchStore();
+    const { targetCommission, targetDMMList, setTargetDMMList, isTargetBranchLoading } = useTargetBranchStore();
     const currentDepartmentId = targetDMMList[currentRowIndex]?.department?.id;
     const { data: departmentList } = useFetchDepartment();
     const { data: subDepartmentList, refetch: refetchSubDepartmentList } = useFetchSubDepartment({
@@ -95,6 +95,7 @@ const TargetDMMList = () => {
                     })) ?? []
                 }
                 isCanAddRow={!_.isEmpty(targetCommission)}
+                isLoading={isTargetBranchLoading}
                 className="max-h-[300px]"
                 meta={{
                     updateData,
