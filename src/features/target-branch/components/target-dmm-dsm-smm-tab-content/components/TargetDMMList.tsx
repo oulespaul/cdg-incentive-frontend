@@ -10,7 +10,11 @@ import SubDepartmentDialog from '../../sub-department-dialog';
 import { TargetBranchDataTable } from '../../target-branch-data-table';
 import { TargetDMM, targetDMMColumns } from '../constants/target-dmm-columns';
 
-const TargetDMMList = () => {
+interface TargetDMMListProps {
+    isViewMode: boolean;
+}
+
+const TargetDMMList: React.FC<TargetDMMListProps> = ({ isViewMode }) => {
     const [dialogsOpen, setDialogsOpen] = useState({ department: false, subDepartment: false });
     const [currentRowIndex, setCurrentRowIndex] = useState<number>(0);
 
@@ -94,8 +98,9 @@ const TargetDMMList = () => {
                         id: index + 1,
                     })) ?? []
                 }
-                isCanAddRow={!_.isEmpty(targetCommission)}
+                isCanAddRow={!_.isEmpty(targetCommission) && !isViewMode}
                 isLoading={isTargetBranchLoading}
+                columnVisibility={{ action: !isViewMode }}
                 className="max-h-[300px]"
                 meta={{
                     updateData,
@@ -104,6 +109,7 @@ const TargetDMMList = () => {
                     removeRow,
                     selectedDepartment: rowIndex => openDialog('department', rowIndex),
                     selectedSubDepartment: rowIndex => openDialog('subDepartment', rowIndex),
+                    isViewMode,
                 }}
             />
 

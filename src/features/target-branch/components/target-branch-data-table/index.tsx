@@ -1,4 +1,11 @@
-import { ColumnDef, flexRender, getCoreRowModel, TableMeta, useReactTable } from '@tanstack/react-table';
+import {
+    ColumnDef,
+    flexRender,
+    getCoreRowModel,
+    TableMeta,
+    useReactTable,
+    VisibilityState,
+} from '@tanstack/react-table';
 
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useEffect, useState } from 'react';
@@ -8,6 +15,7 @@ import { Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Spinner } from '@/components/spinner';
 import { Input } from '@/components/ui/input';
+import { formatThaiCurrency } from '@/lib/number-utils';
 
 const defaultColumn: Partial<ColumnDef<any>> = {
     cell: ({ getValue, row: { index }, column: { id, columnDef }, table }) => {
@@ -26,14 +34,20 @@ const defaultColumn: Partial<ColumnDef<any>> = {
         const { inputType = 'text' } = columnDef.meta || {};
 
         return inputType === 'currency' ? (
-            <CurrencyInput
-                id={`currency-input-${index}-${id}`}
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                value={value as string}
-                decimalsLimit={2}
-                onValueChange={value => setValue(value)}
-                onBlur={onBlur}
-            />
+            table.options.meta?.isViewMode ? (
+                <p>{formatThaiCurrency(value as number, ' ')}</p>
+            ) : (
+                <CurrencyInput
+                    id={`currency-input-${index}-${id}`}
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    value={value as string}
+                    decimalsLimit={2}
+                    onValueChange={value => setValue(value)}
+                    onBlur={onBlur}
+                />
+            )
+        ) : table.options.meta?.isViewMode ? (
+            <p>{value as string}</p>
         ) : (
             <Input
                 id={`input-${index}-${id}`}
@@ -52,6 +66,7 @@ interface TargetBranchDataTableProps<TData, TValue> {
     isCanAddRow?: boolean;
     className?: string | undefined;
     isLoading: boolean;
+    columnVisibility?: VisibilityState | undefined;
 }
 
 export function TargetBranchDataTable<TData, TValue>({
@@ -61,12 +76,14 @@ export function TargetBranchDataTable<TData, TValue>({
     isCanAddRow,
     className,
     isLoading,
+    columnVisibility,
 }: TargetBranchDataTableProps<TData, TValue>) {
     const table = useReactTable({
         data,
         columns,
         defaultColumn,
         meta,
+        state: { columnVisibility },
         getCoreRowModel: getCoreRowModel(),
     });
 

@@ -8,7 +8,11 @@ import SubDepartmentPoolDialog from '../sub-dept-pool-dialog';
 import { SubDepartment } from '@/features/sub-department/models/sub-department';
 import { useFetchSubDepartment } from '@/features/sub-department/api/use-fetch-sub-department';
 
-const TargetDeptTabContent = () => {
+interface TargetDeptTabContentProps {
+    isViewMode: boolean;
+}
+
+const TargetDeptTabContent: React.FC<TargetDeptTabContentProps> = ({ isViewMode }) => {
     const [subDepartmentDialogOpen, setSubDepartmentDialogOpen] = useState(false);
     const [currentRowIndex, setCurrentRowIndex] = useState<number | null>(null);
 
@@ -45,8 +49,9 @@ const TargetDeptTabContent = () => {
             <TargetBranchDataTable
                 columns={targetDeptColumns}
                 data={targetDeptList.map((target, index) => ({ ...target, id: index + 1 })) ?? []}
-                isCanAddRow={!_.isEmpty(targetCommission)}
+                isCanAddRow={!_.isEmpty(targetCommission) && !isViewMode}
                 isLoading={isTargetBranchLoading}
+                columnVisibility={{ action: !isViewMode }}
                 meta={{
                     updateData: (rowIndex, columnId, value) => {
                         setTargetDeptList(old =>
@@ -78,6 +83,7 @@ const TargetDeptTabContent = () => {
                         );
                     },
                     selectedSubDepartmentPool: openSubDepartmentDialog,
+                    isViewMode,
                 }}
             />
 

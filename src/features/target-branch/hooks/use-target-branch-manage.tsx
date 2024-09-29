@@ -25,9 +25,11 @@ import { TargetDept } from '../components/target-dept-tab-content/constants/targ
 import { TargetSMMDSM } from '../components/target-dmm-dsm-smm-tab-content/constants/target-dsm-smm-columns';
 import { TargetDMM } from '../components/target-dmm-dsm-smm-tab-content/constants/target-dmm-columns';
 import _ from 'lodash';
+import { useFetchTargetBranchDetailList } from '../api/use-fetch-target-branch-detail-list';
+import { useDeleteTargetBranch } from '../api/use-delete-target-branch';
 
 export const useTargetBranchManage = () => {
-    const { year, month } = useParams();
+    const { year, month, mode } = useParams();
     const [filterParams, setFilterParams] = useState<TargetCommissionDetailFilterParams>({ year, month });
     const {
         currentBranchId,
@@ -72,6 +74,7 @@ export const useTargetBranchManage = () => {
             });
             setTargetDMMList(() => targetBranchDetail.targetDMMList);
             setTargetWorkflow({
+                id: targetBranchDetail.id,
                 status: targetBranchDetail.status,
                 requestedAt: targetBranchDetail.requestedAt,
                 requestedBy: targetBranchDetail.requestedBy,
@@ -89,6 +92,7 @@ export const useTargetBranchManage = () => {
         setIsTargetBranchLoading(false);
     };
 
+    const { refetch: refetchTargetBranch } = useFetchTargetBranchDetailList();
     const { mutate: fetchTargetBranchDetail } = useFetchTargetBranchDetail({
         onSuccess: onFetchTargetBranchDetailSuccess,
     });
@@ -118,6 +122,32 @@ export const useTargetBranchManage = () => {
     };
 
     const { mutate: createTargetBranch } = useCreateTargetBranch({ onCreateTargetSuccess, onCreateTargetError });
+
+    const onDeleteTargetBranchSuccess = () => {
+        toast.success(
+            <div className="flex flex-col text-start">
+                <p className="text-sm font-bold text-green-400">ลบข้อมูลสำเร็จ</p>
+                <p className="mt-2 text-xs">ลบข้อมูลเป้าสาขาเรียบร้อย</p>
+            </div>,
+            { position: 'bottom-right' },
+        );
+        refetchTargetBranch();
+    };
+
+    const onDeleteTargetBranchError = () => {
+        toast.error(
+            <div className="flex flex-col text-start">
+                <p className="text-sm font-bold text-ref-400">ลบข้อมูลไม่สำเร็จ</p>
+                <p className="mt-2 text-xs">ไม่สามารถลบข้อมูลได้ กรุณาลองใหม่อีกครั้ง</p>
+            </div>,
+            { position: 'bottom-right' },
+        );
+    };
+
+    const { mutate: deleteTargetBranch } = useDeleteTargetBranch({
+        onSuccess: onDeleteTargetBranchSuccess,
+        onError: onDeleteTargetBranchError,
+    });
 
     const { openModal, closeModal } = useModalContext();
 
@@ -262,6 +292,25 @@ export const useTargetBranchManage = () => {
         JSON.stringify(targetDMMList),
     ]);
 
+    const deleteTargetBranchHandler = (targetbranchId: number) => {
+        openModal({
+            title: (
+                <div className="flex items-center gap-2">
+                    <InfoCircledIcon className="w-6 h-6" color="orange" /> <span>ยืนยันลบเป้าสาขา ?</span>
+                </div>
+            ),
+            content: 'เมื่อลบข้อมูลเป้าหมาย จะไม่สามารถกู้คืนได้',
+            confirmTitle: 'ใช่, ลบ',
+            confirmClassName: 'bg-red-500',
+            showCancelButton: true,
+            onConfirm: () => {
+                deleteTargetBranch(targetbranchId);
+                closeModal();
+                navigate('/app/target-branch');
+            },
+        });
+    };
+
     return {
         filterParams,
         yearFilterOptions,
@@ -270,6 +319,8 @@ export const useTargetBranchManage = () => {
         onFilterSelectHandler,
         onSaveTargetHandler,
         onCancelTargetHandler,
-        isEditMode: !_.isUndefined(year) && !_.isUndefined(month),
+        deleteTargetBranchHandler,
+        isEditMode: mode === 'edit',
+        isViewMode: mode === 'view',
     };
 };

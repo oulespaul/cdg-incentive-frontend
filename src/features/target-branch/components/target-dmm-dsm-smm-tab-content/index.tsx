@@ -8,16 +8,20 @@ import { TargetSMMDSM } from './constants/target-dsm-smm-columns';
 import { Separator } from '@/components/ui/separator';
 import TargetDMMList from './components/TargetDMMList';
 
-const TargetDMMDSMSMMTabContent = () => {
+interface TargetDMMDSMSMMTabContentProps {
+    isViewMode: boolean;
+}
+
+const TargetDMMDSMSMMTabContent: React.FC<TargetDMMDSMSMMTabContentProps> = ({ isViewMode }) => {
     const { targetCommission, targetSMMDSMList, setTargetSMMDSMList } = useTargetBranchStore();
 
     return (
         <Card className="p-4">
             {targetSMMDSMList.map((targetSMMDSM, index) => (
                 <div className="mb-2" key={`${targetSMMDSM.id}-${index}`}>
-                    <TargetDSMSMMList smmRowIndex={index} />
+                    <TargetDSMSMMList smmRowIndex={index} isViewMode={isViewMode} />
 
-                    {!_.isEmpty(targetCommission) && index === targetSMMDSMList.length - 1 && (
+                    {!_.isEmpty(targetCommission) && index === targetSMMDSMList.length - 1 && !isViewMode && (
                         <div className="flex mt-2">
                             <Button
                                 onClick={() => {
@@ -39,7 +43,7 @@ const TargetDMMDSMSMMTabContent = () => {
             ))}
 
             <div className="mt-2">
-                <TargetDMMList />
+                <TargetDMMList isViewMode={isViewMode} />
             </div>
         </Card>
     );

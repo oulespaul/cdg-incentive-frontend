@@ -34,6 +34,7 @@ declare module '@tanstack/react-table' {
         selectedSubDepartmentPool?: (rowIndex: number) => void;
         selectedDepartment?: (rowIndex: number) => void;
         selectedSubDepartment?: (rowIndex: number) => void;
+        isViewMode?: boolean
     }
 }
 

@@ -10,6 +10,7 @@ import { useTargetBranchStore } from '@/features/target-branch/api/use-target-br
 import { getStatusColorClass } from '@/lib/status-color-utils';
 import { cn } from '@/lib/utils';
 import { useTargetBranchManage } from '@/features/target-branch/hooks/use-target-branch-manage';
+import { useNavigate } from 'react-router-dom';
 
 export const TargetBranchManagePage = () => {
     const {
@@ -21,8 +22,11 @@ export const TargetBranchManagePage = () => {
         onSaveTargetHandler,
         onCancelTargetHandler,
         isEditMode,
+        isViewMode,
+        deleteTargetBranchHandler,
     } = useTargetBranchManage();
     const { targetWorkflow, isTargetBranchLoading } = useTargetBranchStore();
+    const navigate = useNavigate();
 
     return (
         <div className="flex flex-col">
@@ -32,22 +36,40 @@ export const TargetBranchManagePage = () => {
             </div>
 
             <div className="flex mt-2">
-                <div className="flex gap-2 w-1/3">
-                    <FilterSelect
-                        value={filterParams.year}
-                        options={yearFilterOptions}
-                        placeholder="ปี"
-                        onChange={value => onFilterSelectHandler('year', value)}
-                        disabled={isEditMode}
-                    />
-                    <FilterSelect
-                        value={filterParams.month}
-                        options={monthFilterOptions}
-                        placeholder="เดือน"
-                        onChange={value => onFilterSelectHandler('month', value)}
-                        disabled={isEditMode}
-                    />
-                </div>
+                {isViewMode ? (
+                    <div className="flex items-center gap-2 w-1/3">
+                        <Button
+                            variant="outline"
+                            className="text-black"
+                            onClick={() => {
+                                navigate('/app/target-branch');
+                            }}
+                        >
+                            ย้อนกลับ
+                        </Button>
+                        <p className="text-lg font-semibold">เดือนข้อมูล:</p>
+                        <span className="text-primaryLight">
+                            {filterParams.month} {filterParams.year}
+                        </span>
+                    </div>
+                ) : (
+                    <div className="flex gap-2 w-1/3">
+                        <FilterSelect
+                            value={filterParams.year}
+                            options={yearFilterOptions}
+                            placeholder="ปี"
+                            onChange={value => onFilterSelectHandler('year', value)}
+                            disabled={isEditMode}
+                        />
+                        <FilterSelect
+                            value={filterParams.month}
+                            options={monthFilterOptions}
+                            placeholder="เดือน"
+                            onChange={value => onFilterSelectHandler('month', value)}
+                            disabled={isEditMode}
+                        />
+                    </div>
+                )}
                 <div className="flex w-1/3">
                     <p className="text-lg font-medium text-end self-center ml-2">
                         เป้า commission (เป้าสาขา):{' '}
@@ -58,17 +80,41 @@ export const TargetBranchManagePage = () => {
                         )}
                     </p>
                 </div>
-                <div className="flex w-1/3 gap-3 justify-end">
-                    <Button variant="outline" onClick={onCancelTargetHandler}>
-                        ยกเลิก
-                    </Button>
-                    <Button variant="primary" disabled={_.isEmpty(targetCommission)} onClick={onSaveTargetHandler}>
-                        บันทึก
-                    </Button>
-                    <Button variant="success" disabled={_.isEmpty(targetCommission)}>
-                        ส่งคำขออนุมัติ
-                    </Button>
-                </div>
+                {isViewMode ? (
+                    <div className="flex w-1/3 gap-3 justify-end">
+                        <Button
+                            className="bg-amber-500 hover:bg-amber-500/80"
+                            disabled={_.isEmpty(targetCommission)}
+                            onClick={() => {
+                                navigate(`/app/target-branch/manage/${filterParams.year}/${filterParams.month}/edit`);
+                            }}
+                        >
+                            แก้ไข
+                        </Button>
+                        <Button
+                            variant="destructive"
+                            onClick={() => {
+                                if (targetWorkflow?.id) {
+                                    deleteTargetBranchHandler(targetWorkflow.id);
+                                }
+                            }}
+                        >
+                            ลบ
+                        </Button>
+                    </div>
+                ) : (
+                    <div className="flex w-1/3 gap-3 justify-end">
+                        <Button variant="outline" onClick={onCancelTargetHandler}>
+                            ยกเลิก
+                        </Button>
+                        <Button variant="primary" disabled={_.isEmpty(targetCommission)} onClick={onSaveTargetHandler}>
+                            บันทึก
+                        </Button>
+                        <Button variant="success" disabled={_.isEmpty(targetCommission)}>
+                            ส่งคำขออนุมัติ
+                        </Button>
+                    </div>
+                )}
             </div>
 
             <Separator className="my-4" />
@@ -76,7 +122,7 @@ export const TargetBranchManagePage = () => {
             <div className="flex gap-2">
                 <div className="w-4/5">
                     <div className="flex flex-col">
-                        <TargetBranchTabs />
+                        <TargetBranchTabs isViewMode={isViewMode} />
                     </div>
                 </div>
                 <div className="w-1/5">

@@ -9,6 +9,7 @@ import { sumAttribute, sumNestedAttribute } from '@/lib/number-utils';
 import { Status } from '@/lib/status-color-utils';
 
 export interface TargetBranchWorkflow {
+    id: number | undefined;
     status: Status | undefined;
     requestedAt: Date | undefined;
     requestedBy: string | undefined;
@@ -46,6 +47,7 @@ interface TargetBranchState {
 export const useTargetBranchStore = create<TargetBranchState>((set, get) => ({
     currentBranchId: 1,
     targetWorkflow: {
+        id: undefined,
         status: undefined,
         requestedAt: undefined,
         requestedBy: undefined,
@@ -124,6 +126,7 @@ export const useTargetBranchStore = create<TargetBranchState>((set, get) => ({
         return set(() => {
             return {
                 targetWorkflow: {
+                    id: undefined,
                     status: undefined,
                     requestedAt: undefined,
                     requestedBy: undefined,

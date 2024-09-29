@@ -14,9 +14,10 @@ import { TargetDSM, targetDSMSMMColumns } from '../constants/target-dsm-smm-colu
 
 interface TargetDSMSMMListProps {
     smmRowIndex: number;
+    isViewMode: boolean;
 }
 
-const TargetDSMSMMList: React.FC<TargetDSMSMMListProps> = ({ smmRowIndex }) => {
+const TargetDSMSMMList: React.FC<TargetDSMSMMListProps> = ({ smmRowIndex, isViewMode }) => {
     const [dialogsOpen, setDialogsOpen] = useState({ department: false, subDepartment: false });
     const [currentRowIndex, setCurrentRowIndex] = useState<number>(0);
 
@@ -116,8 +117,12 @@ const TargetDSMSMMList: React.FC<TargetDSMSMMListProps> = ({ smmRowIndex }) => {
         <>
             <div className="flex text-start mb-2">
                 <div className="grid w-full max-w-sm items-center gap-1.5">
-                    <Label>รหัสพนักงาน SMM</Label>
-                    <Input id="smm_id" onChange={handleSMMIdChange} value={targetSMMDSMList[smmRowIndex].smmId} />
+                    <Label className="text-gray-500">รหัสพนักงาน SMM</Label>
+                    {isViewMode ? (
+                        targetSMMDSMList[smmRowIndex].smmId
+                    ) : (
+                        <Input id="smm_id" onChange={handleSMMIdChange} value={targetSMMDSMList[smmRowIndex].smmId} />
+                    )}
                 </div>
             </div>
 
@@ -129,9 +134,10 @@ const TargetDSMSMMList: React.FC<TargetDSMSMMListProps> = ({ smmRowIndex }) => {
                         id: index + 1,
                     })) ?? []
                 }
-                isCanAddRow={!_.isEmpty(targetCommission)}
+                isCanAddRow={!_.isEmpty(targetCommission) && !isViewMode}
                 className="max-h-[300px]"
                 isLoading={isTargetBranchLoading}
+                columnVisibility={{ action: !isViewMode }}
                 meta={{
                     updateData,
                     addRowTitle: 'เพิ่มพนักงาน DSM',
@@ -139,6 +145,7 @@ const TargetDSMSMMList: React.FC<TargetDSMSMMListProps> = ({ smmRowIndex }) => {
                     removeRow,
                     selectedDepartment: rowIndex => openDialog('department', rowIndex),
                     selectedSubDepartment: rowIndex => openDialog('subDepartment', rowIndex),
+                    isViewMode,
                 }}
             />
 

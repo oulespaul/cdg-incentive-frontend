@@ -5,7 +5,11 @@ import TargetDeptTabContent from './target-dept-tab-content';
 import TargetDMMDSMSMMTabContent from './target-dmm-dsm-smm-tab-content';
 import TargetBranchSummaryTabContent from './target-branch-summary';
 
-export const TargetBranchTabs = () => {
+interface TargetBranchTabsProps {
+    isViewMode: boolean;
+}
+
+export const TargetBranchTabs: React.FC<TargetBranchTabsProps> = ({ isViewMode }) => {
     return (
         <Tabs defaultValue="target-in-house" className="w-full">
             <TabsList className="grid w-full grid-cols-4 bg-secondary">
@@ -28,13 +32,13 @@ export const TargetBranchTabs = () => {
             </TabsList>
 
             <TabsContent value="target-in-house">
-                <TargetInHouseTabContent />
+                <TargetInHouseTabContent isViewMode={isViewMode} />
             </TabsContent>
             <TabsContent value="target-dept">
-                <TargetDeptTabContent />
+                <TargetDeptTabContent isViewMode={isViewMode} />
             </TabsContent>
             <TabsContent value="target-dmm-dsm-smm">
-                <TargetDMMDSMSMMTabContent />
+                <TargetDMMDSMSMMTabContent isViewMode={isViewMode} />
             </TabsContent>
             <TabsContent value="summary">
                 <TargetBranchSummaryTabContent />

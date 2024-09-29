@@ -9,7 +9,11 @@ import _ from 'lodash';
 import { toast } from 'react-toastify';
 import { useFetchBrand } from '@/features/brand/api/use-fetch-branch';
 
-const TargetInHouseTabContent = () => {
+interface TargetInHouseTabContentProps {
+    isViewMode: boolean;
+}
+
+const TargetInHouseTabContent: React.FC<TargetInHouseTabContentProps> = ({ isViewMode }) => {
     const [brandDialogOpen, setBrandDialogOpen] = useState(false);
     const [currentRowIndex, setCurrentRowIndex] = useState<number | null>(null);
 
@@ -62,8 +66,9 @@ const TargetInHouseTabContent = () => {
             <TargetBranchDataTable
                 columns={targetInHouseColumns}
                 data={targetInHouseList.map((target, index) => ({ ...target, id: index + 1 })) ?? []}
-                isCanAddRow={!_.isEmpty(targetCommission)}
+                isCanAddRow={!_.isEmpty(targetCommission) && !isViewMode}
                 isLoading={isTargetBranchLoading}
+                columnVisibility={{ action: !isViewMode }}
                 meta={{
                     updateData: (rowIndex, columnId, value) => {
                         setTargetInHouseList(old =>
@@ -100,6 +105,7 @@ const TargetInHouseTabContent = () => {
                         );
                     },
                     selectedBrand: openBrandDialog,
+                    isViewMode,
                 }}
             />
 
