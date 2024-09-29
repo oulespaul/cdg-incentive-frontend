@@ -7,9 +7,10 @@ import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Spinner } from '@/components/spinner';
+import { Input } from '@/components/ui/input';
 
 const defaultColumn: Partial<ColumnDef<any>> = {
-    cell: ({ getValue, row: { index }, column: { id }, table }) => {
+    cell: ({ getValue, row: { index }, column: { id, columnDef }, table }) => {
         const initialValue = getValue();
         const [value, setValue] = useState(initialValue);
 
@@ -21,13 +22,23 @@ const defaultColumn: Partial<ColumnDef<any>> = {
             setValue(initialValue);
         }, [initialValue]);
 
-        return (
+        //@ts-ignore
+        const { inputType = 'text' } = columnDef.meta || {};
+
+        return inputType === 'currency' ? (
             <CurrencyInput
-                id="input-example"
+                id={`currency-input-${index}-${id}`}
                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                 value={value as string}
                 decimalsLimit={2}
                 onValueChange={value => setValue(value)}
+                onBlur={onBlur}
+            />
+        ) : (
+            <Input
+                id={`input-${index}-${id}`}
+                value={value as string}
+                onChange={e => setValue(e.target.value)}
                 onBlur={onBlur}
             />
         );

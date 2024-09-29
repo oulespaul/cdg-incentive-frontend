@@ -124,6 +124,7 @@ export const targetDMMColumns: ColumnDef<TargetDMM>[] = [
         },
         enableSorting: false,
         enableHiding: false,
+        meta: { inputType: 'currency' },
     },
     {
         id: 'actualSalesLastYear',
@@ -145,6 +146,7 @@ export const targetDMMColumns: ColumnDef<TargetDMM>[] = [
         },
         enableSorting: false,
         enableHiding: false,
+        meta: { inputType: 'currency' },
     },
     {
         id: 'goalId',
@@ -160,6 +162,7 @@ export const targetDMMColumns: ColumnDef<TargetDMM>[] = [
         },
         enableSorting: false,
         enableHiding: false,
+        meta: { inputType: 'currency' },
     },
     {
         id: 'actualSalesIDLastYear',
@@ -181,6 +184,7 @@ export const targetDMMColumns: ColumnDef<TargetDMM>[] = [
         },
         enableSorting: false,
         enableHiding: false,
+        meta: { inputType: 'currency' },
     },
     {
         accessorKey: 'action',

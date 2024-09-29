@@ -11,7 +11,7 @@ import { Department } from '@/features/department/models/department';
 export type TargetSMMDSM = {
     id?: number;
     smmId?: string;
-    targetDSMList: TargetDSM[]
+    targetDSMList: TargetDSM[];
 };
 
 export type TargetDSM = {
@@ -130,6 +130,7 @@ export const targetDSMSMMColumns: ColumnDef<TargetDSM>[] = [
         },
         enableSorting: false,
         enableHiding: false,
+        meta: { inputType: 'currency' },
     },
     {
         id: 'actualSalesLastYear',
@@ -151,6 +152,7 @@ export const targetDSMSMMColumns: ColumnDef<TargetDSM>[] = [
         },
         enableSorting: false,
         enableHiding: false,
+        meta: { inputType: 'currency' },
     },
     {
         id: 'goalId',
@@ -166,6 +168,7 @@ export const targetDSMSMMColumns: ColumnDef<TargetDSM>[] = [
         },
         enableSorting: false,
         enableHiding: false,
+        meta: { inputType: 'currency' },
     },
     {
         id: 'actualSalesIDLastYear',
@@ -187,6 +190,7 @@ export const targetDSMSMMColumns: ColumnDef<TargetDSM>[] = [
         },
         enableSorting: false,
         enableHiding: false,
+        meta: { inputType: 'currency' },
     },
     {
         accessorKey: 'action',

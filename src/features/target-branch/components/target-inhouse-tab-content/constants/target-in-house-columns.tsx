@@ -103,6 +103,7 @@ export const targetInHouseColumns: ColumnDef<TargetInHouse>[] = [
         },
         enableSorting: false,
         enableHiding: false,
+        meta: { inputType: 'currency' },
     },
     {
         id: 'actualSalesIDLastYear',
@@ -124,6 +125,7 @@ export const targetInHouseColumns: ColumnDef<TargetInHouse>[] = [
         },
         enableSorting: false,
         enableHiding: false,
+        meta: { inputType: 'currency' },
     },
     {
         accessorKey: 'action',

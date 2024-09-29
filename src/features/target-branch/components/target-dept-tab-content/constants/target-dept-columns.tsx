@@ -100,6 +100,7 @@ export const targetDeptColumns: ColumnDef<TargetDept>[] = [
         },
         enableSorting: false,
         enableHiding: false,
+        meta: { inputType: 'currency' },
     },
     {
         id: 'actualSalesIDLastYear',
@@ -121,6 +122,7 @@ export const targetDeptColumns: ColumnDef<TargetDept>[] = [
         },
         enableSorting: false,
         enableHiding: false,
+        meta: { inputType: 'currency' },
     },
     {
         accessorKey: 'action',

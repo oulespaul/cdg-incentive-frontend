@@ -127,7 +127,13 @@ export const useTargetBranchManage = () => {
             fetchTargetCommissionDetail().then(result => {
                 setTargetInHouseList(() => []);
                 setTargetDeptList(() => []);
-                setTargetSMMDSMList(() => []);
+                setTargetSMMDSMList(() => [
+                    {
+                        id: undefined,
+                        smmId: '',
+                        targetDSMList: [],
+                    },
+                ]);
                 setTargetDMMList(() => []);
                 setTargetWorkflow(undefined);
 
