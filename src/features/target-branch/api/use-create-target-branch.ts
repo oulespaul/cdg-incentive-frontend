@@ -1,4 +1,5 @@
 import { apiClient } from '@/lib/api-client';
+import { useMsal } from '@azure/msal-react';
 import { useMutation } from '@tanstack/react-query';
 
 export interface TargetInhouseRequest {
@@ -47,6 +48,7 @@ export interface CreateTargetBranchRequest {
     targetDeptList: TargetDeptRequest[];
     targetSMMDSMList: TargetSMMDSMRequest[];
     targetDMMList: TargetDMMRequest[];
+    createdBy?: string;
 }
 
 const createTargetBranch = async (data: CreateTargetBranchRequest) => {
@@ -60,8 +62,11 @@ interface UseCrerateTargetBranchProps {
 }
 
 export const useCreateTargetBranch = ({ onCreateTargetSuccess, onCreateTargetError }: UseCrerateTargetBranchProps) => {
+    const { accounts } = useMsal();
+
     return useMutation({
-        mutationFn: (request: CreateTargetBranchRequest) => createTargetBranch(request),
+        mutationFn: (request: CreateTargetBranchRequest) =>
+            createTargetBranch({ ...request, createdBy: accounts[0].name }),
         onSuccess: response => {
             onCreateTargetSuccess(response.data);
         },
