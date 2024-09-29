@@ -8,9 +8,9 @@ import { getStatusColorClass } from '@/lib/status-color-utils';
 
 export const targetBranchColumns: ColumnDef<TargetBranchDetail>[] = [
     {
-        accessorKey: 'id',
+        accessorKey: 'no',
         header: ({ column }) => <DataTableColumnHeader column={column} title="ลำดับ" className="text-center" />,
-        cell: ({ row }) => <div className="text-center">{row.getValue('id')}</div>,
+        cell: ({ row }) => <div className="text-center">{row.getValue('no')}</div>,
         size: 100,
         enableSorting: false,
         enableHiding: false,

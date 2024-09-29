@@ -3,6 +3,8 @@ import { useCallback, useState } from 'react';
 export interface ModalOptions {
     title: string | JSX.Element;
     content?: string | JSX.Element;
+    confirmTitle?: string;
+    confirmClassName?: string;
     showSecondaryActionButton?: boolean;
     secondaryActionButtonTitle?: string;
     showCancelButton?: boolean;

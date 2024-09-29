@@ -37,7 +37,12 @@ const Modal = () => {
                                 {modalState.options.secondaryActionButtonTitle}
                             </AlertDialogAction>
                         )}
-                        <AlertDialogAction onClick={modalState.options?.onConfirm}>ยืนยัน</AlertDialogAction>
+                        <AlertDialogAction
+                            onClick={modalState.options?.onConfirm}
+                            className={modalState.options?.confirmClassName}
+                        >
+                            {modalState.options?.confirmTitle || 'ยืนยัน'}
+                        </AlertDialogAction>
                     </div>
                 </AlertDialogFooter>
             </AlertDialogContent>

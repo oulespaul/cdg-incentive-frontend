@@ -21,17 +21,17 @@ export interface TargetBranchFilterParams {
     year?: string;
 }
 
-const fetchTargetBranchDetailList = async (filterParams: TargetBranchFilterParams & PaginationState) => {
+const fetchTargetBranchDetailList = async (filterParams?: TargetBranchFilterParams & PaginationState) => {
     const params = new URLSearchParams({
-        page: filterParams.pageIndex.toString(),
-        pageSize: filterParams.pageSize.toString(),
-        ...(filterParams.month && { month: filterParams.month }),
-        ...(filterParams.year && { year: filterParams.year }),
+        page: (filterParams?.pageIndex ?? 0).toString(),
+        pageSize: (filterParams?.pageSize ?? 10).toString(),
+        ...(filterParams?.month && { month: filterParams.month }),
+        ...(filterParams?.year && { year: filterParams.year }),
     });
     return await apiClient.get(`target-branch?${params}`);
 };
 
-export const useFetchTargetBranchDetailList = (filterParams: TargetBranchFilterParams & PaginationState) => {
+export const useFetchTargetBranchDetailList = (filterParams?: TargetBranchFilterParams & PaginationState) => {
     return useQuery<Page<TargetBranchDetail>, number>({
         queryFn: async () => {
             const { data } = await fetchTargetBranchDetailList(filterParams);

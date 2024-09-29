@@ -114,7 +114,7 @@ export const TargetBranchPage = () => {
                     data={
                         targetBranchData?.content?.map((target, index) => ({
                             ...target,
-                            id: index + 1,
+                            no: index + 1,
                         })) ?? []
                     }
                     onPaginationChange={onPaginationChange}

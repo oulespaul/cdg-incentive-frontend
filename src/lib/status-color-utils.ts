@@ -1,7 +1,7 @@
 export type Status = 'New' | 'Pending' | 'Rejected' | 'Editing' | 'Approved' | 'Closed' | 'Default';
 
 const statusColorMap: Record<string, string> = {
-    new: 'blue-600',
+    new: 'blue-500',
     pending: 'amber-500',
     rejected: 'red-600',
     editing: 'purple-600',
