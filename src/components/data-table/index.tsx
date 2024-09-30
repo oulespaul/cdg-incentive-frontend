@@ -13,6 +13,7 @@ import {
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { PaginationControl } from './PaginationControl';
 import { useState } from 'react';
+import { cn } from '@/lib/utils';
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -22,6 +23,7 @@ interface DataTableProps<TData, TValue> {
     onPaginationChange?: OnChangeFn<PaginationState> | undefined;
     pageCount?: number | undefined;
     pagination?: PaginationState | undefined;
+    tableClassName?: string;
 }
 
 declare module '@tanstack/react-table' {
@@ -34,7 +36,7 @@ declare module '@tanstack/react-table' {
         selectedSubDepartmentPool?: (rowIndex: number) => void;
         selectedDepartment?: (rowIndex: number) => void;
         selectedSubDepartment?: (rowIndex: number) => void;
-        isViewMode?: boolean
+        isViewMode?: boolean;
     }
 }
 
@@ -46,7 +48,9 @@ export function DataTable<TData, TValue>({
     onPaginationChange,
     pageCount,
     pagination,
+    tableClassName,
 }: DataTableProps<TData, TValue>) {
+    console.log("🚀 ~ tableClassName:", tableClassName)
     const [paginationLocal, setPaginationLocal] = useState<PaginationState>({
         pageIndex: 0,
         pageSize: 10,
@@ -66,13 +70,13 @@ export function DataTable<TData, TValue>({
 
     return (
         <div className="rounded-md border">
-            <Table>
+            <Table className={tableClassName}>
                 <TableHeader className="bg-[#E2E8F0] sticky top-0">
                     {table.getHeaderGroups().map(headerGroup => (
                         <TableRow key={headerGroup.id}>
                             {headerGroup.headers.map(header => {
                                 return (
-                                    <TableHead key={header.id} className="text-bold">
+                                    <TableHead key={header.id} className={cn('text-bold')}>
                                         {header.isPlaceholder
                                             ? null
                                             : flexRender(header.column.columnDef.header, header.getContext())}

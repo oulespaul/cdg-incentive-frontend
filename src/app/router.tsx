@@ -42,6 +42,13 @@ export const createAppRouter = () =>
                         return { Component: TargetBranchManagePage };
                     },
                 },
+                {
+                    path: 'target-branch/review-approve',
+                    lazy: async () => {
+                        const { TargetBranchReviewApprove } = await import('./routes/app/target-branch-review-approve');
+                        return { Component: TargetBranchReviewApprove };
+                    },
+                },
             ],
         },
     ]);

@@ -7,6 +7,10 @@ export interface TargetBranchDetail {
     id: number;
     year: string;
     month: string;
+    branchBU: string;
+    branchNumber: string;
+    branchName: string;
+    branchCode: string;
     targetCommission: number;
     actualSalesLyTotal: number;
     targetID: number;
@@ -19,6 +23,10 @@ export interface TargetBranchDetail {
 export interface TargetBranchFilterParams {
     month?: string;
     year?: string;
+    status?: string;
+    branchNumber?: string;
+    branchCode?: string;
+    branchBU?: string;
 }
 
 const fetchTargetBranchDetailList = async (filterParams?: TargetBranchFilterParams & PaginationState) => {
@@ -27,6 +35,10 @@ const fetchTargetBranchDetailList = async (filterParams?: TargetBranchFilterPara
         pageSize: (filterParams?.pageSize ?? 10).toString(),
         ...(filterParams?.month && { month: filterParams.month }),
         ...(filterParams?.year && { year: filterParams.year }),
+        ...(filterParams?.status && { status: filterParams.status }),
+        ...(filterParams?.branchNumber && { branchNumber: filterParams.branchNumber }),
+        ...(filterParams?.branchBU && { branchBU: filterParams.branchBU }),
+        ...(filterParams?.branchCode && { branchCode: filterParams.branchCode }),
     });
     return await apiClient.get(`target-branch?${params}`);
 };

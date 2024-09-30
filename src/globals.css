@@ -68,6 +68,12 @@
   }
 }
 
+@layer utilities {
+  .max-content {
+    width: max-content;
+  }
+}
+
 @font-face {
   font-family: "Sarabun-Regular";
   src: local("Sarabun-Regular"),
