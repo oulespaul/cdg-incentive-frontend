@@ -12,7 +12,7 @@ import {
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { PaginationControl } from './PaginationControl';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 
 interface DataTableProps<TData, TValue> {
@@ -24,6 +24,7 @@ interface DataTableProps<TData, TValue> {
     pageCount?: number | undefined;
     pagination?: PaginationState | undefined;
     tableClassName?: string;
+    onRowSelectedChange?: (rows: number) => void;
 }
 
 declare module '@tanstack/react-table' {
@@ -50,7 +51,9 @@ export function DataTable<TData, TValue>({
     pageCount,
     pagination,
     tableClassName,
+    onRowSelectedChange,
 }: DataTableProps<TData, TValue>) {
+    const [rowSelection, setRowSelection] = useState({});
     const [paginationLocal, setPaginationLocal] = useState<PaginationState>({
         pageIndex: 0,
         pageSize: 10,
@@ -60,13 +63,21 @@ export function DataTable<TData, TValue>({
         data,
         meta,
         columns,
+        state: { pagination: manualPagination ? pagination : paginationLocal, rowSelection },
         getCoreRowModel: getCoreRowModel(),
         manualPagination,
         getPaginationRowModel: manualPagination ? undefined : getPaginationRowModel(),
         onPaginationChange: manualPagination ? onPaginationChange : setPaginationLocal,
-        state: { pagination: manualPagination ? pagination : paginationLocal },
+        onRowSelectionChange: setRowSelection,
         rowCount: pageCount,
+        enableRowSelection: true,
     });
+
+    useEffect(() => {
+        if (onRowSelectedChange) {
+            onRowSelectedChange(table.getSelectedRowModel().rows.length);
+        }
+    }, [onRowSelectedChange, table.getSelectedRowModel().rows.length]);
 
     return (
         <div className="rounded-md border">

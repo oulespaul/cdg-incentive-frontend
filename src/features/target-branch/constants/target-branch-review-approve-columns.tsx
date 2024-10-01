@@ -4,8 +4,28 @@ import { formatThaiCurrency, handleFalsyOrInfinite } from '@/lib/number-utils';
 import { cn } from '@/lib/utils';
 import { getStatusColorClass } from '@/lib/status-color-utils';
 import { TargetBranchDetail } from '../api/use-fetch-target-branch-detail-list';
+import { Checkbox } from '@/components/ui/checkbox';
 
 export const targetBranchReviewApproveColumns: ColumnDef<TargetBranchDetail>[] = [
+    {
+        id: 'select',
+        header: ({ table }) => (
+            <Checkbox
+                checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
+                onCheckedChange={value => table.toggleAllPageRowsSelected(!!value)}
+                aria-label="Select all"
+            />
+        ),
+        cell: ({ row }) => (
+            <Checkbox
+                checked={row.getIsSelected()}
+                onCheckedChange={value => row.toggleSelected(!!value)}
+                aria-label="Select row"
+            />
+        ),
+        enableSorting: false,
+        enableHiding: false,
+    },
     {
         accessorKey: 'no',
         header: ({ column }) => <DataTableColumnHeader column={column} title="ลำดับ" className="text-center" />,

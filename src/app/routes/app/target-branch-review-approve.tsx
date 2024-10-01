@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { Search } from 'lucide-react';
+import { Check, Search, X } from 'lucide-react';
 import { DataTable } from '@/components/data-table';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
@@ -30,6 +30,7 @@ const initialFilterParams = {
 
 export const TargetBranchReviewApprove = () => {
     const [filterParams, setFilterParams] = useState<TargetBranchFilterParams>(initialFilterParams);
+    const [totalBranchSelected, setTotalBranchSelected] = useState<number | null>(null);
 
     const navigate = useNavigate();
 
@@ -139,7 +140,25 @@ export const TargetBranchReviewApprove = () => {
             <Separator className="my-4" />
 
             <Card className="p-4 text-start">
-                <h1 className="text-lg font-medium mb-4">รายการข้อมูลเป้าสาขา</h1>
+                <div className="flex items-center justify-between mb-4">
+                    <h1 className="text-lg font-medium">รายการข้อมูลเป้าสาขา</h1>
+
+                    {(totalBranchSelected || 0) > 0 && (
+                        <div className="flex gap-2 items-center">
+                            <p className="font-medium">เลือกข้อมูล {totalBranchSelected} รายการ</p>
+                            <div className="flex gap-2">
+                                <Button variant="destructive">
+                                    <X />
+                                    ไม่อนุมัติ
+                                </Button>
+                                <Button variant="success">
+                                    <Check />
+                                    อนุมัติ
+                                </Button>
+                            </div>
+                        </div>
+                    )}
+                </div>
                 <div className="overflow-auto">
                     <DataTable
                         columns={targetBranchReviewApproveColumns}
@@ -159,6 +178,7 @@ export const TargetBranchReviewApprove = () => {
                         pageCount={targetBranchData?.totalElements ?? 0}
                         pagination={pagination}
                         tableClassName="max-content"
+                        onRowSelectedChange={setTotalBranchSelected}
                     />
                 </div>
             </Card>
