@@ -16,7 +16,7 @@ import {
     TargetSMMDSMRequest,
     useCreateTargetBranch,
 } from '../api/use-create-target-branch';
-import { useFetchTargetBranchDetail } from '../api/use-fetch-target-branch-detail';
+import { useFetchTargetBranchDetail } from '../api/use-fetch-target-branch-detail-by-target-commission-id';
 import { useModalContext } from '@/app/providers/modal-provider';
 import { InfoCircledIcon } from '@radix-ui/react-icons';
 import { toast } from 'react-toastify';

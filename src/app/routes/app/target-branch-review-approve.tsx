@@ -17,6 +17,7 @@ import {
     useFetchTargetBranchDetailList,
 } from '@/features/target-branch/api/use-fetch-target-branch-detail-list';
 import { targetBranchReviewApproveColumns } from '@/features/target-branch/constants/target-branch-review-approve-columns';
+import { useNavigate } from 'react-router-dom';
 
 const initialFilterParams = {
     year: undefined,
@@ -29,6 +30,8 @@ const initialFilterParams = {
 
 export const TargetBranchReviewApprove = () => {
     const [filterParams, setFilterParams] = useState<TargetBranchFilterParams>(initialFilterParams);
+
+    const navigate = useNavigate();
 
     const { onPaginationChange, resetPaginationState, pagination } = usePagination();
     const { data: targetBranchData, refetch: refetchTargetBranch } = useFetchTargetBranchDetailList({
@@ -146,6 +149,12 @@ export const TargetBranchReviewApprove = () => {
                                 no: index + 1,
                             })) ?? []
                         }
+                        //@ts-ignore
+                        meta={{
+                            onAction: (id: number) => {
+                                navigate(`detail/${id}`);
+                            },
+                        }}
                         onPaginationChange={onPaginationChange}
                         pageCount={targetBranchData?.totalElements ?? 0}
                         pagination={pagination}

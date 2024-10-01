@@ -2,6 +2,7 @@ import { Separator } from '@/components/ui/separator';
 import { formatThaiCurrency, handleFalsyOrInfinite } from '@/lib/number-utils';
 import { useTargetBranchStore } from '../../api/use-target-branch-store';
 import { Spinner } from '@/components/spinner';
+import { Card } from '@/components/ui/card';
 
 export interface TargetBranchSummary {
     totalCommission: number;
@@ -72,7 +73,7 @@ const TargetBranchSummaryTabContent = () => {
     }
 
     return (
-        <div className="flex flex-col justify-start p-4">
+        <Card className="flex flex-col justify-start p-4">
             {targetBranchSummaryList.map(targetBranchSummary => (
                 <div key={targetBranchSummary.title}>
                     <div className="flex justify-between py-2">
@@ -85,7 +86,7 @@ const TargetBranchSummaryTabContent = () => {
                     <Separator />
                 </div>
             ))}
-        </div>
+        </Card>
     );
 };
 

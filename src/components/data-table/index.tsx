@@ -37,6 +37,7 @@ declare module '@tanstack/react-table' {
         selectedDepartment?: (rowIndex: number) => void;
         selectedSubDepartment?: (rowIndex: number) => void;
         isViewMode?: boolean;
+        onAction?: (id: number) => void;
     }
 }
 
@@ -50,7 +51,6 @@ export function DataTable<TData, TValue>({
     pagination,
     tableClassName,
 }: DataTableProps<TData, TValue>) {
-    console.log("🚀 ~ tableClassName:", tableClassName)
     const [paginationLocal, setPaginationLocal] = useState<PaginationState>({
         pageIndex: 0,
         pageSize: 10,
