@@ -96,9 +96,9 @@ export const targetBranchColumns: ColumnDef<TargetBranchDetail>[] = [
         accessorKey: 'status',
         header: ({ column }) => <DataTableColumnHeader column={column} title="สถานะ" className="text-center" />,
         cell: ({ row }) => (
-            <div className={cn('font-bold text-center', getStatusColorClass(row.getValue('status'), 'text'))}>
+            <p className={cn('font-bold text-center', getStatusColorClass(row.getValue('status'), 'text'))}>
                 {row.getValue('status')}
-            </div>
+            </p>
         ),
         size: 200,
         enableSorting: false,

@@ -5,7 +5,7 @@ const statusColorMap: Record<string, string> = {
     pending: 'amber-500',
     rejected: 'red-600',
     editing: 'purple-600',
-    approved: 'green-600',
+    approved: 'green-dark',
     closed: 'gray-600',
     default: 'gray-600',
 };

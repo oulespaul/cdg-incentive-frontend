@@ -27,6 +27,7 @@ import { TargetDMM } from '../components/target-dmm-dsm-smm-tab-content/constant
 import _ from 'lodash';
 import { useFetchTargetBranchDetailList } from '../api/use-fetch-target-branch-detail-list';
 import { useDeleteTargetBranch } from '../api/use-delete-target-branch';
+import { useMakeActionTargetBranch } from '../api/use-make-action-target-branch';
 
 export const useTargetBranchManage = () => {
     const { year, month, mode } = useParams();
@@ -147,6 +148,32 @@ export const useTargetBranchManage = () => {
     const { mutate: deleteTargetBranch } = useDeleteTargetBranch({
         onSuccess: onDeleteTargetBranchSuccess,
         onError: onDeleteTargetBranchError,
+    });
+
+    const onMakeActionTargetBranchSuccess = () => {
+        toast.success(
+            <div className="flex flex-col text-start">
+                <p className="text-sm font-bold text-green-400">ลบข้อมูลสำเร็จ</p>
+                <p className="mt-2 text-xs">ลบข้อมูลเป้าสาขาเรียบร้อย</p>
+            </div>,
+            { position: 'bottom-right' },
+        );
+        refetchTargetBranch();
+    };
+
+    const onMakeActionTargetBranchError = () => {
+        toast.error(
+            <div className="flex flex-col text-start">
+                <p className="text-sm font-bold text-ref-400">ลบข้อมูลไม่สำเร็จ</p>
+                <p className="mt-2 text-xs">ไม่สามารถลบข้อมูลได้ กรุณาลองใหม่อีกครั้ง</p>
+            </div>,
+            { position: 'bottom-right' },
+        );
+    };
+
+    const { mutate: makeActionTargetBranch } = useMakeActionTargetBranch({
+        onSuccess: onMakeActionTargetBranchSuccess,
+        onError: onMakeActionTargetBranchError,
     });
 
     const { openModal, closeModal } = useModalContext();
@@ -311,6 +338,25 @@ export const useTargetBranchManage = () => {
         });
     };
 
+    const makeActionTargetBranchHandler = (targetBranchId: number, action: string) => {
+        openModal({
+            title: (
+                <div className="flex items-center gap-2">
+                    <InfoCircledIcon className="w-6 h-6" color="orange" /> <span>ยืนยันการอนุมัติข้อมูล</span>
+                </div>
+            ),
+            content: 'เมื่อลบข้อมูลเป้าหมาย จะไม่สามารถกู้คืนได้',
+            confirmTitle: 'ใช่, ลบ',
+            confirmClassName: 'bg-red-500',
+            showCancelButton: true,
+            onConfirm: () => {
+                makeActionTargetBranch({ targetBranchId, action });
+                closeModal();
+                navigate('/app/target-branch');
+            },
+        });
+    };
+
     return {
         filterParams,
         yearFilterOptions,
@@ -320,6 +366,7 @@ export const useTargetBranchManage = () => {
         onSaveTargetHandler,
         onCancelTargetHandler,
         deleteTargetBranchHandler,
+        makeActionTargetBranchHandler,
         isEditMode: mode === 'edit',
         isViewMode: mode === 'view',
     };

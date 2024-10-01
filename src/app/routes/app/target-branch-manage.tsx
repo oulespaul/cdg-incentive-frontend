@@ -24,6 +24,7 @@ export const TargetBranchManagePage = () => {
         isEditMode,
         isViewMode,
         deleteTargetBranchHandler,
+        makeActionTargetBranchHandler,
     } = useTargetBranchManage();
     const { targetWorkflow, isTargetBranchLoading } = useTargetBranchStore();
     const navigate = useNavigate();
@@ -110,7 +111,15 @@ export const TargetBranchManagePage = () => {
                         <Button variant="primary" disabled={_.isEmpty(targetCommission)} onClick={onSaveTargetHandler}>
                             บันทึก
                         </Button>
-                        <Button variant="success" disabled={_.isEmpty(targetCommission)}>
+                        <Button
+                            variant="success"
+                            disabled={_.isEmpty(targetCommission)}
+                            onClick={() => {
+                                if (targetWorkflow?.id) {
+                                    makeActionTargetBranchHandler(targetWorkflow.id, 'Approved');
+                                }
+                            }}
+                        >
                             ส่งคำขออนุมัติ
                         </Button>
                     </div>
