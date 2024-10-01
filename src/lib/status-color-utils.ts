@@ -1,17 +1,15 @@
 export type Status = 'New' | 'Pending' | 'Rejected' | 'Editing' | 'Approved' | 'Closed' | 'Default';
 
 const statusColorMap: Record<string, string> = {
-    new: 'blue-500',
-    pending: 'amber-500',
-    rejected: 'red-600',
-    editing: 'purple-600',
-    approved: 'green-dark',
-    closed: 'gray-600',
-    default: 'gray-600',
+    new: 'text-blue-600',
+    pending: 'text-amber-500',
+    rejected: 'text-red-600',
+    editing: 'text-purple-600',
+    approved: 'text-green-500',
+    closed: 'text-gray-600',
+    default: 'text-gray-600',
 };
 
-export const getStatusColorClass = (status: Status, type: string): string => {
-    const color = statusColorMap[status.toLowerCase()] || statusColorMap['default'];
-
-    return `${type}-${color}`;
+export const getStatusTextColorClass = (status: Status): string => {
+    return statusColorMap[status.toLowerCase()] || statusColorMap['default'];
 };

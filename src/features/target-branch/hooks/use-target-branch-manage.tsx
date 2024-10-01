@@ -153,8 +153,8 @@ export const useTargetBranchManage = () => {
     const onMakeActionTargetBranchSuccess = () => {
         toast.success(
             <div className="flex flex-col text-start">
-                <p className="text-sm font-bold text-green-400">ลบข้อมูลสำเร็จ</p>
-                <p className="mt-2 text-xs">ลบข้อมูลเป้าสาขาเรียบร้อย</p>
+                <p className="text-sm font-bold text-green-400">ส่งคำขออนุมติสำเร็จ</p>
+                <p className="mt-2 text-xs">ส่งคำขออนุมติเป้าสาขาเรียบร้อย</p>
             </div>,
             { position: 'bottom-right' },
         );
@@ -164,8 +164,8 @@ export const useTargetBranchManage = () => {
     const onMakeActionTargetBranchError = () => {
         toast.error(
             <div className="flex flex-col text-start">
-                <p className="text-sm font-bold text-ref-400">ลบข้อมูลไม่สำเร็จ</p>
-                <p className="mt-2 text-xs">ไม่สามารถลบข้อมูลได้ กรุณาลองใหม่อีกครั้ง</p>
+                <p className="text-sm font-bold text-ref-400">ไม่สามารถส่งคำขออนุมติ</p>
+                <p className="mt-2 text-xs">กรุณากรอกข้อมูลให้ครบถ้วนก่อนส่งคำขออนุมัติ</p>
             </div>,
             { position: 'bottom-right' },
         );
@@ -345,9 +345,7 @@ export const useTargetBranchManage = () => {
                     <InfoCircledIcon className="w-6 h-6" color="orange" /> <span>ยืนยันการอนุมัติข้อมูล</span>
                 </div>
             ),
-            content: 'เมื่อลบข้อมูลเป้าหมาย จะไม่สามารถกู้คืนได้',
-            confirmTitle: 'ใช่, ลบ',
-            confirmClassName: 'bg-red-500',
+            content: 'บันทึกข้อมูลและส่งคำขออนุมัติสาขา',
             showCancelButton: true,
             onConfirm: () => {
                 makeActionTargetBranch({ targetBranchId, action });

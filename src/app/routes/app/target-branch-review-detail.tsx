@@ -4,7 +4,7 @@ import { Card } from '@/components/ui/card';
 import _ from 'lodash';
 import { TimelineLayout } from '@/components/timeline/timeline-layout';
 import { useTargetBranchStore } from '@/features/target-branch/api/use-target-branch-store';
-import { getStatusColorClass } from '@/lib/status-color-utils';
+import { getStatusTextColorClass } from '@/lib/status-color-utils';
 import { cn } from '@/lib/utils';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Check, X } from 'lucide-react';
@@ -126,7 +126,7 @@ export const TargetBranchReviewDetail = () => {
                                     <h1
                                         className={cn(
                                             'font-bold',
-                                            getStatusColorClass(targetWorkflow.status || 'Default', 'text'),
+                                            getStatusTextColorClass(targetWorkflow.status || 'Default'),
                                         )}
                                     >
                                         {targetWorkflow.status}

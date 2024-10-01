@@ -31,7 +31,7 @@ const TargetBranchSummaryTabContent = () => {
         },
         {
             title: '2. ยอดขายของปีที่แล้วในเดือนเดียวกัน',
-            description: 'Actual Sales',
+            description: 'Actual Sales Last year',
             total: formatThaiCurrency(totalActualSalesLastYear, ' บาท'),
         },
         {
@@ -41,7 +41,7 @@ const TargetBranchSummaryTabContent = () => {
         },
         {
             title: '4. ยอดขายของพนักงานห้าง ของปีที่แล้วในเดือนเดียวกัน  ',
-            description: 'Actual ID Total',
+            description: 'Actual Sales ID Last year',
             total: formatThaiCurrency(totalGoalIDLastYear, ' บาท'),
         },
         {

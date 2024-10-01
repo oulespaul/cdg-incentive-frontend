@@ -39,7 +39,7 @@ export const targetDeptColumns: ColumnDef<TargetDept>[] = [
         header: ({ column }) => <DataTableColumnHeader column={column} title="Dept Pool" className="text-start" />,
         cell: ({ row, table }) => {
             if (row.getValue('subDepartmentPool') === undefined) {
-                if (table.options.meta?.selectedSubDepartmentPool) {
+                if (table.options.meta?.selectedSubDepartmentPool && !table.options.meta?.isViewMode) {
                     return (
                         <div className="flex">
                             <Button
@@ -68,17 +68,19 @@ export const targetDeptColumns: ColumnDef<TargetDept>[] = [
                             </Card>
                         );
                     })}
-                    <Button
-                        variant="outline"
-                        className="border-dotted border-2"
-                        onClick={() => {
-                            if (table.options.meta?.selectedSubDepartmentPool) {
-                                table.options.meta?.selectedSubDepartmentPool(row.index);
-                            }
-                        }}
-                    >
-                        <Plus /> เลือก Sub Dept
-                    </Button>
+                    {!table.options.meta?.isViewMode && (
+                        <Button
+                            variant="outline"
+                            className="border-dotted border-2"
+                            onClick={() => {
+                                if (table.options.meta?.selectedSubDepartmentPool) {
+                                    table.options.meta?.selectedSubDepartmentPool(row.index);
+                                }
+                            }}
+                        >
+                            <Plus /> เลือก Sub Dept
+                        </Button>
+                    )}
                 </div>
             );
         },

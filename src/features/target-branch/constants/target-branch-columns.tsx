@@ -4,7 +4,7 @@ import { formatThaiCurrency } from '@/lib/number-utils';
 import { TargetBranchDetail } from '../api/use-fetch-target-branch-detail-list';
 import TargetBranchActionMenus from '../components/action-menus';
 import { cn } from '@/lib/utils';
-import { getStatusColorClass } from '@/lib/status-color-utils';
+import { getStatusTextColorClass } from '@/lib/status-color-utils';
 
 export const targetBranchColumns: ColumnDef<TargetBranchDetail>[] = [
     {
@@ -96,7 +96,7 @@ export const targetBranchColumns: ColumnDef<TargetBranchDetail>[] = [
         accessorKey: 'status',
         header: ({ column }) => <DataTableColumnHeader column={column} title="สถานะ" className="text-center" />,
         cell: ({ row }) => (
-            <p className={cn('font-bold text-center', getStatusColorClass(row.getValue('status'), 'text'))}>
+            <p className={cn('font-bold text-center', getStatusTextColorClass(row.getValue('status')))}>
                 {row.getValue('status')}
             </p>
         ),

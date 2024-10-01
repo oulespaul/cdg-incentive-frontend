@@ -7,7 +7,7 @@ import { formatThaiCurrency } from '@/lib/number-utils';
 import _ from 'lodash';
 import { TimelineLayout } from '@/components/timeline/timeline-layout';
 import { useTargetBranchStore } from '@/features/target-branch/api/use-target-branch-store';
-import { getStatusColorClass } from '@/lib/status-color-utils';
+import { getStatusTextColorClass } from '@/lib/status-color-utils';
 import { cn } from '@/lib/utils';
 import { useTargetBranchManage } from '@/features/target-branch/hooks/use-target-branch-manage';
 import { useNavigate } from 'react-router-dom';
@@ -116,7 +116,7 @@ export const TargetBranchManagePage = () => {
                             disabled={_.isEmpty(targetCommission)}
                             onClick={() => {
                                 if (targetWorkflow?.id) {
-                                    makeActionTargetBranchHandler(targetWorkflow.id, 'Approved');
+                                    makeActionTargetBranchHandler(targetWorkflow.id, 'Pending');
                                 }
                             }}
                         >
@@ -143,7 +143,7 @@ export const TargetBranchManagePage = () => {
                                 <h1
                                     className={cn(
                                         'font-bold',
-                                        getStatusColorClass(targetWorkflow.status || 'Default', 'text'),
+                                        getStatusTextColorClass(targetWorkflow.status || 'Default'),
                                     )}
                                 >
                                     {targetWorkflow.status}
