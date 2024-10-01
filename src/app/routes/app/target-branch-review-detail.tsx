@@ -92,7 +92,7 @@ export const TargetBranchReviewDetail = () => {
                     </span>
                 </div>
 
-                {targetWorkflow && !isTargetBranchLoading && (
+                {targetWorkflow && !isTargetBranchLoading && targetBranchDetail?.status === 'Pending' && (
                     <div className="flex w-1/3 gap-3 justify-end">
                         <Button variant="destructive">
                             <X />
