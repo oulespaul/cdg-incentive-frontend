@@ -96,13 +96,16 @@ export const TargetBranchReviewDetail = () => {
 
                 {targetWorkflow && !isTargetBranchLoading && targetBranchDetail?.status === 'Pending' && (
                     <div className="flex w-1/3 gap-3 justify-end">
-                        <Button variant="destructive">
+                        <Button
+                            variant="destructive"
+                            onClick={() => makeActionTargetBranchHandler([targetBranchDetail.id], 'Rejected')}
+                        >
                             <X />
                             ไม่อนุมัติ
                         </Button>
                         <Button
                             variant="success"
-                            onClick={() => makeActionTargetBranchHandler(targetBranchDetail.id, 'Approved')}
+                            onClick={() => makeActionTargetBranchHandler([targetBranchDetail.id], 'Approved')}
                         >
                             <Check />
                             อนุมัติ

@@ -18,6 +18,9 @@ import {
 } from '@/features/target-branch/api/use-fetch-target-branch-detail-list';
 import { targetBranchReviewApproveColumns } from '@/features/target-branch/constants/target-branch-review-approve-columns';
 import { useNavigate } from 'react-router-dom';
+import { TargetBranch } from '@/features/target-branch/api/use-fetch-target-branch-detail-by-target-commission-id';
+import { Row } from '@tanstack/react-table';
+import { useTargetBranchManage } from '@/features/target-branch/hooks/use-target-branch-manage';
 
 const initialFilterParams = {
     year: undefined,
@@ -30,7 +33,11 @@ const initialFilterParams = {
 
 export const TargetBranchReviewApprove = () => {
     const [filterParams, setFilterParams] = useState<TargetBranchFilterParams>(initialFilterParams);
-    const [totalBranchSelected, setTotalBranchSelected] = useState<number | null>(null);
+
+    const [rowSelection, setRowSelection] = useState({});
+    const [branchSelected, setBranchSelected] = useState<Row<TargetBranch>[]>([]);
+
+    const { makeActionTargetBranchHandler } = useTargetBranchManage();
 
     const navigate = useNavigate();
 
@@ -96,7 +103,11 @@ export const TargetBranchReviewApprove = () => {
                     />
                     <FilterSelect
                         value={filterParams.status}
-                        options={[{ label: 'New', value: 'New' }]}
+                        options={[
+                            { label: 'New', value: 'New' },
+                            { label: 'Pending', value: 'Pending' },
+                            { label: 'Approved', value: 'Approved' },
+                        ]}
                         placeholder="สถานะ"
                         onChange={value => onFilterSelectHandler('status', value)}
                     />
@@ -143,15 +154,33 @@ export const TargetBranchReviewApprove = () => {
                 <div className="flex items-center justify-between mb-4">
                     <h1 className="text-lg font-medium">รายการข้อมูลเป้าสาขา</h1>
 
-                    {(totalBranchSelected || 0) > 0 && (
+                    {(branchSelected.length || 0) > 0 && (
                         <div className="flex gap-2 items-center">
-                            <p className="font-medium">เลือกข้อมูล {totalBranchSelected} รายการ</p>
+                            <p className="font-medium">เลือกข้อมูล {branchSelected.length} รายการ</p>
                             <div className="flex gap-2">
-                                <Button variant="destructive">
+                                <Button
+                                    variant="destructive"
+                                    onClick={() => {
+                                        makeActionTargetBranchHandler(
+                                            branchSelected.map(b => b.original.id),
+                                            'Rejected',
+                                        );
+                                        setRowSelection({});
+                                    }}
+                                >
                                     <X />
                                     ไม่อนุมัติ
                                 </Button>
-                                <Button variant="success">
+                                <Button
+                                    variant="success"
+                                    onClick={() => {
+                                        makeActionTargetBranchHandler(
+                                            branchSelected.map(b => b.original.id),
+                                            'Approved',
+                                        );
+                                        setRowSelection({});
+                                    }}
+                                >
                                     <Check />
                                     อนุมัติ
                                 </Button>
@@ -178,7 +207,9 @@ export const TargetBranchReviewApprove = () => {
                         pageCount={targetBranchData?.totalElements ?? 0}
                         pagination={pagination}
                         tableClassName="max-content"
-                        onRowSelectedChange={setTotalBranchSelected}
+                        onRowSelectedChange={setBranchSelected}
+                        rowSelectionExternal={rowSelection}
+                        setRowSelectionExternal={setRowSelection}
                     />
                 </div>
             </Card>

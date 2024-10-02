@@ -6,7 +6,7 @@ import {
     useFetchTargetCommissionYearFilter,
     useFetchTargetCommissionMonthFilter,
 } from '@/features/target-commission/api/use-fetch-target-commission-filters';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTargetBranchStore } from '../api/use-target-branch-store';
 import { TargetInHouse } from '../components/target-inhouse-tab-content/constants/target-in-house-columns';
 import {
@@ -27,11 +27,26 @@ import { TargetDMM } from '../components/target-dmm-dsm-smm-tab-content/constant
 import _ from 'lodash';
 import { useFetchTargetBranchDetailList } from '../api/use-fetch-target-branch-detail-list';
 import { useDeleteTargetBranch } from '../api/use-delete-target-branch';
-import { useMakeActionTargetBranch } from '../api/use-make-action-target-branch';
+import { MakeActionTargetBranchRequst, useMakeActionTargetBranch } from '../api/use-make-action-target-branch';
+import { Input } from '@/components/ui/input';
+
+interface MakeActionText {
+    title: string;
+    content: string | JSX.Element | undefined;
+    redirect: string;
+    successTitle: string;
+    successDescription: string;
+    onSuccess?: (() => void) | undefined;
+    failedTitle: string;
+    failedDescription: string;
+}
 
 export const useTargetBranchManage = () => {
     const { year, month, mode } = useParams();
     const [filterParams, setFilterParams] = useState<TargetCommissionDetailFilterParams>({ year, month });
+    const [rejectReason, setRejectReason] = useState<string>('');
+    const rejectReasonRef = useRef(rejectReason);
+
     const {
         currentBranchId,
         targetCommission,
@@ -55,6 +70,53 @@ export const useTargetBranchManage = () => {
         branchId: currentBranchId,
         ...filterParams,
     });
+
+    const makeActionMetaMapping: Record<string, MakeActionText> = {
+        ['Pending']: {
+            title: 'ยืนยันส่งคำขออนุมัติเป้าสาขา',
+            content: 'บันทึกข้อมูลและส่งคำขออนุมัติเป้าสาขา',
+            successTitle: 'ส่งคำขออนุมติสำเร็จ',
+            successDescription: 'ส่งคำขออนุมัติเป้าสาขาเรียบร้อย',
+            failedTitle: 'ส่งคำขออนุมติสำเร็จ',
+            failedDescription: 'ไม่สามารถส่งคำขออนุมัติข้อมูลได้ กรุณาลองใหม่ในภายหลัง',
+            redirect: '/app/target-branch',
+        },
+        ['Approved']: {
+            title: 'ยืนยันการอนุมัติข้อมูล',
+            content: 'อนุมัติเป้าสาขา',
+            successTitle: 'อนุมัติข้อมูลสำเร็จ',
+            successDescription: 'อนุมัติข้อมูลเป้าสาขาเรียบร้อย',
+            onSuccess: () => {
+                refetchTargetBranch();
+            },
+            failedTitle: 'อนุมัติข้อมูลไม่สำเร็จ',
+            failedDescription: 'ไม่สามารถอนุมัติข้อมูลได้ กรุณาลองใหม่ในภายหลัง',
+            redirect: '/app/target-branch/review-approve',
+        },
+        ['Rejected']: {
+            title: 'ยืนยันการไม่อนุมัติข้อมูล',
+            content: (
+                <div>
+                    <p>เหตุผล*</p>
+                    <Input
+                        placeholder="ระบุเหตุผลที่ไม่อนุมัติ"
+                        onChange={e => {
+                            setRejectReason(e.target.value);
+                            rejectReasonRef.current = e.target.value;
+                        }}
+                    />
+                </div>
+            ),
+            successTitle: 'ไม่อนุมัติข้อมูลสำเร็จ',
+            successDescription: 'ไม่อนุมัติข้อมูลเป้าสาขาเรียบร้อย',
+            onSuccess: () => {
+                refetchTargetBranch();
+            },
+            failedTitle: 'ไม่อนุมัติข้อมูลไม่สำเร็จ',
+            failedDescription: 'ไม่สามารถไม่อนุมัติข้อมูลได้ กรุณาลองใหม่ในภายหลัง',
+            redirect: '/app/target-branch/review-approve',
+        },
+    };
 
     const onFetchTargetBranchDetailSuccess = (targetBranchDetail: any) => {
         if (targetBranchDetail) {
@@ -150,22 +212,26 @@ export const useTargetBranchManage = () => {
         onError: onDeleteTargetBranchError,
     });
 
-    const onMakeActionTargetBranchSuccess = () => {
+    const onMakeActionTargetBranchSuccess = async (_data: any, variables: MakeActionTargetBranchRequst) => {
+        const makeActionMeta = makeActionMetaMapping[variables.action];
         toast.success(
             <div className="flex flex-col text-start">
-                <p className="text-sm font-bold text-green-400">ส่งคำขออนุมติสำเร็จ</p>
-                <p className="mt-2 text-xs">ส่งคำขออนุมติเป้าสาขาเรียบร้อย</p>
+                <p className="text-sm font-bold text-green-400">{makeActionMeta.successTitle}</p>
+                <p className="mt-2 text-xs">{makeActionMeta.successDescription}</p>
             </div>,
             { position: 'bottom-right' },
         );
-        refetchTargetBranch();
+        if (makeActionMeta.onSuccess) {
+            makeActionMeta.onSuccess();
+        }
     };
 
-    const onMakeActionTargetBranchError = () => {
+    const onMakeActionTargetBranchError = async (_error: Error, variables: MakeActionTargetBranchRequst) => {
+        const makeActionMeta = makeActionMetaMapping[variables.action];
         toast.error(
             <div className="flex flex-col text-start">
-                <p className="text-sm font-bold text-ref-400">ไม่สามารถส่งคำขออนุมติ</p>
-                <p className="mt-2 text-xs">กรุณากรอกข้อมูลให้ครบถ้วนก่อนส่งคำขออนุมัติ</p>
+                <p className="text-sm font-bold text-ref-400">{makeActionMeta.failedTitle}</p>
+                <p className="mt-2 text-xs">{makeActionMeta.failedDescription}</p>
             </div>,
             { position: 'bottom-right' },
         );
@@ -338,19 +404,22 @@ export const useTargetBranchManage = () => {
         });
     };
 
-    const makeActionTargetBranchHandler = (targetBranchId: number, action: string) => {
+    const makeActionTargetBranchHandler = (targetBranchIdList: number[], action: string) => {
         openModal({
             title: (
                 <div className="flex items-center gap-2">
-                    <InfoCircledIcon className="w-6 h-6" color="orange" /> <span>ยืนยันการอนุมัติข้อมูล</span>
+                    <InfoCircledIcon className="w-6 h-6" color="orange" />{' '}
+                    <span>{makeActionMetaMapping[action].title}</span>
                 </div>
             ),
-            content: 'บันทึกข้อมูลและส่งคำขออนุมัติสาขา',
+            content: makeActionMetaMapping[action].content,
             showCancelButton: true,
             onConfirm: () => {
-                makeActionTargetBranch({ targetBranchId, action });
+                const latestRejectReason = rejectReasonRef.current;
+                makeActionTargetBranch({ targetBranchIdList, action, rejectReason: latestRejectReason });
+                setRejectReason('');
                 closeModal();
-                navigate('/app/target-branch');
+                navigate(makeActionMetaMapping[action].redirect);
             },
         });
     };

@@ -12,7 +12,14 @@ export const targetBranchReviewApproveColumns: ColumnDef<TargetBranchDetail>[] =
         header: ({ table }) => (
             <Checkbox
                 checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
-                onCheckedChange={value => table.toggleAllPageRowsSelected(!!value)}
+                onCheckedChange={value => {
+                    const shouldSelectAll = !!value;
+                    table.getRowModel().rows.forEach(row => {
+                        if (row.original.status === 'Pending') {
+                            row.toggleSelected(shouldSelectAll);
+                        }
+                    });
+                }}
                 aria-label="Select all"
             />
         ),
@@ -21,6 +28,7 @@ export const targetBranchReviewApproveColumns: ColumnDef<TargetBranchDetail>[] =
                 checked={row.getIsSelected()}
                 onCheckedChange={value => row.toggleSelected(!!value)}
                 aria-label="Select row"
+                disabled={row.original.status !== 'Pending'}
             />
         ),
         enableSorting: false,

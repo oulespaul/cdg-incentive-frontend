@@ -1,4 +1,4 @@
-import { Check, Hourglass } from 'lucide-react';
+import { Check, Hourglass, X } from 'lucide-react';
 import {
     Timeline,
     TimelineConnector,
@@ -35,7 +35,7 @@ export const TimelineLayout = ({ targetWorkflow }: TimelineLayoutProps) => {
             id: 1,
             date: targetWorkflow.createdAt,
             actionIcon: (
-                <div className="bg-blue-600 rounded-full flex items-center w-6 h-6 p-1">
+                <div className="bg-blue-500 rounded-full flex items-center w-6 h-6 p-1">
                     <Check color="white" />
                 </div>
             ),
@@ -44,7 +44,7 @@ export const TimelineLayout = ({ targetWorkflow }: TimelineLayoutProps) => {
             waitingAction: ['New', 'Pending'].includes(targetWorkflow.status ?? '')
                 ? {
                       title: 'รออนุมัติ',
-                      iconColor: targetWorkflow.status === 'New' ? 'bg-gray-500' : 'bg-amber-500',
+                      iconColor: targetWorkflow.status === 'New' ? 'bg-gray-400' : 'bg-amber-500',
                   }
                 : undefined,
         },
@@ -52,12 +52,31 @@ export const TimelineLayout = ({ targetWorkflow }: TimelineLayoutProps) => {
             id: 2,
             date: targetWorkflow.approvedAt,
             actionIcon: (
-                <div className="bg-green-600 rounded-full flex items-center w-6 h-6 p-1">
+                <div className="bg-green-500 rounded-full flex items-center w-6 h-6 p-1">
                     <Check color="white" />
                 </div>
             ),
             actionBy: targetWorkflow.approvedBy,
             actionDescription: 'ผู้อนุมัติ',
+            waitingAction: {
+                title: 'รอคำนวน',
+                iconColor: 'bg-gray-400',
+            },
+        },
+        {
+            id: 3,
+            date: targetWorkflow.rejectedAt,
+            actionIcon: (
+                <div className="bg-red-600 rounded-full flex items-center w-6 h-6 p-1">
+                    <X color="white" />
+                </div>
+            ),
+            actionBy: targetWorkflow.rejectedBy,
+            actionDescription: `ไม่อนุมัติ: ${targetWorkflow.rejectedReason}`,
+            waitingAction: {
+                title: 'รอแก้ไข',
+                iconColor: 'bg-gray-400',
+            },
         },
     ];
 

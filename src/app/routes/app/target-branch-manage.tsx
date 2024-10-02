@@ -116,7 +116,7 @@ export const TargetBranchManagePage = () => {
                             disabled={_.isEmpty(targetCommission)}
                             onClick={() => {
                                 if (targetWorkflow?.id) {
-                                    makeActionTargetBranchHandler(targetWorkflow.id, 'Pending');
+                                    makeActionTargetBranchHandler([targetWorkflow.id], 'Pending');
                                 }
                             }}
                         >

@@ -5,7 +5,9 @@ import {
     getPaginationRowModel,
     OnChangeFn,
     PaginationState,
+    Row,
     RowData,
+    RowSelectionState,
     TableMeta,
     useReactTable,
 } from '@tanstack/react-table';
@@ -24,7 +26,9 @@ interface DataTableProps<TData, TValue> {
     pageCount?: number | undefined;
     pagination?: PaginationState | undefined;
     tableClassName?: string;
-    onRowSelectedChange?: (rows: number) => void;
+    onRowSelectedChange?: (rows: Row<any>[]) => void;
+    rowSelectionExternal?: RowSelectionState | undefined;
+    setRowSelectionExternal?: OnChangeFn<RowSelectionState> | undefined;
 }
 
 declare module '@tanstack/react-table' {
@@ -52,6 +56,8 @@ export function DataTable<TData, TValue>({
     pagination,
     tableClassName,
     onRowSelectedChange,
+    rowSelectionExternal,
+    setRowSelectionExternal,
 }: DataTableProps<TData, TValue>) {
     const [rowSelection, setRowSelection] = useState({});
     const [paginationLocal, setPaginationLocal] = useState<PaginationState>({
@@ -63,19 +69,22 @@ export function DataTable<TData, TValue>({
         data,
         meta,
         columns,
-        state: { pagination: manualPagination ? pagination : paginationLocal, rowSelection },
+        state: {
+            pagination: manualPagination ? pagination : paginationLocal,
+            rowSelection: rowSelectionExternal ? rowSelectionExternal : rowSelection,
+        },
         getCoreRowModel: getCoreRowModel(),
         manualPagination,
         getPaginationRowModel: manualPagination ? undefined : getPaginationRowModel(),
         onPaginationChange: manualPagination ? onPaginationChange : setPaginationLocal,
-        onRowSelectionChange: setRowSelection,
+        onRowSelectionChange: setRowSelectionExternal ? setRowSelectionExternal : setRowSelection,
         rowCount: pageCount,
         enableRowSelection: true,
     });
 
     useEffect(() => {
         if (onRowSelectedChange) {
-            onRowSelectedChange(table.getSelectedRowModel().rows.length);
+            onRowSelectedChange(table.getSelectedRowModel().rows);
         }
     }, [onRowSelectedChange, table.getSelectedRowModel().rows.length]);
 
