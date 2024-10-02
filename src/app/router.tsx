@@ -21,6 +21,13 @@ export const createAppRouter = () =>
             ),
             children: [
                 {
+                    path: '',
+                    index: true,
+                    lazy: async () => {
+                        return { Component: () => <div></div> };
+                    },
+                },
+                {
                     path: 'target-commission',
                     index: true,
                     lazy: async () => {

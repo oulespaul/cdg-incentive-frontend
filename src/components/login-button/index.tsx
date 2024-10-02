@@ -1,18 +1,16 @@
-import { useMsal } from "@azure/msal-react";
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
+import { useAuth } from '@/hooks/use-auth';
 
 function LoginButton() {
-  const { instance } = useMsal();
+    const { login } = useAuth();
 
-  const handleLogin = () => {
-    instance.loginRedirect();
-  };
-
-  return (
-    <>
-      <Button className="font-regular" onClick={handleLogin}>เข้าสู่ระบบ</Button>
-    </>
-  );
+    return (
+        <>
+            <Button className="font-regular" onClick={login}>
+                เข้าสู่ระบบ
+            </Button>
+        </>
+    );
 }
 
 export default LoginButton;

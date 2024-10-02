@@ -12,6 +12,7 @@ import TargetBranchSummaryTabContent from '@/features/target-branch/components/t
 import { useFetchTargetBranchDetailByBranchId } from '@/features/target-branch/api/use-fetch-target-branch-detail-by-id';
 import { useEffect } from 'react';
 import { Spinner } from '@/components/spinner';
+import { useTargetBranchManage } from '@/features/target-branch/hooks/use-target-branch-manage';
 
 export const TargetBranchReviewDetail = () => {
     const {
@@ -24,6 +25,7 @@ export const TargetBranchReviewDetail = () => {
         setTargetWorkflow,
         targetWorkflow,
     } = useTargetBranchStore();
+    const { makeActionTargetBranchHandler } = useTargetBranchManage();
 
     const { id } = useParams();
     const { data: targetBranchDetail, isFetching: isTargetBranchLoading } = useFetchTargetBranchDetailByBranchId(
@@ -98,7 +100,10 @@ export const TargetBranchReviewDetail = () => {
                             <X />
                             ไม่อนุมัติ
                         </Button>
-                        <Button variant="success">
+                        <Button
+                            variant="success"
+                            onClick={() => makeActionTargetBranchHandler(targetBranchDetail.id, 'Approved')}
+                        >
                             <Check />
                             อนุมัติ
                         </Button>

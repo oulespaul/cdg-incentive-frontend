@@ -1,3 +1,4 @@
+import { getRoutePermissionByPath } from '@/app/routes/routePermission';
 import { Calculator, CheckCircle, LucideIcon, Star } from 'lucide-react';
 
 type Submenu = {
@@ -12,6 +13,7 @@ type Menu = {
     active: boolean;
     icon: LucideIcon;
     submenus: Submenu[];
+    allowedRoles: string[];
 };
 
 type Group = {
@@ -30,6 +32,7 @@ export function getMenuList(pathname: string): Group[] {
                     active: pathname.includes('/app/target-commission'),
                     icon: Star,
                     submenus: [],
+                    allowedRoles: getRoutePermissionByPath('/app/target-commission')?.allowedRoles || [],
                 },
                 {
                     href: '/app/target-branch',
@@ -39,6 +42,7 @@ export function getMenuList(pathname: string): Group[] {
                         !pathname.includes('/app/target-branch/review-approve'),
                     icon: Calculator,
                     submenus: [],
+                    allowedRoles: getRoutePermissionByPath('/app/target-branch')?.allowedRoles || [],
                 },
                 {
                     href: '/app/target-branch/review-approve',
@@ -46,6 +50,7 @@ export function getMenuList(pathname: string): Group[] {
                     active: pathname.includes('/app/target-branch/review-approve'),
                     icon: CheckCircle,
                     submenus: [],
+                    allowedRoles: getRoutePermissionByPath('/app/target-branch/review-approve')?.allowedRoles || [],
                 },
             ],
         },
