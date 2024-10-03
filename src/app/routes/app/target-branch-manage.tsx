@@ -11,6 +11,7 @@ import { getStatusTextColorClass } from '@/lib/status-color-utils';
 import { cn } from '@/lib/utils';
 import { useTargetBranchManage } from '@/features/target-branch/hooks/use-target-branch-manage';
 import { useNavigate } from 'react-router-dom';
+import { useAppUserDetail } from '@/features/app-user/hooks/use-app-user-detail';
 
 export const TargetBranchManagePage = () => {
     const {
@@ -27,13 +28,18 @@ export const TargetBranchManagePage = () => {
         makeActionTargetBranchHandler,
     } = useTargetBranchManage();
     const { targetWorkflow, isTargetBranchLoading } = useTargetBranchStore();
+    const { appUserDetail } = useAppUserDetail();
     const navigate = useNavigate();
 
     return (
         <div className="flex flex-col">
             <div className="flex justify-between text-start">
                 <h1 className="text-2xl font-medium">จัดการเป้าสาขา</h1>
-                <h2 className="text-xl font-medium">สาขา: 10102 - Chidlom</h2>
+                {appUserDetail?.branch && (
+                    <h2 className="text-xl font-medium">
+                        สาขา: {appUserDetail?.branch?.branchNumber} - {appUserDetail?.branch?.name}
+                    </h2>
+                )}
             </div>
 
             <div className="flex mt-2">
@@ -81,48 +87,61 @@ export const TargetBranchManagePage = () => {
                         )}
                     </p>
                 </div>
-                {isViewMode ? (
-                    <div className="flex w-1/3 gap-3 justify-end">
-                        <Button
-                            className="bg-amber-500 hover:bg-amber-500/80"
-                            disabled={_.isEmpty(targetCommission)}
-                            onClick={() => {
-                                navigate(`/app/target-branch/manage/${filterParams.year}/${filterParams.month}/edit`);
-                            }}
-                        >
-                            แก้ไข
-                        </Button>
-                        <Button
-                            variant="destructive"
-                            onClick={() => {
-                                if (targetWorkflow?.id) {
-                                    deleteTargetBranchHandler(targetWorkflow.id);
-                                }
-                            }}
-                        >
-                            ลบ
-                        </Button>
-                    </div>
-                ) : (
-                    <div className="flex w-1/3 gap-3 justify-end">
-                        <Button variant="outline" onClick={onCancelTargetHandler}>
-                            ยกเลิก
-                        </Button>
-                        <Button variant="primary" disabled={_.isEmpty(targetCommission)} onClick={onSaveTargetHandler}>
-                            บันทึก
-                        </Button>
-                        <Button
-                            variant="success"
-                            disabled={_.isEmpty(targetCommission)}
-                            onClick={() => {
-                                if (targetWorkflow?.id) {
-                                    makeActionTargetBranchHandler([targetWorkflow.id], 'Pending');
-                                }
-                            }}
-                        >
-                            ส่งคำขออนุมัติ
-                        </Button>
-                    </div>
+
+                {!isTargetBranchLoading && (
+                    <>
+                        {isViewMode || ['Approved', 'Rejected'].includes(targetWorkflow?.status || '') ? (
+                            <div className="flex w-1/3 gap-3 justify-end">
+                                {targetWorkflow?.status !== 'Approved' && (
+                                    <Button
+                                        className="bg-amber-500 hover:bg-amber-500/80"
+                                        disabled={_.isEmpty(targetCommission)}
+                                        onClick={() => {
+                                            navigate(
+                                                `/app/target-branch/manage/${filterParams.year}/${filterParams.month}/edit`,
+                                            );
+                                        }}
+                                    >
+                                        แก้ไข
+                                    </Button>
+                                )}
+                                <Button
+                                    variant="destructive"
+                                    onClick={() => {
+                                        if (targetWorkflow?.id) {
+                                            deleteTargetBranchHandler(targetWorkflow.id);
+                                        }
+                                    }}
+                                >
+                                    ลบ
+                                </Button>
+                            </div>
+                        ) : (
+                            <div className="flex w-1/3 gap-3 justify-end">
+                                <Button variant="outline" onClick={onCancelTargetHandler}>
+                                    ยกเลิก
+                                </Button>
+                                <Button
+                                    variant="primary"
+                                    disabled={_.isEmpty(targetCommission)}
+                                    onClick={onSaveTargetHandler}
+                                >
+                                    บันทึก
+                                </Button>
+                                <Button
+                                    variant="success"
+                                    disabled={_.isEmpty(targetCommission)}
+                                    onClick={() => {
+                                        if (targetWorkflow?.id) {
+                                            makeActionTargetBranchHandler([targetWorkflow.id], 'Pending');
+                                        }
+                                    }}
+                                >
+                                    ส่งคำขออนุมัติ
+                                </Button>
+                            </div>
+                        )}
+                    </>
                 )}
             </div>
 

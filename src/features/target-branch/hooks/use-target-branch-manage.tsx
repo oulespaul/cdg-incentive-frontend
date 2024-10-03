@@ -29,6 +29,7 @@ import { useFetchTargetBranchDetailList } from '../api/use-fetch-target-branch-d
 import { useDeleteTargetBranch } from '../api/use-delete-target-branch';
 import { MakeActionTargetBranchRequst, useMakeActionTargetBranch } from '../api/use-make-action-target-branch';
 import { Input } from '@/components/ui/input';
+import { useAppUserDetail } from '@/features/app-user/hooks/use-app-user-detail';
 
 interface MakeActionText {
     title: string;
@@ -46,9 +47,9 @@ export const useTargetBranchManage = () => {
     const [filterParams, setFilterParams] = useState<TargetCommissionDetailFilterParams>({ year, month });
     const [rejectReason, setRejectReason] = useState<string>('');
     const rejectReasonRef = useRef(rejectReason);
+    const { appUserDetail } = useAppUserDetail();
 
     const {
-        currentBranchId,
         targetCommission,
         setTargetCommission,
         targetInHouseList,
@@ -63,6 +64,8 @@ export const useTargetBranchManage = () => {
         resetState,
         setIsTargetBranchLoading,
     } = useTargetBranchStore();
+
+    const currentBranchId = appUserDetail?.branch?.id;
 
     const { data: yearFilterOptions } = useFetchTargetCommissionYearFilter({ branchId: currentBranchId });
     const { data: monthFilterOptions } = useFetchTargetCommissionMonthFilter({ branchId: currentBranchId });

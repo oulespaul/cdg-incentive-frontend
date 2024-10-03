@@ -7,8 +7,20 @@ export interface AppUser {
     firstname: string;
     lastname: string;
     isActive: boolean;
-    branch: null;
+    branch?: UserBranch;
     role: Role;
+}
+
+interface UserBranch {
+    id: number;
+    bu: string;
+    brand: string;
+    segment: string;
+    name: string;
+    regionName: string;
+    type: string;
+    branchNumber: string;
+    branchCode: string;
 }
 
 interface Role {
