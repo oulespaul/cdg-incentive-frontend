@@ -16,6 +16,7 @@ import {
     TargetBranchFilterParams,
     useFetchTargetBranchDetailList,
 } from '@/features/target-branch/api/use-fetch-target-branch-detail-list';
+import { useAppUserDetail } from '@/features/app-user/hooks/use-app-user-detail';
 
 const initialFilterParams = {
     year: undefined,
@@ -24,6 +25,8 @@ const initialFilterParams = {
 
 export const TargetBranchPage = () => {
     const [filterParams, setFilterParams] = useState<TargetBranchFilterParams>(initialFilterParams);
+
+    const { appUserDetail } = useAppUserDetail();
     const navigate = useNavigate();
 
     const { onPaginationChange, resetPaginationState, pagination } = usePagination();
@@ -36,6 +39,8 @@ export const TargetBranchPage = () => {
     const { data: monthFilterOptions } = useFetchTargetCommissionMonthFilter();
 
     useEffect(() => {
+        // TODO: Refactor this logic
+        if (!appUserDetail?.branch?.branchNumber) return;
         refetchTargetBranch();
     }, [pagination.pageIndex, pagination.pageSize, refetchTargetBranch]);
 
@@ -55,7 +60,11 @@ export const TargetBranchPage = () => {
         <div className="flex flex-col">
             <div className="flex justify-between text-start">
                 <h1 className="text-2xl font-medium">จัดการเป้าสาขา</h1>
-                <h2 className="text-xl font-medium">สาขา: 10102 - Chidlom</h2>
+                {appUserDetail?.branch && (
+                    <h2 className="text-xl font-medium">
+                        สาขา: {appUserDetail?.branch?.branchNumber} - {appUserDetail?.branch?.name}
+                    </h2>
+                )}
             </div>
 
             <div className="flex flex-col mt-4">

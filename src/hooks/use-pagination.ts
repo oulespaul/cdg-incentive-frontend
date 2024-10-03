@@ -1,20 +1,20 @@
-import { useState } from "react";
+import { useState } from 'react';
 
 const initialPagination = {
-  pageSize: 10,
-  pageIndex: 0,
-}
+    pageSize: 10,
+    pageIndex: 0,
+};
 
 export const usePagination = () => {
-  const [pagination, setPagination] = useState(initialPagination);
+    const [pagination, setPagination] = useState(initialPagination);
 
-  const resetPaginationState = () => {
-    setPagination(initialPagination)
-  }
+    const resetPaginationState = () => {
+        setPagination(initialPagination);
+    };
 
-  return {
-    onPaginationChange: setPagination,
-    resetPaginationState,
-    pagination,
-  };
+    return {
+        onPaginationChange: setPagination,
+        resetPaginationState,
+        pagination,
+    };
 };
