@@ -17,7 +17,6 @@ import {
     useCreateTargetBranch,
 } from '../api/use-create-target-branch';
 import { useFetchTargetBranchDetail } from '../api/use-fetch-target-branch-detail-by-target-commission-id';
-import { useModalContext } from '@/app/providers/modal-provider';
 import { InfoCircledIcon } from '@radix-ui/react-icons';
 import { toast } from 'react-toastify';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -29,7 +28,9 @@ import { useFetchTargetBranchDetailList } from '../api/use-fetch-target-branch-d
 import { useDeleteTargetBranch } from '../api/use-delete-target-branch';
 import { MakeActionTargetBranchRequst, useMakeActionTargetBranch } from '../api/use-make-action-target-branch';
 import { Input } from '@/components/ui/input';
-import { useAppUserDetail } from '@/features/app-user/hooks/use-app-user-detail';
+import { useModalContext } from '@/app/contexts/modal-context';
+import { useUser } from '@/app/contexts/user-context';
+import { TARGET_BRANCH, TARGET_BRANCH_REVIEW_APPROVE } from '@/constants/route-path';
 
 interface MakeActionText {
     title: string;
@@ -47,7 +48,7 @@ export const useTargetBranchManage = () => {
     const [filterParams, setFilterParams] = useState<TargetCommissionDetailFilterParams>({ year, month });
     const [rejectReason, setRejectReason] = useState<string>('');
     const rejectReasonRef = useRef(rejectReason);
-    const { appUserDetail } = useAppUserDetail();
+    const { user } = useUser();
 
     const {
         targetCommission,
@@ -65,7 +66,7 @@ export const useTargetBranchManage = () => {
         setIsTargetBranchLoading,
     } = useTargetBranchStore();
 
-    const currentBranchId = appUserDetail?.branch?.id;
+    const currentBranchId = user?.branch?.id;
 
     const { data: yearFilterOptions } = useFetchTargetCommissionYearFilter({ branchId: currentBranchId });
     const { data: monthFilterOptions } = useFetchTargetCommissionMonthFilter({ branchId: currentBranchId });
@@ -82,7 +83,7 @@ export const useTargetBranchManage = () => {
             successDescription: 'ส่งคำขออนุมัติเป้าสาขาเรียบร้อย',
             failedTitle: 'ส่งคำขออนุมติสำเร็จ',
             failedDescription: 'ไม่สามารถส่งคำขออนุมัติข้อมูลได้ กรุณาลองใหม่ในภายหลัง',
-            redirect: '/app/target-branch',
+            redirect: TARGET_BRANCH,
         },
         ['Approved']: {
             title: 'ยืนยันการอนุมัติข้อมูล',
@@ -94,7 +95,7 @@ export const useTargetBranchManage = () => {
             },
             failedTitle: 'อนุมัติข้อมูลไม่สำเร็จ',
             failedDescription: 'ไม่สามารถอนุมัติข้อมูลได้ กรุณาลองใหม่ในภายหลัง',
-            redirect: '/app/target-branch/review-approve',
+            redirect: TARGET_BRANCH_REVIEW_APPROVE,
         },
         ['Rejected']: {
             title: 'ยืนยันการไม่อนุมัติข้อมูล',
@@ -117,7 +118,7 @@ export const useTargetBranchManage = () => {
             },
             failedTitle: 'ไม่อนุมัติข้อมูลไม่สำเร็จ',
             failedDescription: 'ไม่สามารถไม่อนุมัติข้อมูลได้ กรุณาลองใหม่ในภายหลัง',
-            redirect: '/app/target-branch/review-approve',
+            redirect: TARGET_BRANCH_REVIEW_APPROVE,
         },
     };
 
@@ -174,7 +175,7 @@ export const useTargetBranchManage = () => {
             { position: 'bottom-right' },
         );
         resetState();
-        navigate('/app/target-branch');
+        navigate(TARGET_BRANCH);
     };
 
     const onCreateTargetError = () => {
@@ -378,7 +379,7 @@ export const useTargetBranchManage = () => {
             onSecondaryActionClick: () => {
                 resetState();
                 closeModal();
-                navigate('/app/target-branch');
+                navigate(TARGET_BRANCH);
             },
         });
     }, [
@@ -402,7 +403,7 @@ export const useTargetBranchManage = () => {
             onConfirm: () => {
                 deleteTargetBranch(targetbranchId);
                 closeModal();
-                navigate('/app/target-branch');
+                navigate(TARGET_BRANCH);
             },
         });
     };

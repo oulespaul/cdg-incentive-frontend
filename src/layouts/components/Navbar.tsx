@@ -4,12 +4,12 @@ import { useStore } from '@/hooks/use-store';
 import { useSidebarToggle } from '@/hooks/use-sidebar-toggle';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
-import { useAppUserDetail } from '@/features/app-user/hooks/use-app-user-detail';
 import { useAuth } from '@/hooks/use-auth';
+import { useUser } from '@/app/contexts/user-context';
 
 export function Navbar() {
     const sidebar = useStore(useSidebarToggle, state => state);
-    const { appUserDetail } = useAppUserDetail();
+    const { user } = useUser();
     const { logout } = useAuth();
 
     return (
@@ -32,9 +32,9 @@ export function Navbar() {
                 </Avatar>
                 <div className="flex flex-col items-start mr-2">
                     <p className="text-primary-foreground text-sm font-semibold">
-                        {appUserDetail?.firstname} {appUserDetail?.lastname}
+                        {user?.firstname} {user?.lastname}
                     </p>
-                    <p className="text-primary-foreground text-xs font-normal">{appUserDetail?.role.description}</p>
+                    <p className="text-primary-foreground text-xs font-normal">{user?.role.description}</p>
                 </div>
                 <Button>
                     <LogOut onClick={logout} />

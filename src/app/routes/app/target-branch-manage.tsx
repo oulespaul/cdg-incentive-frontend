@@ -11,7 +11,8 @@ import { getStatusTextColorClass } from '@/lib/status-color-utils';
 import { cn } from '@/lib/utils';
 import { useTargetBranchManage } from '@/features/target-branch/hooks/use-target-branch-manage';
 import { useNavigate } from 'react-router-dom';
-import { useAppUserDetail } from '@/features/app-user/hooks/use-app-user-detail';
+import { useUser } from '@/app/contexts/user-context';
+import { TARGET_BRANCH } from '@/constants/route-path';
 
 export const TargetBranchManagePage = () => {
     const {
@@ -28,16 +29,16 @@ export const TargetBranchManagePage = () => {
         makeActionTargetBranchHandler,
     } = useTargetBranchManage();
     const { targetWorkflow, isTargetBranchLoading } = useTargetBranchStore();
-    const { appUserDetail } = useAppUserDetail();
+    const { user } = useUser();
     const navigate = useNavigate();
 
     return (
         <div className="flex flex-col">
             <div className="flex justify-between text-start">
                 <h1 className="text-2xl font-medium">จัดการเป้าสาขา</h1>
-                {appUserDetail?.branch && (
+                {user?.branch && (
                     <h2 className="text-xl font-medium">
-                        สาขา: {appUserDetail?.branch?.branchNumber} - {appUserDetail?.branch?.name}
+                        สาขา: {user?.branch?.branchNumber} - {user?.branch?.name}
                     </h2>
                 )}
             </div>
@@ -49,7 +50,7 @@ export const TargetBranchManagePage = () => {
                             variant="outline"
                             className="text-black"
                             onClick={() => {
-                                navigate('/app/target-branch');
+                                navigate(TARGET_BRANCH);
                             }}
                         >
                             ย้อนกลับ

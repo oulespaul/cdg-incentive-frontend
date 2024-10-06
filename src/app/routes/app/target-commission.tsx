@@ -29,7 +29,6 @@ const initialFilterParams = {
 
 export const TargetCommissionPage = () => {
     const [filterParams, setFilterParams] = useState<TargetCommissionFilterParams>(initialFilterParams);
-
     const { onPaginationChange, resetPaginationState, pagination } = usePagination();
     const { data: targetCommissionData, refetch: refetchTargetCommission } = useFetchTargetCommission({
         ...filterParams,

@@ -2,7 +2,7 @@ import { apiClient } from '@/lib/api-client';
 import { useQuery } from '@tanstack/react-query';
 import { Page } from '@/models/pagination-response';
 import { PaginationState } from '@tanstack/react-table';
-import { useAppUserDetail } from '@/features/app-user/hooks/use-app-user-detail';
+import { useUser } from '@/app/contexts/user-context';
 
 export interface TargetBranchDetail {
     id: number;
@@ -45,17 +45,17 @@ const fetchTargetBranchDetailList = async (filterParams?: TargetBranchFilterPara
 };
 
 export const useFetchTargetBranchDetailList = (filterParams?: TargetBranchFilterParams & PaginationState) => {
-    const { appUserDetail } = useAppUserDetail();
+    const { user } = useUser();
     return useQuery<Page<TargetBranchDetail>, number>({
         queryFn: async () => {
             //@ts-ignore
             const { data } = await fetchTargetBranchDetailList({
                 ...filterParams,
-                branchNumber: appUserDetail?.branch?.branchNumber,
+                branchNumber: user?.branch?.branchNumber,
             });
             return data;
         },
         queryKey: ['target-branch-detail-list'],
-        enabled: !!appUserDetail?.branch?.branchNumber,
+        enabled: !!user?.branch?.branchNumber,
     });
 };

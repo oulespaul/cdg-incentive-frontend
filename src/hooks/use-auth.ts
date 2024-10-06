@@ -1,17 +1,17 @@
-import { useAppUserDetail } from '@/features/app-user/hooks/use-app-user-detail';
+import { useUser } from '@/app/contexts/user-context';
 import { useMsal } from '@azure/msal-react';
 import { useCallback } from 'react';
 
 export const useAuth = () => {
     const { instance } = useMsal();
-    const { clearAppUserDetail } = useAppUserDetail();
+    const { setUser } = useUser();
 
     const login = useCallback(() => {
         instance.loginRedirect();
     }, []);
 
     const logout = useCallback(() => {
-        clearAppUserDetail();
+        setUser(undefined);
         instance.logout();
     }, []);
 

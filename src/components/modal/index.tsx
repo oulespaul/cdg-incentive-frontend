@@ -1,4 +1,4 @@
-import { useModalContext } from '@/app/providers/modal-provider';
+import { useModalContext } from '@/app/contexts/modal-context';
 import {
     AlertDialog,
     AlertDialogAction,

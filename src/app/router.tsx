@@ -65,6 +65,20 @@ export const createAppRouter = () =>
                 },
             ],
         },
+        {
+            path: 'unauthorized',
+            lazy: async () => {
+                const { UnauthorizedPage } = await import('./routes/app/unauthorized');
+                return { Component: UnauthorizedPage };
+            },
+        },
+        {
+            path: '*',
+            lazy: async () => {
+                const { NotFound } = await import('./routes/app/not-found');
+                return { Component: NotFound };
+            },
+        },
     ]);
 
 export const AppRouter = () => {

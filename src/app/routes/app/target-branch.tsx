@@ -16,7 +16,8 @@ import {
     TargetBranchFilterParams,
     useFetchTargetBranchDetailList,
 } from '@/features/target-branch/api/use-fetch-target-branch-detail-list';
-import { useAppUserDetail } from '@/features/app-user/hooks/use-app-user-detail';
+import { useUser } from '@/app/contexts/user-context';
+import { TARGET_BRANCH_MANAGE } from '@/constants/route-path';
 
 const initialFilterParams = {
     year: undefined,
@@ -26,7 +27,7 @@ const initialFilterParams = {
 export const TargetBranchPage = () => {
     const [filterParams, setFilterParams] = useState<TargetBranchFilterParams>(initialFilterParams);
 
-    const { appUserDetail } = useAppUserDetail();
+    const { user } = useUser();
     const navigate = useNavigate();
 
     const { onPaginationChange, resetPaginationState, pagination } = usePagination();
@@ -40,7 +41,7 @@ export const TargetBranchPage = () => {
 
     useEffect(() => {
         // TODO: Refactor this logic
-        if (!appUserDetail?.branch?.branchNumber) return;
+        if (!user?.branch?.branchNumber) return;
         refetchTargetBranch();
     }, [pagination.pageIndex, pagination.pageSize, refetchTargetBranch]);
 
@@ -60,9 +61,9 @@ export const TargetBranchPage = () => {
         <div className="flex flex-col">
             <div className="flex justify-between text-start">
                 <h1 className="text-2xl font-medium">จัดการเป้าสาขา</h1>
-                {appUserDetail?.branch && (
+                {user?.branch && (
                     <h2 className="text-xl font-medium">
-                        สาขา: {appUserDetail?.branch?.branchNumber} - {appUserDetail?.branch?.name}
+                        สาขา: {user?.branch?.branchNumber} - {user?.branch?.name}
                     </h2>
                 )}
             </div>
@@ -87,7 +88,7 @@ export const TargetBranchPage = () => {
                     <div className="flex w-1/2 justify-end">
                         <Button
                             className="bg-gradient-to-l from-cyan-500 to-blue-500"
-                            onClick={() => navigate('/app/target-branch/manage')}
+                            onClick={() => navigate(TARGET_BRANCH_MANAGE)}
                         >
                             <Plus className="mr-2 h-4 w-4" />
                             สร้าง Target

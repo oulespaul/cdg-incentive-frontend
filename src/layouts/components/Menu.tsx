@@ -7,8 +7,8 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '@/components/ui/tooltip';
 import { Link, useLocation } from 'react-router-dom';
 import { CollapseMenuButton } from './CollapseMenuButton';
-import { useAppUserDetail } from '@/features/app-user/hooks/use-app-user-detail';
 import { useMemo } from 'react';
+import { useUser } from '@/app/contexts/user-context';
 
 interface MenuProps {
     isOpen: boolean | undefined;
@@ -16,15 +16,16 @@ interface MenuProps {
 
 export function Menu({ isOpen }: MenuProps) {
     const { pathname } = useLocation();
+
+    const { user } = useUser();
     const menuList = getMenuList(pathname);
-    const { appUserDetail } = useAppUserDetail();
 
     const filteredMenus = useMemo(() => {
         return menuList.map(group => ({
             ...group,
-            menus: group.menus.filter(menu => menu.allowedRoles.includes(appUserDetail?.role.roleName || '')),
+            menus: group.menus.filter(menu => menu.allowedRoles.includes(user?.role.roleName || '')),
         }));
-    }, [appUserDetail?.role, JSON.stringify(menuList)]);
+    }, [user?.role, JSON.stringify(menuList)]);
 
     return (
         <ScrollArea className="[&>div>div[style]]:!block">

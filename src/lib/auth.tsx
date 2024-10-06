@@ -1,55 +1,104 @@
-import { routePermissions } from '@/app/routes/routePermission';
-import { useAppUserDetail } from '@/features/app-user/hooks/use-app-user-detail';
-import { useMsal } from '@azure/msal-react';
-import { useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { getMenuList } from './menu-list';
+import React, { useEffect, ReactNode, useState } from 'react';
+import { useIsAuthenticated, useMsal } from '@azure/msal-react';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { useUser } from '@/app/contexts/user-context';
+import { loginRequest } from '@/configs/authConfig';
+import { apiClient } from './api-client';
 import { Loader2 } from 'lucide-react';
+import { roleBasedRoutes } from '@/types/auth';
+import { getRoutePermissionByPath } from '@/constants/route-permission';
 
 interface ProtectedRouteProps {
-    children: React.ReactNode;
+    children: ReactNode;
 }
 
+const fetchAccessToken = async (instance: any, account: any) => {
+    return await instance.acquireTokenSilent({
+        account,
+        ...loginRequest,
+    });
+};
+
+const fetchUserDetails = async (accessToken: string) => {
+    try {
+        const response = await apiClient.get('/app-user', {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching user details:', error);
+        throw error;
+    }
+};
+
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-    const { accounts } = useMsal();
-    const { appUserDetail } = useAppUserDetail();
+    const [isLoading, setIsLoading] = useState(true);
+    const isAuthenticated = useIsAuthenticated();
+    const { instance, accounts } = useMsal();
+    const { user, setUser } = useUser();
 
     const location = useLocation();
     const navigate = useNavigate();
 
+    const checkAccess = React.useCallback(
+        ({ allowedRoles }: { allowedRoles: string[] }) => {
+            if (allowedRoles && allowedRoles.length > 0 && user) {
+                return allowedRoles?.includes(user.role.roleName);
+            }
+
+            return true;
+        },
+        [user?.id],
+    );
+
     useEffect(() => {
-        const currentRoute = location.pathname;
-        const sortedPermissions = [...routePermissions].sort((a, b) => b.path.length - a.path.length);
-        const permission = sortedPermissions.find(route => currentRoute.startsWith(route.path));
+        const loadUserDetails = async () => {
+            if (isAuthenticated && accounts.length > 0 && !user) {
+                try {
+                    const accessTokenResponse = await fetchAccessToken(instance, accounts[0]);
 
-        if (currentRoute === '/app' || currentRoute === '/app/') {
-            if (appUserDetail?.role) {
-                const firstMenuPath = getMenuList('')
-                    .flatMap(group => group.menus)
-                    .find(menu => menu.allowedRoles.includes(appUserDetail.role.roleName))?.href;
+                    const userDetails = await fetchUserDetails(accessTokenResponse.accessToken);
+                    setUser(userDetails);
 
-                if (firstMenuPath) {
-                    navigate(firstMenuPath, { replace: true });
-                } else {
-                    navigate('/app/unauthorized');
+                    apiClient.interceptors.request.use(async config => {
+                        const bearer = `Bearer ${accessTokenResponse.accessToken}`;
+                        config.headers.Authorization = bearer;
+                        return config;
+                    });
+                    setIsLoading(false);
+                } catch (error) {
+                    console.error('Failed to load user details');
                 }
             }
-        } else if (
-            permission &&
-            appUserDetail?.role &&
-            !permission.allowedRoles.includes(appUserDetail.role.roleName)
-        ) {
-            navigate('/app/unauthorized');
-        }
-    }, [location.pathname, JSON.stringify(appUserDetail), accounts.length]);
+        };
 
-    if (!appUserDetail?.role) {
+        loadUserDetails();
+    }, [isAuthenticated, accounts, user, setUser, instance]);
+
+    useEffect(() => {
+        if (user && user.role) {
+            const targetRoute = roleBasedRoutes[user.role.roleName] || '/';
+            navigate(targetRoute);
+        }
+    }, [user, navigate]);
+
+    if (!isAuthenticated && !user) {
+        return <Navigate to="/" replace />;
+    }
+
+    if (!checkAccess({ allowedRoles: getRoutePermissionByPath(location.pathname)?.allowedRoles || [] })) {
+        return <Navigate to="/unauthorized" replace />;
+    }
+
+    if (isLoading) {
         return (
             <div className="flex justify-center">
-                <Loader2 className="ml-2 h-10 w-10 animate-spin text-primary" />
+                <Loader2 className="ml-2 h-12 w-12 animate-spin text-primary" />
             </div>
         );
     }
 
-    return <>{children}</>;
+    return children;
 };

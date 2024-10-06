@@ -4,8 +4,9 @@ import { msalConfig } from '@/configs/authConfig';
 import { PublicClientApplication } from '@azure/msal-browser';
 import { MsalProvider } from '@azure/msal-react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ModalProvider } from './providers/modal-provider';
+import { ModalProvider } from './contexts/modal-context';
 import Modal from '@/components/modal';
+import { UserProvider } from './contexts/user-context';
 
 interface AppProviderProps {
     children: React.ReactNode;
@@ -23,14 +24,16 @@ export const AppProvider = ({ children }: AppProviderProps) => {
                 </div>
             }
         >
-            <QueryClientProvider client={queryClient}>
-                <ModalProvider>
-                    <MsalProvider instance={msalInstance}>
-                        {children}
-                        <Modal />
-                    </MsalProvider>
-                </ModalProvider>
-            </QueryClientProvider>
+            <UserProvider>
+                <MsalProvider instance={msalInstance}>
+                    <QueryClientProvider client={queryClient}>
+                        <ModalProvider>
+                            {children}
+                            <Modal />
+                        </ModalProvider>
+                    </QueryClientProvider>
+                </MsalProvider>
+            </UserProvider>
         </React.Suspense>
     );
 };
