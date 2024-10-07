@@ -55,7 +55,9 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
 
     useEffect(() => {
         const loadUserDetails = async () => {
+            setIsLoading(false);
             if (isAuthenticated && accounts.length > 0 && !user) {
+                setIsLoading(true);
                 try {
                     const accessTokenResponse = await fetchAccessToken(instance, accounts[0]);
 
@@ -84,7 +86,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
         }
     }, [user, navigate]);
 
-    if (!isAuthenticated && !user) {
+    if (!isAuthenticated) {
         return <Navigate to="/" replace />;
     }
 

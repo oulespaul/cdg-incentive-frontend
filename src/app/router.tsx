@@ -1,15 +1,16 @@
 import { ProtectedRoute } from '@/lib/auth';
 import { useMemo } from 'react';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
 import { AppRoot } from './routes/app/root';
+import { useIsAuthenticated } from '@azure/msal-react';
 
-export const createAppRouter = () =>
+export const createAppRouter = (isAuthenticated: boolean) =>
     createBrowserRouter([
         {
             path: '/',
             lazy: async () => {
                 const { LoginPage } = await import('./routes/auth/login');
-                return { Component: LoginPage };
+                return { Component: isAuthenticated ? () => <Navigate to="/app" /> : LoginPage };
             },
         },
         {
@@ -22,9 +23,9 @@ export const createAppRouter = () =>
             children: [
                 {
                     path: '',
-                    index: true,
                     lazy: async () => {
-                        return { Component: () => <div></div> };
+                        const { LandingPage } = await import('./routes/app/landing');
+                        return { Component: LandingPage };
                     },
                 },
                 {
@@ -82,7 +83,8 @@ export const createAppRouter = () =>
     ]);
 
 export const AppRouter = () => {
-    const router = useMemo(() => createAppRouter(), []);
+    const isAuthenticated = useIsAuthenticated();
+    const router = useMemo(() => createAppRouter(isAuthenticated), [isAuthenticated]);
 
     return <RouterProvider router={router} />;
 };
