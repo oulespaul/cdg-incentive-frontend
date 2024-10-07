@@ -5,10 +5,7 @@ import { Separator } from '@/components/ui/separator';
 import { useCallback, useEffect, useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { usePagination } from '@/hooks/use-pagination';
-import {
-    useFetchTargetCommissionMonthFilter,
-    useFetchTargetCommissionYearFilter,
-} from '@/features/target-commission/api/use-fetch-target-commission-filters';
+import { useFetchTargetCommissionFilter } from '@/features/target-commission/api/use-fetch-target-commission-filters';
 import FilterSelect from '@/components/select';
 import { targetBranchColumns } from '@/features/target-branch/constants/target-branch-columns';
 import { useNavigate } from 'react-router-dom';
@@ -36,8 +33,8 @@ export const TargetBranchPage = () => {
         ...pagination,
     });
 
-    const { data: yearFilterOptions } = useFetchTargetCommissionYearFilter();
-    const { data: monthFilterOptions } = useFetchTargetCommissionMonthFilter();
+    const { data: yearFilterOptions } = useFetchTargetCommissionFilter('year');
+    const { data: monthFilterOptions } = useFetchTargetCommissionFilter('month');
 
     useEffect(() => {
         // TODO: Refactor this logic

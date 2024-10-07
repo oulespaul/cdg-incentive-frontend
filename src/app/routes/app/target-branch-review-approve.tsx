@@ -6,11 +6,7 @@ import { Separator } from '@/components/ui/separator';
 import { useCallback, useEffect, useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { usePagination } from '@/hooks/use-pagination';
-import {
-    useFetchTargetCommissionMonthFilter,
-    useFetchTargetCommissionBranchFilter,
-    useFetchTargetCommissionYearFilter,
-} from '@/features/target-commission/api/use-fetch-target-commission-filters';
+import { useFetchTargetCommissionFilter } from '@/features/target-commission/api/use-fetch-target-commission-filters';
 import FilterSelect from '@/components/select';
 import {
     TargetBranchFilterParams,
@@ -47,9 +43,9 @@ export const TargetBranchReviewApprove = () => {
         ...pagination,
     });
 
-    const { data: yearFilterOptions } = useFetchTargetCommissionYearFilter();
-    const { data: monthFilterOptions } = useFetchTargetCommissionMonthFilter();
-    const { data: branchFilterOptions } = useFetchTargetCommissionBranchFilter();
+    const { data: yearFilterOptions } = useFetchTargetCommissionFilter('year');
+    const { data: monthFilterOptions } = useFetchTargetCommissionFilter('month');
+    const { data: branchFilterOptions } = useFetchTargetCommissionFilter('branch');
 
     useEffect(() => {
         refetchTargetBranch();

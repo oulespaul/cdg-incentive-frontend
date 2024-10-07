@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import { getStatusTextColorClass } from '@/lib/status-color-utils';
 import { TargetBranchDetail } from '../api/use-fetch-target-branch-detail-list';
 import { Checkbox } from '@/components/ui/checkbox';
+import { getThaiMonthName } from '@/lib/month-utils';
 
 export const targetBranchReviewApproveColumns: ColumnDef<TargetBranchDetail>[] = [
     {
@@ -44,7 +45,7 @@ export const targetBranchReviewApproveColumns: ColumnDef<TargetBranchDetail>[] =
     },
     {
         id: 'monthYear',
-        accessorFn: row => `${row.month} - ${row.year}`,
+        accessorFn: row => `${getThaiMonthName(row.month)} - ${row.year}`,
         header: ({ column }) => <DataTableColumnHeader column={column} title="เดือน ปี" className="text-start" />,
         cell: ({ row }) => <div className="text-start">{`${row.getValue('monthYear')}`}</div>,
         size: 200,

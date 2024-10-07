@@ -1,13 +1,13 @@
 import { apiClient } from '@/lib/api-client';
+import { getThaiMonthName } from '@/lib/month-utils';
 import { FilterOption } from '@/models/filter-option';
 import { useQuery } from '@tanstack/react-query';
 import { AxiosRequestConfig } from 'axios';
+import _ from 'lodash';
 
 interface TargetCommissionYearFilterParams {
     branchId?: number;
 }
-
-interface TargetCommissionMonthFilterParams extends TargetCommissionYearFilterParams {}
 
 const fetchTargetCommissionFilter = async (key: string, params?: TargetCommissionYearFilterParams) => {
     const config: AxiosRequestConfig = {
@@ -16,32 +16,24 @@ const fetchTargetCommissionFilter = async (key: string, params?: TargetCommissio
     return await apiClient.get(`/target-commission/filter/${key}`, config);
 };
 
-export const useFetchTargetCommissionYearFilter = (params?: TargetCommissionYearFilterParams) => {
+export const useFetchTargetCommissionFilter = (key: string, params?: TargetCommissionYearFilterParams) => {
     return useQuery<FilterOption[], unknown>({
         queryFn: async () => {
-            const { data } = await fetchTargetCommissionFilter('year', params);
+            const { data } = await fetchTargetCommissionFilter(key, params);
             return data;
         },
-        queryKey: ['target-commission/filter/year'],
-    });
-};
-
-export const useFetchTargetCommissionMonthFilter = (params?: TargetCommissionMonthFilterParams) => {
-    return useQuery<FilterOption[], unknown>({
-        queryFn: async () => {
-            const { data } = await fetchTargetCommissionFilter('month', params);
+        queryKey: ['target-commission/filter', key],
+        select: data => {
+            if (key === 'month') {
+                return _.sortBy(
+                    _.map(data, d => ({
+                        label: getThaiMonthName(d.label),
+                        value: d.value,
+                    })),
+                    'value',
+                );
+            }
             return data;
         },
-        queryKey: ['target-commission/filter/month'],
-    });
-};
-
-export const useFetchTargetCommissionBranchFilter = () => {
-    return useQuery<FilterOption[], unknown>({
-        queryFn: async () => {
-            const { data } = await fetchTargetCommissionFilter('branch');
-            return data;
-        },
-        queryKey: ['target-commission/filter/branch'],
     });
 };

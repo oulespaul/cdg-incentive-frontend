@@ -1,36 +1,7 @@
 import { apiClient } from '@/lib/api-client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
-import { TargetCommission } from '../models/target-commission-response';
-
-const validateUploadFile = async (file: File): Promise<AxiosResponse<TargetCommission[], FormData>> => {
-    const formData = new FormData();
-    formData.append('file', file);
-
-    return await apiClient.post('/target-commission/upload/validate', formData, {
-        headers: {
-            'Content-Type': 'multipart/form-data',
-        },
-    });
-};
-
-interface UseValidatedTargetCommissionUploadFileProps {
-    onValidateSuccess: (data: TargetCommission[]) => void;
-    onValidateError: (error: Error) => void;
-}
-
-export const useValidatedTargetCommissionUploadFile = ({
-    onValidateSuccess,
-    onValidateError,
-}: UseValidatedTargetCommissionUploadFileProps) => {
-    return useMutation({
-        mutationFn: (file: File) => validateUploadFile(file),
-        onSuccess: reponse => {
-            onValidateSuccess(reponse.data);
-        },
-        onError: onValidateError,
-    });
-};
+import { MutationConfig } from '@/lib/react-query';
 
 const uploadFile = async (file: File): Promise<AxiosResponse<string, FormData>> => {
     const formData = new FormData();
@@ -43,23 +14,18 @@ const uploadFile = async (file: File): Promise<AxiosResponse<string, FormData>> 
     });
 };
 
-interface UseUploadTargetCommissionFileProps {
-    onUploadSuccess: (data: string) => void;
-    onUploadError: (error: Error) => void;
-}
-
-export const useUploadTargetCommissionFile = ({
-    onUploadSuccess,
-    onUploadError,
-}: UseUploadTargetCommissionFileProps) => {
+export const useUploadTargetCommissionFile = (mutationConfig: MutationConfig<typeof uploadFile>) => {
     const queryClient = useQueryClient();
+    const { onSuccess, ...restConfig } = mutationConfig || {};
 
     return useMutation({
-        mutationFn: (file: File) => uploadFile(file),
-        onSuccess: reponse => {
-            queryClient.invalidateQueries({ queryKey: ['target-commission'] });
-            onUploadSuccess(reponse.data);
+        mutationFn: uploadFile,
+        onSuccess: (...args) => {
+            queryClient.invalidateQueries({
+                queryKey: ['target-commission'],
+            });
+            onSuccess?.(...args);
         },
-        onError: onUploadError,
+        ...restConfig,
     });
 };

@@ -12,6 +12,14 @@ export interface TargetCommissionFilterParams {
     branchBU?: string;
 }
 
+export const targetCommissionInitialFilterParams = {
+    year: undefined,
+    month: undefined,
+    branchNumber: undefined,
+    branchCode: '',
+    branchBU: '',
+};
+
 const fetchTargetCommission = async (filterParams: TargetCommissionFilterParams & PaginationState) => {
     const params = new URLSearchParams({
         page: filterParams.pageIndex.toString(),
@@ -26,12 +34,12 @@ const fetchTargetCommission = async (filterParams: TargetCommissionFilterParams 
     return await apiClient.get(`/target-commission?${params}`);
 };
 
-export const useFetchTargetCommission = (filterParams: TargetCommissionFilterParams & PaginationState) => {
+export const useTargetCommission = (filterParams: TargetCommissionFilterParams & PaginationState) => {
     return useQuery<Page<TargetCommission>, unknown>({
         queryFn: async () => {
             const { data } = await fetchTargetCommission(filterParams);
             return data;
         },
-        queryKey: ['target-commission'],
+        queryKey: ['target-commission', filterParams.pageIndex, filterParams.pageSize],
     });
 };

@@ -2,10 +2,7 @@ import {
     TargetCommissionDetailFilterParams,
     useFetchTargetCommissionDetail,
 } from '@/features/target-commission/api/use-fetch-target-commission-detail';
-import {
-    useFetchTargetCommissionYearFilter,
-    useFetchTargetCommissionMonthFilter,
-} from '@/features/target-commission/api/use-fetch-target-commission-filters';
+import { useFetchTargetCommissionFilter } from '@/features/target-commission/api/use-fetch-target-commission-filters';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTargetBranchStore } from '../api/use-target-branch-store';
 import { TargetInHouse } from '../components/target-inhouse-tab-content/constants/target-in-house-columns';
@@ -68,8 +65,8 @@ export const useTargetBranchManage = () => {
 
     const currentBranchId = user?.branch?.id;
 
-    const { data: yearFilterOptions } = useFetchTargetCommissionYearFilter({ branchId: currentBranchId });
-    const { data: monthFilterOptions } = useFetchTargetCommissionMonthFilter({ branchId: currentBranchId });
+    const { data: yearFilterOptions } = useFetchTargetCommissionFilter('year', { branchId: currentBranchId });
+    const { data: monthFilterOptions } = useFetchTargetCommissionFilter('month', { branchId: currentBranchId });
     const { refetch: fetchTargetCommissionDetail } = useFetchTargetCommissionDetail({
         branchId: currentBranchId,
         ...filterParams,

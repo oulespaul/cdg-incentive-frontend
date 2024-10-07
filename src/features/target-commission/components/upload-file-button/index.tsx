@@ -3,70 +3,62 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import UploadInput, { FileUploadProgress } from './components/upload-input';
 import { Button } from '@/components/ui/button';
 import { CloudDownload, Loader2 } from 'lucide-react';
-import {
-    useUploadTargetCommissionFile,
-    useValidatedTargetCommissionUploadFile,
-} from '../../api/use-upload-target-commission';
+import { useUploadTargetCommissionFile } from '../../api/use-upload-target-commission';
 import { targetCommissionColumns } from '../../constants/target-commission-columns';
 import { DataTable } from '../../../../components/data-table';
 import { toast } from 'react-toastify';
 import { TargetCommission } from '../../models/target-commission-response';
+import { reOrderList } from '@/lib/list-utils';
+import { useValidatedTargetCommissionUploadFile } from '../../api/use-validate-upload-target-commission';
 
 const UploadFile = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [filesToUpload, setFilesToUpload] = useState<FileUploadProgress[]>([]);
     const [targetCommissionPreviewList, setTargetCommissionPreviewList] = useState<TargetCommission[]>([]);
 
-    const onValidateSuccess = (targetCommissionList: TargetCommission[]) => {
-        setTargetCommissionPreviewList(targetCommissionList);
-    };
+    const validateUploadFile = useValidatedTargetCommissionUploadFile({
+        onSuccess: response => {
+            setTargetCommissionPreviewList(response.data);
+        },
+        onError: () => {
+            toast.warn(
+                <div className="flex flex-col text-start">
+                    <p className="text-sm font-bold text-orange-400">ไม่สามารถนำเข้าข้อมูลได้</p>
+                    <p className="mt-2 text-xs">ไฟล์ข้อมูลไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง</p>
+                </div>,
+                { position: 'bottom-right' },
+            );
+        },
+    });
 
-    const onValidateError = () => {
-        toast.warn(
-            <div className="flex flex-col text-start">
-                <p className="text-sm font-bold text-orange-400">ไม่สามารถนำเข้าข้อมูลได้</p>
-                <p className="mt-2 text-xs">ไฟล์ข้อมูลไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง</p>
-            </div>,
-            { position: 'bottom-right' },
-        );
-    };
-
-    const {
-        mutate: validateUploadFile,
-        isPending: validating,
-        isSuccess,
-    } = useValidatedTargetCommissionUploadFile({ onValidateSuccess, onValidateError });
-
-    const onUploadSuccess = () => {
-        toast.success(
-            <div className="flex flex-col text-start">
-                <p className="text-sm font-bold text-green-400">นำเข้าข้อมูลสำเร็จ</p>
-                <p className="mt-2 text-xs">นำเข้าข้อมูลเป้า commission เรียบร้อย</p>
-            </div>,
-            { position: 'bottom-right' },
-        );
-        resetState();
-    };
-    const onUploadError = () => {
-        toast.error(
-            <div className="flex flex-col text-start">
-                <p className="text-sm font-bold text-red-400">ข้อมูลไม่ถูกต้อง</p>
-                <p className="mt-2 text-xs">ข้อมูลไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง</p>
-            </div>,
-            { position: 'bottom-right' },
-        );
-    };
-    const { mutate: uploadFile, isPending: uploading } = useUploadTargetCommissionFile({
-        onUploadSuccess,
-        onUploadError,
+    const uploadFile = useUploadTargetCommissionFile({
+        onSuccess: () => {
+            toast.success(
+                <div className="flex flex-col text-start">
+                    <p className="text-sm font-bold text-green-400">นำเข้าข้อมูลสำเร็จ</p>
+                    <p className="mt-2 text-xs">นำเข้าข้อมูลเป้า commission เรียบร้อย</p>
+                </div>,
+                { position: 'bottom-right' },
+            );
+            resetState();
+        },
+        onError: () => {
+            toast.error(
+                <div className="flex flex-col text-start">
+                    <p className="text-sm font-bold text-red-400">ข้อมูลไม่ถูกต้อง</p>
+                    <p className="mt-2 text-xs">ข้อมูลไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง</p>
+                </div>,
+                { position: 'bottom-right' },
+            );
+        },
     });
 
     const onUploadfileForValidateHandler = (file: File) => {
-        validateUploadFile(file);
+        validateUploadFile.mutate(file);
     };
 
     const onUploadfileHandler = (file: File) => {
-        uploadFile(file);
+        uploadFile.mutate(file);
     };
 
     const resetState = () => {
@@ -83,7 +75,7 @@ const UploadFile = () => {
                     นำเข้าเป้า commission
                 </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-5xl">
+            <DialogContent className="max-w-4xl">
                 <DialogHeader>
                     <DialogTitle className="text-start">นำเข้าเป้า commission (เป้าสาขา)</DialogTitle>
                 </DialogHeader>
@@ -91,7 +83,7 @@ const UploadFile = () => {
                     {targetCommissionPreviewList.length > 0 ? (
                         <DataTable
                             columns={targetCommissionColumns}
-                            data={targetCommissionPreviewList.map((target, index) => ({ ...target, id: index + 1 }))}
+                            data={reOrderList(targetCommissionPreviewList, 'id')}
                             manualPagination={false}
                         />
                     ) : (
@@ -99,34 +91,33 @@ const UploadFile = () => {
                     )}
                     <div className="flex justify-between mt-8">
                         <Button
-                            disabled={uploading}
+                            disabled={uploadFile.isPending}
                             variant="secondary"
                             className="text-black hover:text-black hover:border-black"
                             onClick={() => resetState()}
                         >
                             ยกเลิก
                         </Button>
-                        {isSuccess && targetCommissionPreviewList.length !== 0 ? (
+                        {validateUploadFile.isSuccess && targetCommissionPreviewList.length !== 0 ? (
                             <Button
-                                disabled={uploading}
+                                disabled={uploadFile.isPending}
                                 onClick={() => {
-                                    // For single file
                                     onUploadfileHandler(filesToUpload[0]?.File);
                                 }}
                             >
-                                ยืนยัน {uploading && <Loader2 className="ml-2 h-4 w-4 animate-spin" />}
+                                ยืนยัน {uploadFile.isPending && <Loader2 className="ml-2 h-4 w-4 animate-spin" />}
                             </Button>
                         ) : (
                             <Button
                                 variant="outline"
                                 className="text-primary hover:text-primary"
-                                disabled={filesToUpload.length === 0 || validating}
+                                disabled={filesToUpload.length === 0 || validateUploadFile.isPending}
                                 onClick={() => {
-                                    // For single file
                                     onUploadfileForValidateHandler(filesToUpload[0]?.File);
                                 }}
                             >
-                                ถัดไป {validating && <Loader2 className="ml-2 h-4 w-4 animate-spin" />}
+                                ถัดไป{' '}
+                                {validateUploadFile.isPending && <Loader2 className="ml-2 h-4 w-4 animate-spin" />}
                             </Button>
                         )}
                     </div>

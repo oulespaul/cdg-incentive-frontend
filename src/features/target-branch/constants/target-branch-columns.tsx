@@ -5,6 +5,7 @@ import { TargetBranchDetail } from '../api/use-fetch-target-branch-detail-list';
 import TargetBranchActionMenus from '../components/action-menus';
 import { cn } from '@/lib/utils';
 import { getStatusTextColorClass } from '@/lib/status-color-utils';
+import { getThaiMonthName } from '@/lib/month-utils';
 
 export const targetBranchColumns: ColumnDef<TargetBranchDetail>[] = [
     {
@@ -17,7 +18,7 @@ export const targetBranchColumns: ColumnDef<TargetBranchDetail>[] = [
     },
     {
         id: 'monthYear',
-        accessorFn: row => `${row.month} - ${row.year}`,
+        accessorFn: row => `${getThaiMonthName(row.month)} - ${row.year}`,
         header: ({ column }) => <DataTableColumnHeader column={column} title="เดือน ปี" className="text-start" />,
         cell: ({ row }) => <div className="text-start">{`${row.getValue('monthYear')}`}</div>,
         size: 200,
