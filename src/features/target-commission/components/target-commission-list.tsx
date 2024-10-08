@@ -12,10 +12,10 @@ import {
     useTargetCommission,
 } from '@/features/target-commission/api/use-fetch-target-commission';
 import { useFetchTargetCommissionFilter } from '@/features/target-commission/api/use-fetch-target-commission-filters';
-import UploadFile from '@/features/target-commission/components/upload-file-button';
 import FilterSelect from '@/components/select';
 import { targetCommissionColumns } from '@/features/target-commission/constants/target-commission-columns';
 import { reOrderList } from '@/lib/list-utils';
+import UploadTargetCommissionInput from './upload-target-commission-input';
 
 export const TargetCommissionList = () => {
     const [filterParams, setFilterParams] = useState<TargetCommissionFilterParams>(targetCommissionInitialFilterParams);
@@ -75,7 +75,7 @@ export const TargetCommissionList = () => {
                     </div>
 
                     <div className="flex w-1/2 justify-end">
-                        <UploadFile />
+                        <UploadTargetCommissionInput />
                     </div>
                 </div>
 

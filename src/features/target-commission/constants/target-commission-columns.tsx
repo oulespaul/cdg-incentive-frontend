@@ -1,8 +1,8 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { DataTableColumnHeader } from '../../../components/data-table/ColumnHeader';
 import { formatThaiCurrency } from '@/lib/number-utils';
-import { TargetCommission } from '../models/target-commission-response';
 import { getThaiMonthName } from '@/lib/month-utils';
+import { TargetCommission } from '@/types/api';
 
 export const targetCommissionColumns: ColumnDef<TargetCommission>[] = [
     {

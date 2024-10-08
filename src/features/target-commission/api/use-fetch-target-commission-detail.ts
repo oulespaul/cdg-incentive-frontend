@@ -1,6 +1,6 @@
 import { apiClient } from '@/lib/api-client';
+import { TargetCommission } from '@/types/api';
 import { useQuery } from '@tanstack/react-query';
-import { TargetCommission } from '../models/target-commission-response';
 
 export interface TargetCommissionDetailFilterParams {
     year?: string;

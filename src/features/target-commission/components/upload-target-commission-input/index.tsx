@@ -1,17 +1,17 @@
-import { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../../../../components/ui/dialog';
-import UploadInput, { FileUploadProgress } from './components/upload-input';
-import { Button } from '@/components/ui/button';
-import { CloudDownload, Loader2 } from 'lucide-react';
-import { useUploadTargetCommissionFile } from '../../api/use-upload-target-commission';
-import { targetCommissionColumns } from '../../constants/target-commission-columns';
-import { DataTable } from '../../../../components/data-table';
-import { toast } from 'react-toastify';
-import { TargetCommission } from '../../models/target-commission-response';
+import { DataTable } from '@/components/data-table';
+import { useUploadTargetCommissionFile } from '@/features/target-commission/api/use-upload-target-commission';
+import { useValidatedTargetCommissionUploadFile } from '@/features/target-commission/api/use-validate-upload-target-commission';
+import { targetCommissionColumns } from '@/features/target-commission/constants/target-commission-columns';
 import { reOrderList } from '@/lib/list-utils';
-import { useValidatedTargetCommissionUploadFile } from '../../api/use-validate-upload-target-commission';
+import { TargetCommission } from '@/types/api';
+import { CloudDownload, Loader2 } from 'lucide-react';
+import { useState } from 'react';
+import { toast } from 'react-toastify';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import UploadInput, { FileUploadProgress } from '@/components/upload-input';
 
-const UploadFile = () => {
+const UploadTargetCommissionInput = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [filesToUpload, setFilesToUpload] = useState<FileUploadProgress[]>([]);
     const [targetCommissionPreviewList, setTargetCommissionPreviewList] = useState<TargetCommission[]>([]);
@@ -127,4 +127,4 @@ const UploadFile = () => {
     );
 };
 
-export default UploadFile;
+export default UploadTargetCommissionInput;

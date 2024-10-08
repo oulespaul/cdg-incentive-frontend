@@ -1,4 +1,3 @@
-import { TargetCommission } from '@/features/target-commission/models/target-commission-response';
 import { apiClient } from '@/lib/api-client';
 import { useMutation } from '@tanstack/react-query';
 import { TargetInHouse } from '../components/target-inhouse-tab-content/constants/target-in-house-columns';
@@ -6,6 +5,7 @@ import { TargetDept } from '../components/target-dept-tab-content/constants/targ
 import { TargetSMMDSM } from '../components/target-dmm-dsm-smm-tab-content/constants/target-dsm-smm-columns';
 import { TargetDMM } from '../components/target-dmm-dsm-smm-tab-content/constants/target-dmm-columns';
 import { Status } from '@/lib/status-color-utils';
+import { TargetCommission } from '@/types/api';
 
 export interface TargetBranch {
     id: number;

@@ -2,7 +2,7 @@ import { apiClient } from '@/lib/api-client';
 import { useQuery } from '@tanstack/react-query';
 import { PaginationState } from '@tanstack/react-table';
 import { Page } from '@/models/pagination-response';
-import { TargetCommission } from '../models/target-commission-response';
+import { TargetCommission } from '@/types/api';
 
 export interface TargetCommissionFilterParams {
     month?: string;

@@ -1,4 +1,3 @@
-import { TargetCommission } from '@/features/target-commission/models/target-commission-response';
 import { create } from 'zustand';
 import { TargetInHouse } from '../components/target-inhouse-tab-content/constants/target-in-house-columns';
 import { TargetDept } from '../components/target-dept-tab-content/constants/target-dept-columns';
@@ -7,6 +6,7 @@ import { TargetDMM } from '../components/target-dmm-dsm-smm-tab-content/constant
 import { TargetBranchSummary } from '../components/target-branch-summary';
 import { sumAttribute, sumNestedAttribute } from '@/lib/number-utils';
 import { Status } from '@/lib/status-color-utils';
+import { TargetCommission } from '@/types/api';
 
 export interface TargetBranchWorkflow {
     id: number | undefined;

@@ -1,8 +1,8 @@
 import { apiClient } from '@/lib/api-client';
 import { MutationConfig } from '@/lib/react-query';
+import { TargetCommission } from '@/types/api';
 import { useMutation } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
-import { TargetCommission } from '../models/target-commission-response';
 
 const validateUploadFile = async (file: File): Promise<AxiosResponse<TargetCommission[], FormData>> => {
     const formData = new FormData();
