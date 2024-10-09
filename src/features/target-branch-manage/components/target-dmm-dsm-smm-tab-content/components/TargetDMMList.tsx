@@ -1,28 +1,25 @@
-import { Input } from '@/components/ui/input';
 import { useFetchDepartment } from '@/features/department/api/use-fetch-department';
 import { Department } from '@/features/department/models/department';
 import { useFetchSubDepartment } from '@/features/sub-department/api/use-fetch-sub-department';
 import { SubDepartment } from '@/features/sub-department/models/sub-department';
-import { useTargetBranchStore } from '@/features/target-branch/api/use-target-branch-store';
-import { Label } from '@radix-ui/react-dropdown-menu';
-import { useState, useEffect, useCallback } from 'react';
 import _ from 'lodash';
+import { useState, useEffect, useCallback } from 'react';
 import DepartmentDialog from '../../department-dialog';
 import SubDepartmentDialog from '../../sub-department-dialog';
 import { TargetBranchDataTable } from '../../target-branch-data-table';
-import { TargetDSM, targetDSMSMMColumns } from '../constants/target-dsm-smm-columns';
+import { TargetDMM, targetDMMColumns } from '../constants/target-dmm-columns';
+import { useTargetBranchStore } from '@/features/target-branch-manage/api/use-target-branch-store';
 
-interface TargetDSMSMMListProps {
-    smmRowIndex: number;
+interface TargetDMMListProps {
     isViewMode: boolean;
 }
 
-const TargetDSMSMMList: React.FC<TargetDSMSMMListProps> = ({ smmRowIndex, isViewMode }) => {
+const TargetDMMList: React.FC<TargetDMMListProps> = ({ isViewMode }) => {
     const [dialogsOpen, setDialogsOpen] = useState({ department: false, subDepartment: false });
     const [currentRowIndex, setCurrentRowIndex] = useState<number>(0);
 
-    const { targetCommission, targetSMMDSMList, setTargetSMMDSMList, isTargetBranchLoading } = useTargetBranchStore();
-    const currentDepartmentId = targetSMMDSMList[smmRowIndex]?.targetDSMList[currentRowIndex]?.department?.id;
+    const { targetCommission, targetDMMList, setTargetDMMList, isTargetBranchLoading } = useTargetBranchStore();
+    const currentDepartmentId = targetDMMList[currentRowIndex]?.department?.id;
     const { data: departmentList } = useFetchDepartment();
     const { data: subDepartmentList, refetch: refetchSubDepartmentList } = useFetchSubDepartment({
         departmentId: currentDepartmentId,
@@ -59,16 +56,10 @@ const TargetDSMSMMList: React.FC<TargetDSMSMMListProps> = ({ smmRowIndex, isView
         setDialogsOpen(prev => ({ ...prev, [dialogType]: true }));
     }, []);
 
-    const handleSMMIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setTargetSMMDSMList(prevList =>
-            prevList.map((row, index) => (index === smmRowIndex ? { ...row, smmId: e.target.value } : row)),
-        );
-    };
-
     const addRow = () => {
-        const newRow: TargetDSM = {
+        const newRow = {
             id: undefined,
-            dsmId: '',
+            dmmId: '',
             department: undefined,
             subDepartment: undefined,
             goalDept: '',
@@ -76,22 +67,16 @@ const TargetDSMSMMList: React.FC<TargetDSMSMMListProps> = ({ smmRowIndex, isView
             goalId: '',
             actualSalesIDLastYear: '',
         };
-        setTargetSMMDSMList(prevList =>
-            prevList.map((row, index) =>
-                index === smmRowIndex ? { ...row, targetDSMList: [...row.targetDSMList, newRow] } : row,
-            ),
-        );
+        setTargetDMMList((old: TargetDMM[]) => [...old, newRow]);
     };
 
     const updateData = (rowIndex: number, columnId: string, value: any) => {
-        setTargetSMMDSMList(prevList =>
-            prevList.map((row, index) => {
-                if (index === smmRowIndex) {
+        setTargetDMMList(old =>
+            old.map((row, index) => {
+                if (index === rowIndex) {
                     return {
-                        ...row,
-                        targetDSMList: row.targetDSMList.map((target, targetIndex) =>
-                            targetIndex === rowIndex ? { ...target, [columnId]: value } : target,
-                        ),
+                        ...old[rowIndex]!,
+                        [columnId]: value,
                     };
                 }
                 return row;
@@ -100,47 +85,26 @@ const TargetDSMSMMList: React.FC<TargetDSMSMMListProps> = ({ smmRowIndex, isView
     };
 
     const removeRow = (rowIndex: number) => {
-        setTargetSMMDSMList(prevList =>
-            prevList.map((row, index) => {
-                if (index === smmRowIndex) {
-                    return {
-                        ...row,
-                        targetDSMList: row.targetDSMList.filter((_, targetIndex) => targetIndex !== rowIndex),
-                    };
-                }
-                return row;
-            }),
-        );
+        setTargetDMMList((old: TargetDMM[]) => old.filter((_row: TargetDMM, index: number) => index !== rowIndex));
     };
 
     return (
         <>
-            <div className="flex text-start mb-2">
-                <div className="grid w-full max-w-sm items-center gap-1.5">
-                    <Label className="text-gray-500">รหัสพนักงาน SMM</Label>
-                    {isViewMode ? (
-                        targetSMMDSMList[smmRowIndex].smmId
-                    ) : (
-                        <Input id="smm_id" onChange={handleSMMIdChange} value={targetSMMDSMList[smmRowIndex].smmId} />
-                    )}
-                </div>
-            </div>
-
             <TargetBranchDataTable
-                columns={targetDSMSMMColumns}
+                columns={targetDMMColumns}
                 data={
-                    targetSMMDSMList[smmRowIndex]?.targetDSMList?.map((target, index) => ({
+                    targetDMMList?.map((target, index) => ({
                         ...target,
                         id: index + 1,
                     })) ?? []
                 }
                 isCanAddRow={!_.isEmpty(targetCommission) && !isViewMode}
-                className="max-h-[300px]"
                 isLoading={isTargetBranchLoading}
                 columnVisibility={{ action: !isViewMode }}
+                className="max-h-[300px]"
                 meta={{
                     updateData,
-                    addRowTitle: 'เพิ่มพนักงาน DSM',
+                    addRowTitle: 'เพิ่มพนักงาน DMM',
                     addRow,
                     removeRow,
                     selectedDepartment: rowIndex => openDialog('department', rowIndex),
@@ -168,4 +132,4 @@ const TargetDSMSMMList: React.FC<TargetDSMSMMListProps> = ({ smmRowIndex, isView
     );
 };
 
-export default TargetDSMSMMList;
+export default TargetDMMList;

@@ -1,5 +1,5 @@
 import { useUser } from '@/app/contexts/user-context';
-import { TargetBranchList } from '@/features/target-branch/components/target-branch-list';
+import { TargetBranchList } from '@/features/target-branch-manage/components/target-branch-list';
 
 export const TargetBranchPage = () => {
     const { user } = useUser();

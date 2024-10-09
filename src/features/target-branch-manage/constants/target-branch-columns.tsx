@@ -1,11 +1,11 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { DataTableColumnHeader } from '../../../components/data-table/ColumnHeader';
 import { formatThaiCurrency } from '@/lib/number-utils';
-import { TargetBranchDetail } from '../api/use-fetch-target-branch-detail-list';
 import TargetBranchActionMenus from '../components/action-menus';
 import { cn } from '@/lib/utils';
 import { getStatusTextColorClass } from '@/lib/status-color-utils';
 import { getThaiMonthName } from '@/lib/month-utils';
+import { TargetBranchDetail } from '@/types/api';
 
 export const targetBranchColumns: ColumnDef<TargetBranchDetail>[] = [
     {

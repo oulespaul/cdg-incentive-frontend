@@ -6,16 +6,17 @@ import { useCallback, useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { usePagination } from '@/hooks/use-pagination';
 import { useFetchTargetCommissionFilter } from '@/features/target-commission/api/use-fetch-target-commission-filters';
+import { reOrderList } from '@/lib/list-utils';
+import _ from 'lodash';
 import FilterSelect from '@/components/select';
-import { targetBranchColumns } from '@/features/target-branch/constants/target-branch-columns';
+import { TARGET_BRANCH_MANAGE_PATH } from '@/constants/route-path';
 import { useNavigate } from 'react-router-dom';
 import {
-    targetBranchDetailInitialFilterParams,
     TargetBranchFilterParams,
+    targetBranchDetailInitialFilterParams,
     useFetchTargetBranchDetailList,
-} from '@/features/target-branch/api/use-fetch-target-branch-detail-list';
-import { TARGET_BRANCH_MANAGE_PATH } from '@/constants/route-path';
-import { reOrderList } from '@/lib/list-utils';
+} from '../api/use-fetch-target-branch-detail-list';
+import { targetBranchColumns } from '../constants/target-branch-columns';
 
 export const TargetBranchList = () => {
     const [filterParams, setFilterParams] = useState<TargetBranchFilterParams>(targetBranchDetailInitialFilterParams);
@@ -98,7 +99,7 @@ export const TargetBranchList = () => {
                 <h1 className="text-lg font-medium mb-4">รายการข้อมูลเป้าสาขา</h1>
                 <DataTable
                     columns={targetBranchColumns}
-                    data={reOrderList(targetBranchData?.content, 'id')}
+                    data={reOrderList(targetBranchData?.content, 'no')}
                     onPaginationChange={onPaginationChange}
                     pageCount={targetBranchData?.totalElements ?? 0}
                     pagination={pagination}

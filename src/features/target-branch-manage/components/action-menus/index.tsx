@@ -1,8 +1,8 @@
 import { Menubar, MenubarContent, MenubarItem, MenubarMenu, MenubarTrigger } from '@/components/ui/menubar';
 import { Ellipsis } from 'lucide-react';
-import { TargetBranchDetail } from '../../api/use-fetch-target-branch-detail-list';
 import { useNavigate } from 'react-router-dom';
 import { useTargetBranchManage } from '../../hooks/use-target-branch-manage';
+import { TargetBranchDetail } from '@/types/api';
 
 interface TargetBranchActionMenusProps {
     targetBranchDetail: TargetBranchDetail;

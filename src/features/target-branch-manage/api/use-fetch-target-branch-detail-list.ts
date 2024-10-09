@@ -40,15 +40,15 @@ const fetchTargetBranchDetailList = async (
     return await apiClient.get(`target-branch?${params}`);
 };
 
-export const useFetchTargetBranchDetailList = (filterParams: TargetBranchFilterParams & PaginationState) => {
+export const useFetchTargetBranchDetailList = (filterParams?: TargetBranchFilterParams & PaginationState) => {
     const { user } = useUser();
 
     return useQuery<Page<TargetBranchDetail>, number>({
         queryFn: async () => {
             const { data } = await fetchTargetBranchDetailList({
                 ...filterParams,
-                page: filterParams.pageIndex.toString(),
-                pageSize: filterParams.pageSize.toString(),
+                page: (filterParams?.pageIndex ?? 0).toString(),
+                pageSize: (filterParams?.pageSize ?? 10).toString(),
                 branchNumber: user?.branch?.branchNumber,
             });
 

@@ -8,15 +8,15 @@ import { Card } from '@/components/ui/card';
 import { usePagination } from '@/hooks/use-pagination';
 import { useFetchTargetCommissionFilter } from '@/features/target-commission/api/use-fetch-target-commission-filters';
 import FilterSelect from '@/components/select';
+import { TargetBranch } from '@/features/target-branch-manage/api/use-fetch-target-branch-detail-by-target-commission-id';
 import {
     TargetBranchFilterParams,
     useFetchTargetBranchDetailList,
-} from '@/features/target-branch/api/use-fetch-target-branch-detail-list';
-import { targetBranchReviewApproveColumns } from '@/features/target-branch/constants/target-branch-review-approve-columns';
-import { useNavigate } from 'react-router-dom';
-import { TargetBranch } from '@/features/target-branch/api/use-fetch-target-branch-detail-by-target-commission-id';
+} from '@/features/target-branch-manage/api/use-fetch-target-branch-detail-list';
+import { targetBranchReviewApproveColumns } from '@/features/target-branch-manage/constants/target-branch-review-approve-columns';
+import { useTargetBranchManage } from '@/features/target-branch-manage/hooks/use-target-branch-manage';
 import { Row } from '@tanstack/react-table';
-import { useTargetBranchManage } from '@/features/target-branch/hooks/use-target-branch-manage';
+import { useNavigate } from 'react-router-dom';
 
 const initialFilterParams = {
     year: undefined,

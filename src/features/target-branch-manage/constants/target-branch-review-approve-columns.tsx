@@ -3,9 +3,9 @@ import { DataTableColumnHeader } from '../../../components/data-table/ColumnHead
 import { formatThaiCurrency, handleFalsyOrInfinite } from '@/lib/number-utils';
 import { cn } from '@/lib/utils';
 import { getStatusTextColorClass } from '@/lib/status-color-utils';
-import { TargetBranchDetail } from '../api/use-fetch-target-branch-detail-list';
 import { Checkbox } from '@/components/ui/checkbox';
 import { getThaiMonthName } from '@/lib/month-utils';
+import { TargetBranchDetail } from '@/types/api';
 
 export const targetBranchReviewApproveColumns: ColumnDef<TargetBranchDetail>[] = [
     {

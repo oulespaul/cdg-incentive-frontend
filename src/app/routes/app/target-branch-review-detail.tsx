@@ -3,17 +3,17 @@ import { Separator } from '@/components/ui/separator';
 import { Card } from '@/components/ui/card';
 import _ from 'lodash';
 import { TimelineLayout } from '@/components/timeline/timeline-layout';
-import { useTargetBranchStore } from '@/features/target-branch/api/use-target-branch-store';
 import { getStatusTextColorClass } from '@/lib/status-color-utils';
 import { cn } from '@/lib/utils';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Check, X } from 'lucide-react';
-import TargetBranchSummaryTabContent from '@/features/target-branch/components/target-branch-summary';
-import { useFetchTargetBranchDetailByBranchId } from '@/features/target-branch/api/use-fetch-target-branch-detail-by-id';
-import { useEffect } from 'react';
-import { Spinner } from '@/components/spinner';
-import { useTargetBranchManage } from '@/features/target-branch/hooks/use-target-branch-manage';
 import { TARGET_BRANCH_REVIEW_APPROVE_PATH } from '@/constants/route-path';
+import { Spinner } from '@/components/spinner';
+import { useFetchTargetBranchDetailByBranchId } from '@/features/target-branch-manage/api/use-fetch-target-branch-detail-by-id';
+import { useTargetBranchStore } from '@/features/target-branch-manage/api/use-target-branch-store';
+import TargetBranchSummaryTabContent from '@/features/target-branch-manage/components/target-branch-summary';
+import { useTargetBranchManage } from '@/features/target-branch-manage/hooks/use-target-branch-manage';
+import { useEffect } from 'react';
 
 export const TargetBranchReviewDetail = () => {
     const {
