@@ -12,7 +12,7 @@ import { cn } from '@/lib/utils';
 import { useTargetBranchManage } from '@/features/target-branch/hooks/use-target-branch-manage';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '@/app/contexts/user-context';
-import { TARGET_BRANCH } from '@/constants/route-path';
+import { TARGET_BRANCH_PATH } from '@/constants/route-path';
 
 export const TargetBranchManagePage = () => {
     const {
@@ -50,7 +50,7 @@ export const TargetBranchManagePage = () => {
                             variant="outline"
                             className="text-black"
                             onClick={() => {
-                                navigate(TARGET_BRANCH);
+                                navigate(TARGET_BRANCH_PATH);
                             }}
                         >
                             ย้อนกลับ

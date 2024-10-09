@@ -1,4 +1,4 @@
-import { TARGET_BRANCH, TARGET_BRANCH_REVIEW_APPROVE, TARGET_COMMISSION } from '@/constants/route-path';
+import { TARGET_BRANCH_PATH, TARGET_BRANCH_REVIEW_APPROVE_PATH, TARGET_COMMISSION_PATH } from '@/constants/route-path';
 import { getRoutePermissionByPath } from '@/constants/route-permission';
 import { Calculator, CheckCircle, LucideIcon, Star } from 'lucide-react';
 
@@ -28,28 +28,28 @@ export function getMenuList(pathname: string): Group[] {
             groupLabel: '',
             menus: [
                 {
-                    href: TARGET_COMMISSION,
+                    href: TARGET_COMMISSION_PATH,
                     label: 'นำเข้าเป้า commission (เป้าสาขา)',
-                    active: pathname.includes(TARGET_COMMISSION),
+                    active: pathname.includes(TARGET_COMMISSION_PATH),
                     icon: Star,
                     submenus: [],
-                    allowedRoles: getRoutePermissionByPath(TARGET_COMMISSION)?.allowedRoles || [],
+                    allowedRoles: getRoutePermissionByPath(TARGET_COMMISSION_PATH)?.allowedRoles || [],
                 },
                 {
-                    href: TARGET_BRANCH,
+                    href: TARGET_BRANCH_PATH,
                     label: 'จัดการเป้าสาขา',
-                    active: pathname.includes(TARGET_BRANCH) && !pathname.includes(TARGET_BRANCH_REVIEW_APPROVE),
+                    active: pathname.includes(TARGET_BRANCH_PATH) && !pathname.includes(TARGET_BRANCH_REVIEW_APPROVE_PATH),
                     icon: Calculator,
                     submenus: [],
-                    allowedRoles: getRoutePermissionByPath(TARGET_BRANCH)?.allowedRoles || [],
+                    allowedRoles: getRoutePermissionByPath(TARGET_BRANCH_PATH)?.allowedRoles || [],
                 },
                 {
-                    href: TARGET_BRANCH_REVIEW_APPROVE,
+                    href: TARGET_BRANCH_REVIEW_APPROVE_PATH,
                     label: 'ตรวจสอบและอนุมัติเป้าสาขา',
-                    active: pathname.includes(TARGET_BRANCH_REVIEW_APPROVE),
+                    active: pathname.includes(TARGET_BRANCH_REVIEW_APPROVE_PATH),
                     icon: CheckCircle,
                     submenus: [],
-                    allowedRoles: getRoutePermissionByPath(TARGET_BRANCH_REVIEW_APPROVE)?.allowedRoles || [],
+                    allowedRoles: getRoutePermissionByPath(TARGET_BRANCH_REVIEW_APPROVE_PATH)?.allowedRoles || [],
                 },
             ],
         },

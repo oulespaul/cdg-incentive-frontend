@@ -13,7 +13,7 @@ import { useFetchTargetBranchDetailByBranchId } from '@/features/target-branch/a
 import { useEffect } from 'react';
 import { Spinner } from '@/components/spinner';
 import { useTargetBranchManage } from '@/features/target-branch/hooks/use-target-branch-manage';
-import { TARGET_BRANCH_REVIEW_APPROVE } from '@/constants/route-path';
+import { TARGET_BRANCH_REVIEW_APPROVE_PATH } from '@/constants/route-path';
 
 export const TargetBranchReviewDetail = () => {
     const {
@@ -84,7 +84,7 @@ export const TargetBranchReviewDetail = () => {
                         variant="outline"
                         className="text-black"
                         onClick={() => {
-                            navigate(TARGET_BRANCH_REVIEW_APPROVE);
+                            navigate(TARGET_BRANCH_REVIEW_APPROVE_PATH);
                         }}
                     >
                         ย้อนกลับ

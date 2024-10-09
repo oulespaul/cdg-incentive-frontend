@@ -3,23 +3,8 @@ import { useQuery } from '@tanstack/react-query';
 import { Page } from '@/models/pagination-response';
 import { PaginationState } from '@tanstack/react-table';
 import { useUser } from '@/app/contexts/user-context';
-
-export interface TargetBranchDetail {
-    id: number;
-    year: string;
-    month: string;
-    branchBU: string;
-    branchNumber: string;
-    branchName: string;
-    branchCode: string;
-    targetCommission: number;
-    actualSalesLyTotal: number;
-    targetID: number;
-    actualLyID: number;
-    changeTargetCommissionPercentage: number;
-    changeTargetIDPercentage: number;
-    status: string;
-}
+import { PaginationStateRequest, TargetBranchDetail } from '@/types/api';
+import { AxiosResponse } from 'axios';
 
 export interface TargetBranchFilterParams {
     month?: string;
@@ -30,10 +15,21 @@ export interface TargetBranchFilterParams {
     branchBU?: string;
 }
 
-const fetchTargetBranchDetailList = async (filterParams?: TargetBranchFilterParams & PaginationState) => {
+export const targetBranchDetailInitialFilterParams: TargetBranchFilterParams = {
+    year: undefined,
+    month: undefined,
+    status: undefined,
+    branchNumber: undefined,
+    branchCode: undefined,
+    branchBU: undefined,
+};
+
+const fetchTargetBranchDetailList = async (
+    filterParams: TargetBranchFilterParams & PaginationStateRequest,
+): Promise<AxiosResponse<Page<TargetBranchDetail>, any>> => {
     const params = new URLSearchParams({
-        page: (filterParams?.pageIndex ?? 0).toString(),
-        pageSize: (filterParams?.pageSize ?? 10).toString(),
+        page: filterParams.page,
+        pageSize: filterParams.pageSize,
         ...(filterParams?.month && { month: filterParams.month }),
         ...(filterParams?.year && { year: filterParams.year }),
         ...(filterParams?.status && { status: filterParams.status }),
@@ -44,18 +40,21 @@ const fetchTargetBranchDetailList = async (filterParams?: TargetBranchFilterPara
     return await apiClient.get(`target-branch?${params}`);
 };
 
-export const useFetchTargetBranchDetailList = (filterParams?: TargetBranchFilterParams & PaginationState) => {
+export const useFetchTargetBranchDetailList = (filterParams: TargetBranchFilterParams & PaginationState) => {
     const { user } = useUser();
+
     return useQuery<Page<TargetBranchDetail>, number>({
         queryFn: async () => {
-            //@ts-ignore
             const { data } = await fetchTargetBranchDetailList({
                 ...filterParams,
+                page: filterParams.pageIndex.toString(),
+                pageSize: filterParams.pageSize.toString(),
                 branchNumber: user?.branch?.branchNumber,
             });
+
             return data;
         },
-        queryKey: ['target-branch-detail-list'],
+        queryKey: ['target-branch-detail-list', filterParams?.pageSize, filterParams?.pageIndex],
         enabled: !!user?.branch?.branchNumber,
     });
 };

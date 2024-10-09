@@ -1,3 +1,8 @@
+export interface PaginationStateRequest {
+    page: string;
+    pageSize: string;
+}
+
 export interface Sort {
     empty: boolean;
     sorted: boolean;
@@ -38,3 +43,20 @@ export type TargetCommission = {
     branchCode: string;
     targetCommission: number;
 };
+
+export interface TargetBranchDetail {
+    id: number;
+    year: string;
+    month: string;
+    branchBU: string;
+    branchNumber: string;
+    branchName: string;
+    branchCode: string;
+    targetCommission: number;
+    actualSalesLyTotal: number;
+    targetID: number;
+    actualLyID: number;
+    changeTargetCommissionPercentage: number;
+    changeTargetIDPercentage: number;
+    status: string;
+}

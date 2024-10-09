@@ -27,7 +27,7 @@ import { MakeActionTargetBranchRequst, useMakeActionTargetBranch } from '../api/
 import { Input } from '@/components/ui/input';
 import { useModalContext } from '@/app/contexts/modal-context';
 import { useUser } from '@/app/contexts/user-context';
-import { TARGET_BRANCH, TARGET_BRANCH_REVIEW_APPROVE } from '@/constants/route-path';
+import { TARGET_BRANCH_PATH, TARGET_BRANCH_REVIEW_APPROVE_PATH } from '@/constants/route-path';
 
 interface MakeActionText {
     title: string;
@@ -80,7 +80,7 @@ export const useTargetBranchManage = () => {
             successDescription: 'ส่งคำขออนุมัติเป้าสาขาเรียบร้อย',
             failedTitle: 'ส่งคำขออนุมติสำเร็จ',
             failedDescription: 'ไม่สามารถส่งคำขออนุมัติข้อมูลได้ กรุณาลองใหม่ในภายหลัง',
-            redirect: TARGET_BRANCH,
+            redirect: TARGET_BRANCH_PATH,
         },
         ['Approved']: {
             title: 'ยืนยันการอนุมัติข้อมูล',
@@ -92,7 +92,7 @@ export const useTargetBranchManage = () => {
             },
             failedTitle: 'อนุมัติข้อมูลไม่สำเร็จ',
             failedDescription: 'ไม่สามารถอนุมัติข้อมูลได้ กรุณาลองใหม่ในภายหลัง',
-            redirect: TARGET_BRANCH_REVIEW_APPROVE,
+            redirect: TARGET_BRANCH_REVIEW_APPROVE_PATH,
         },
         ['Rejected']: {
             title: 'ยืนยันการไม่อนุมัติข้อมูล',
@@ -115,7 +115,7 @@ export const useTargetBranchManage = () => {
             },
             failedTitle: 'ไม่อนุมัติข้อมูลไม่สำเร็จ',
             failedDescription: 'ไม่สามารถไม่อนุมัติข้อมูลได้ กรุณาลองใหม่ในภายหลัง',
-            redirect: TARGET_BRANCH_REVIEW_APPROVE,
+            redirect: TARGET_BRANCH_REVIEW_APPROVE_PATH,
         },
     };
 
@@ -172,7 +172,7 @@ export const useTargetBranchManage = () => {
             { position: 'bottom-right' },
         );
         resetState();
-        navigate(TARGET_BRANCH);
+        navigate(TARGET_BRANCH_PATH);
     };
 
     const onCreateTargetError = () => {
@@ -376,7 +376,7 @@ export const useTargetBranchManage = () => {
             onSecondaryActionClick: () => {
                 resetState();
                 closeModal();
-                navigate(TARGET_BRANCH);
+                navigate(TARGET_BRANCH_PATH);
             },
         });
     }, [
@@ -400,7 +400,7 @@ export const useTargetBranchManage = () => {
             onConfirm: () => {
                 deleteTargetBranch(targetbranchId);
                 closeModal();
-                navigate(TARGET_BRANCH);
+                navigate(TARGET_BRANCH_PATH);
             },
         });
     };
