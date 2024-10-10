@@ -14,9 +14,10 @@ import {
     useFetchTargetBranchDetailList,
 } from '@/features/target-branch-manage/api/use-fetch-target-branch-detail-list';
 import { targetBranchReviewApproveColumns } from '@/features/target-branch-manage/constants/target-branch-review-approve-columns';
-import { useTargetBranchManage } from '@/features/target-branch-manage/hooks/use-target-branch-manage';
 import { Row } from '@tanstack/react-table';
 import { useNavigate } from 'react-router-dom';
+import { WorkflowStatus } from '@/constants/workflow-status';
+import { useTargetBranchActions } from '@/features/target-branch-manage/hooks/use-target-branch-actions';
 
 const initialFilterParams = {
     year: undefined,
@@ -33,7 +34,7 @@ export const TargetBranchReviewApprove = () => {
     const [rowSelection, setRowSelection] = useState({});
     const [branchSelected, setBranchSelected] = useState<Row<TargetBranch>[]>([]);
 
-    const { makeActionTargetBranchHandler } = useTargetBranchManage();
+    const { makeActionTargetBranchHandler } = useTargetBranchActions();
 
     const navigate = useNavigate();
 
@@ -159,7 +160,7 @@ export const TargetBranchReviewApprove = () => {
                                     onClick={() => {
                                         makeActionTargetBranchHandler(
                                             branchSelected.map(b => b.original.id),
-                                            'Rejected',
+                                            WorkflowStatus.REJECTED,
                                         );
                                         setRowSelection({});
                                     }}
@@ -172,7 +173,7 @@ export const TargetBranchReviewApprove = () => {
                                     onClick={() => {
                                         makeActionTargetBranchHandler(
                                             branchSelected.map(b => b.original.id),
-                                            'Approved',
+                                            WorkflowStatus.APPROVED,
                                         );
                                         setRowSelection({});
                                     }}

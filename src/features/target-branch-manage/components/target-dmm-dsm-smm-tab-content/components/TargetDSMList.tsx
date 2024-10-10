@@ -10,7 +10,7 @@ import DepartmentDialog from '../../department-dialog';
 import SubDepartmentDialog from '../../sub-department-dialog';
 import { TargetBranchDataTable } from '../../target-branch-data-table';
 import { TargetDSM, targetDSMSMMColumns } from '../constants/target-dsm-smm-columns';
-import { useTargetBranchStore } from '@/features/target-branch-manage/api/use-target-branch-store';
+import { useTargetBranchStore } from '@/features/target-branch-manage/hooks/use-target-branch-store';
 
 interface TargetDSMSMMListProps {
     smmRowIndex: number;

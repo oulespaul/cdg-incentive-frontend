@@ -1,4 +1,4 @@
-export type Status = 'New' | 'Pending' | 'Rejected' | 'Editing' | 'Approved' | 'Closed' | 'Default';
+import { WorkflowStatus } from '@/constants/workflow-status';
 
 const statusColorMap: Record<string, string> = {
     new: 'text-blue-600',
@@ -10,6 +10,6 @@ const statusColorMap: Record<string, string> = {
     default: 'text-gray-600',
 };
 
-export const getStatusTextColorClass = (status: Status): string => {
+export const getStatusTextColorClass = (status: WorkflowStatus): string => {
     return statusColorMap[status.toLowerCase()] || statusColorMap['default'];
 };

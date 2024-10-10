@@ -8,7 +8,7 @@ import DepartmentDialog from '../../department-dialog';
 import SubDepartmentDialog from '../../sub-department-dialog';
 import { TargetBranchDataTable } from '../../target-branch-data-table';
 import { TargetDMM, targetDMMColumns } from '../constants/target-dmm-columns';
-import { useTargetBranchStore } from '@/features/target-branch-manage/api/use-target-branch-store';
+import { useTargetBranchStore } from '@/features/target-branch-manage/hooks/use-target-branch-store';
 
 interface TargetDMMListProps {
     isViewMode: boolean;

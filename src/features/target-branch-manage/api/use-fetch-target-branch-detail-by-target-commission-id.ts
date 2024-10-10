@@ -4,12 +4,13 @@ import { TargetInHouse } from '../components/target-inhouse-tab-content/constant
 import { TargetDept } from '../components/target-dept-tab-content/constants/target-dept-columns';
 import { TargetSMMDSM } from '../components/target-dmm-dsm-smm-tab-content/constants/target-dsm-smm-columns';
 import { TargetDMM } from '../components/target-dmm-dsm-smm-tab-content/constants/target-dmm-columns';
-import { Status } from '@/lib/status-color-utils';
 import { TargetCommission } from '@/types/api';
+import { MutationConfig } from '@/lib/react-query';
+import { WorkflowStatus } from '@/constants/workflow-status';
 
 export interface TargetBranch {
     id: number;
-    status: Status;
+    status: WorkflowStatus;
     requestedAt: Date;
     requestedBy: string;
     approvedAt: Date;
@@ -33,13 +34,9 @@ const fetchTargetBranchDetail = async (targetCommissionId: number) => {
     return data;
 };
 
-interface UseFetchTargetBranchDetailProps {
-    onSuccess: (data: any) => void;
-}
-
-export const useFetchTargetBranchDetail = ({ onSuccess }: UseFetchTargetBranchDetailProps) => {
+export const useFetchTargetBranchDetail = (mutationConfig: MutationConfig<typeof fetchTargetBranchDetail>) => {
     return useMutation({
         mutationFn: (targetCommissionId: number) => fetchTargetBranchDetail(targetCommissionId),
-        onSuccess,
+        ...mutationConfig,
     });
 };

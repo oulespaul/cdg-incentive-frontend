@@ -15,8 +15,8 @@ import {
     TargetBranchFilterParams,
     targetBranchDetailInitialFilterParams,
     useFetchTargetBranchDetailList,
-} from '../api/use-fetch-target-branch-detail-list';
-import { targetBranchColumns } from '../constants/target-branch-columns';
+} from '../target-branch-manage/api/use-fetch-target-branch-detail-list';
+import { targetBranchColumns } from '../target-branch-manage/constants/target-branch-columns';
 
 export const TargetBranchList = () => {
     const [filterParams, setFilterParams] = useState<TargetBranchFilterParams>(targetBranchDetailInitialFilterParams);

@@ -1,4 +1,5 @@
 import { apiClient } from '@/lib/api-client';
+import { MutationConfig } from '@/lib/react-query';
 import { useMutation } from '@tanstack/react-query';
 
 const deleteTargetBranch = async (targetBranch: number) => {
@@ -6,15 +7,9 @@ const deleteTargetBranch = async (targetBranch: number) => {
     return data;
 };
 
-interface UseDeleteTargetBranchProps {
-    onSuccess: () => void;
-    onError: () => void;
-}
-
-export const useDeleteTargetBranch = ({ onSuccess, onError }: UseDeleteTargetBranchProps) => {
+export const useDeleteTargetBranch = (mutationConfig: MutationConfig<typeof deleteTargetBranch>) => {
     return useMutation({
         mutationFn: (targetBranch: number) => deleteTargetBranch(targetBranch),
-        onSuccess,
-        onError,
+        ...mutationConfig,
     });
 };

@@ -24,7 +24,7 @@ export const useFetchTargetCommissionDetail = (filterParams: TargetCommissionDet
             const { data } = await fetchTargetCommissionDetail(filterParams);
             return data;
         },
-        queryKey: ['target-commission-detail'],
-        enabled: false,
+        queryKey: ['target-commission-detail', filterParams.year, filterParams.month],
+        enabled: !!filterParams.year && !!filterParams.month,
     });
 };

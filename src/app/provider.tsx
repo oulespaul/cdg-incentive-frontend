@@ -35,8 +35,6 @@ export const AppProvider = ({ children }: AppProviderProps) => {
         }
     });
 
-    msalInstance.enableAccountStorageEvents();
-
     return (
         <React.Suspense
             fallback={

@@ -5,12 +5,12 @@ import { TargetSMMDSM } from '../components/target-dmm-dsm-smm-tab-content/const
 import { TargetDMM } from '../components/target-dmm-dsm-smm-tab-content/constants/target-dmm-columns';
 import { TargetBranchSummary } from '../components/target-branch-summary';
 import { sumAttribute, sumNestedAttribute } from '@/lib/number-utils';
-import { Status } from '@/lib/status-color-utils';
 import { TargetCommission } from '@/types/api';
+import { WorkflowStatus } from '@/constants/workflow-status';
 
 export interface TargetBranchWorkflow {
     id: number | undefined;
-    status: Status | undefined;
+    status: WorkflowStatus;
     requestedAt: Date | undefined;
     requestedBy: string | undefined;
     approvedAt: Date | undefined;
@@ -24,8 +24,7 @@ export interface TargetBranchWorkflow {
     createdBy: string | undefined;
 }
 interface TargetBranchState {
-    currentBranchId: number | undefined;
-    targetWorkflow: TargetBranchWorkflow | undefined;
+    targetWorkflow: TargetBranchWorkflow;
     targetCommission: TargetCommission | undefined;
     targetInHouseList: TargetInHouse[];
     targetDeptList: TargetDept[];
@@ -33,7 +32,6 @@ interface TargetBranchState {
     targetDMMList: TargetDMM[];
     targetSummary: () => TargetBranchSummary;
     isTargetBranchLoading: boolean;
-    setCurrentBranchId: (branchId: number) => void;
     setTargetCommission: (commission?: TargetCommission) => void;
     setTargetInHouseList: (updateFn: (prevState: TargetInHouse[]) => TargetInHouse[]) => void;
     setTargetDeptList: (updateFn: (prevState: TargetDept[]) => TargetDept[]) => void;
@@ -45,10 +43,9 @@ interface TargetBranchState {
 }
 
 export const useTargetBranchStore = create<TargetBranchState>((set, get) => ({
-    currentBranchId: 1,
     targetWorkflow: {
         id: undefined,
-        status: undefined,
+        status: WorkflowStatus.NEW,
         requestedAt: undefined,
         requestedBy: undefined,
         approvedAt: undefined,
@@ -99,7 +96,6 @@ export const useTargetBranchStore = create<TargetBranchState>((set, get) => ({
         };
     },
     isTargetBranchLoading: false,
-    setCurrentBranchId: (branchId: number) => set({ currentBranchId: branchId }),
     setTargetCommission: (targetCommission?: TargetCommission) => set({ targetCommission }),
     setTargetInHouseList: (updateFn: (prevState: TargetInHouse[]) => TargetInHouse[]) => {
         return set(state => {
@@ -127,7 +123,7 @@ export const useTargetBranchStore = create<TargetBranchState>((set, get) => ({
             return {
                 targetWorkflow: {
                     id: undefined,
-                    status: undefined,
+                    status: WorkflowStatus.NEW,
                     requestedAt: undefined,
                     requestedBy: undefined,
                     approvedAt: undefined,

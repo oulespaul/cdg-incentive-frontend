@@ -1,36 +1,17 @@
-import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { Card } from '@/components/ui/card';
-import FilterSelect from '@/components/select';
-import { formatThaiCurrency } from '@/lib/number-utils';
 import _ from 'lodash';
-import { TimelineLayout } from '@/components/timeline/timeline-layout';
-import { getStatusTextColorClass } from '@/lib/status-color-utils';
-import { cn } from '@/lib/utils';
-import { useNavigate } from 'react-router-dom';
 import { useUser } from '@/app/contexts/user-context';
-import { TARGET_BRANCH_PATH } from '@/constants/route-path';
-import { useTargetBranchStore } from '@/features/target-branch-manage/api/use-target-branch-store';
-import { TargetBranchTabs } from '@/features/target-branch-manage/components/TargetBranchTabs';
+import { TargetBranchTabs } from '@/features/target-branch-manage/components/target-branch-tabs';
+import TargetBranchWorkflowTimeline from '@/features/target-branch-manage/components/target-branch-workflow-timeline';
+import TargetBranchManageHeader from '@/features/target-branch-manage/components/target-branch-manage-header';
 import { useTargetBranchManage } from '@/features/target-branch-manage/hooks/use-target-branch-manage';
+import { useTargetBranchStore } from '@/features/target-branch-manage/hooks/use-target-branch-store';
 
 export const TargetBranchManagePage = () => {
-    const {
-        filterParams,
-        yearFilterOptions,
-        monthFilterOptions,
-        onFilterSelectHandler,
-        targetCommission,
-        onSaveTargetHandler,
-        onCancelTargetHandler,
-        isEditMode,
-        isViewMode,
-        deleteTargetBranchHandler,
-        makeActionTargetBranchHandler,
-    } = useTargetBranchManage();
-    const { targetWorkflow, isTargetBranchLoading } = useTargetBranchStore();
+    const { isViewMode } = useTargetBranchManage();
     const { user } = useUser();
-    const navigate = useNavigate();
+
+    const { targetCommission, targetWorkflow, isTargetBranchLoading } = useTargetBranchStore();
 
     return (
         <div className="flex flex-col">
@@ -43,108 +24,14 @@ export const TargetBranchManagePage = () => {
                 )}
             </div>
 
-            <div className="flex mt-2">
-                {isViewMode ? (
-                    <div className="flex items-center gap-2 w-1/3">
-                        <Button
-                            variant="outline"
-                            className="text-black"
-                            onClick={() => {
-                                navigate(TARGET_BRANCH_PATH);
-                            }}
-                        >
-                            ย้อนกลับ
-                        </Button>
-                        <p className="text-lg font-semibold">เดือนข้อมูล:</p>
-                        <span className="text-primaryLight">
-                            {filterParams.month} {filterParams.year}
-                        </span>
-                    </div>
-                ) : (
-                    <div className="flex gap-2 w-1/3">
-                        <FilterSelect
-                            value={filterParams.year}
-                            options={yearFilterOptions}
-                            placeholder="ปี"
-                            onChange={value => onFilterSelectHandler('year', value)}
-                            disabled={isEditMode}
-                        />
-                        <FilterSelect
-                            value={filterParams.month}
-                            options={monthFilterOptions}
-                            placeholder="เดือน"
-                            onChange={value => onFilterSelectHandler('month', value)}
-                            disabled={isEditMode}
-                        />
-                    </div>
-                )}
-                <div className="flex w-1/3">
-                    <p className="text-lg font-medium text-end self-center ml-2">
-                        เป้า commission (เป้าสาขา):{' '}
-                        {!_.isEmpty(targetCommission) && (
-                            <span className="text-primaryLight">
-                                {formatThaiCurrency(targetCommission.targetCommission, ' บาท')}
-                            </span>
-                        )}
-                    </p>
+            {!isTargetBranchLoading && (
+                <div className="flex mt-2">
+                    <TargetBranchManageHeader
+                        targetCommissionDetail={targetCommission}
+                        targetWorkflow={targetWorkflow}
+                    />
                 </div>
-
-                {!isTargetBranchLoading && (
-                    <>
-                        {isViewMode || ['Approved', 'Rejected'].includes(targetWorkflow?.status || '') ? (
-                            <div className="flex w-1/3 gap-3 justify-end">
-                                {targetWorkflow?.status !== 'Approved' && (
-                                    <Button
-                                        className="bg-amber-500 hover:bg-amber-500/80"
-                                        disabled={_.isEmpty(targetCommission)}
-                                        onClick={() => {
-                                            navigate(
-                                                `/app/target-branch/manage/${filterParams.year}/${filterParams.month}/edit`,
-                                            );
-                                        }}
-                                    >
-                                        แก้ไข
-                                    </Button>
-                                )}
-                                <Button
-                                    variant="destructive"
-                                    onClick={() => {
-                                        if (targetWorkflow?.id) {
-                                            deleteTargetBranchHandler(targetWorkflow.id);
-                                        }
-                                    }}
-                                >
-                                    ลบ
-                                </Button>
-                            </div>
-                        ) : (
-                            <div className="flex w-1/3 gap-3 justify-end">
-                                <Button variant="outline" onClick={onCancelTargetHandler}>
-                                    ยกเลิก
-                                </Button>
-                                <Button
-                                    variant="primary"
-                                    disabled={_.isEmpty(targetCommission)}
-                                    onClick={onSaveTargetHandler}
-                                >
-                                    บันทึก
-                                </Button>
-                                <Button
-                                    variant="success"
-                                    disabled={_.isEmpty(targetCommission)}
-                                    onClick={() => {
-                                        if (targetWorkflow?.id) {
-                                            makeActionTargetBranchHandler([targetWorkflow.id], 'Pending');
-                                        }
-                                    }}
-                                >
-                                    ส่งคำขออนุมัติ
-                                </Button>
-                            </div>
-                        )}
-                    </>
-                )}
-            </div>
+            )}
 
             <Separator className="my-4" />
 
@@ -155,23 +42,8 @@ export const TargetBranchManagePage = () => {
                     </div>
                 </div>
                 <div className="w-1/5">
-                    {!_.isEmpty(targetCommission) && targetWorkflow && !isTargetBranchLoading && (
-                        <Card className="p-4">
-                            <div className="flex text-lg justify-end mb-4 align-middle">
-                                <h1 className="mr-2">สถานะ:</h1>
-
-                                <h1
-                                    className={cn(
-                                        'font-bold',
-                                        getStatusTextColorClass(targetWorkflow.status || 'Default'),
-                                    )}
-                                >
-                                    {targetWorkflow.status}
-                                </h1>
-                            </div>
-
-                            <TimelineLayout targetWorkflow={targetWorkflow} />
-                        </Card>
+                    {!_.isEmpty(targetCommission) && !isTargetBranchLoading && (
+                        <TargetBranchWorkflowTimeline targetWorkflow={targetWorkflow} />
                     )}
                 </div>
             </div>

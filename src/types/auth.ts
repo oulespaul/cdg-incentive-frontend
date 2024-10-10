@@ -10,7 +10,7 @@ export interface AppUser {
     role: Role;
 }
 
-interface UserBranch {
+export interface UserBranch {
     id: number;
     bu: string;
     brand: string;

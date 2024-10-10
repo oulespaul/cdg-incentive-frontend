@@ -1,19 +1,17 @@
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { Card } from '@/components/ui/card';
 import _ from 'lodash';
-import { TimelineLayout } from '@/components/timeline/timeline-layout';
-import { getStatusTextColorClass } from '@/lib/status-color-utils';
-import { cn } from '@/lib/utils';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Check, X } from 'lucide-react';
 import { TARGET_BRANCH_REVIEW_APPROVE_PATH } from '@/constants/route-path';
 import { Spinner } from '@/components/spinner';
 import { useFetchTargetBranchDetailByBranchId } from '@/features/target-branch-manage/api/use-fetch-target-branch-detail-by-id';
-import { useTargetBranchStore } from '@/features/target-branch-manage/api/use-target-branch-store';
 import TargetBranchSummaryTabContent from '@/features/target-branch-manage/components/target-branch-summary';
-import { useTargetBranchManage } from '@/features/target-branch-manage/hooks/use-target-branch-manage';
 import { useEffect } from 'react';
+import TargetBranchWorkflowTimeline from '@/features/target-branch-manage/components/target-branch-workflow-timeline';
+import { WorkflowStatus } from '@/constants/workflow-status';
+import { useTargetBranchStore } from '@/features/target-branch-manage/hooks/use-target-branch-store';
+import { useTargetBranchActions } from '@/features/target-branch-manage/hooks/use-target-branch-actions';
 
 export const TargetBranchReviewDetail = () => {
     const {
@@ -26,7 +24,7 @@ export const TargetBranchReviewDetail = () => {
         setTargetWorkflow,
         targetWorkflow,
     } = useTargetBranchStore();
-    const { makeActionTargetBranchHandler } = useTargetBranchManage();
+    const { makeActionTargetBranchHandler } = useTargetBranchActions();
 
     const { id } = useParams();
     const { data: targetBranchDetail, isFetching: isTargetBranchLoading } = useFetchTargetBranchDetailByBranchId(
@@ -99,14 +97,18 @@ export const TargetBranchReviewDetail = () => {
                     <div className="flex w-1/3 gap-3 justify-end">
                         <Button
                             variant="destructive"
-                            onClick={() => makeActionTargetBranchHandler([targetBranchDetail.id], 'Rejected')}
+                            onClick={() =>
+                                makeActionTargetBranchHandler([targetBranchDetail.id], WorkflowStatus.REJECTED)
+                            }
                         >
                             <X />
                             ไม่อนุมัติ
                         </Button>
                         <Button
                             variant="success"
-                            onClick={() => makeActionTargetBranchHandler([targetBranchDetail.id], 'Approved')}
+                            onClick={() =>
+                                makeActionTargetBranchHandler([targetBranchDetail.id], WorkflowStatus.APPROVED)
+                            }
                         >
                             <Check />
                             อนุมัติ
@@ -127,24 +129,7 @@ export const TargetBranchReviewDetail = () => {
                         <TargetBranchSummaryTabContent />
                     </div>
                     <div className="w-1/5">
-                        {targetWorkflow && !isTargetBranchLoading && (
-                            <Card className="p-4">
-                                <div className="flex text-lg justify-end mb-4 align-middle">
-                                    <h1 className="mr-2">สถานะ:</h1>
-
-                                    <h1
-                                        className={cn(
-                                            'font-bold',
-                                            getStatusTextColorClass(targetWorkflow.status || 'Default'),
-                                        )}
-                                    >
-                                        {targetWorkflow.status}
-                                    </h1>
-                                </div>
-
-                                <TimelineLayout targetWorkflow={targetWorkflow} />
-                            </Card>
-                        )}
+                        {!isTargetBranchLoading && <TargetBranchWorkflowTimeline targetWorkflow={targetWorkflow} />}
                     </div>
                 </div>
             )}

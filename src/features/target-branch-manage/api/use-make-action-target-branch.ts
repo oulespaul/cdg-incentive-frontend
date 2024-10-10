@@ -1,9 +1,11 @@
+import { WorkflowStatus } from '@/constants/workflow-status';
 import { apiClient } from '@/lib/api-client';
+import { MutationConfig } from '@/lib/react-query';
 import { useMutation } from '@tanstack/react-query';
 
 export interface MakeActionTargetBranchRequst {
     targetBranchIdList: number[];
-    action: string;
+    action: WorkflowStatus;
     rejectReason?: string;
 }
 
@@ -12,19 +14,9 @@ const makeActionTargetBranch = async (request: MakeActionTargetBranchRequst) => 
     return data;
 };
 
-interface UseMakeActionTargetBranchProps {
-    onSuccess:
-        | ((data: any, variables: MakeActionTargetBranchRequst, context: unknown) => Promise<unknown> | unknown)
-        | undefined;
-    onError:
-        | ((error: Error, variables: MakeActionTargetBranchRequst, context: unknown) => Promise<unknown> | unknown)
-        | undefined;
-}
-
-export const useMakeActionTargetBranch = ({ onSuccess, onError }: UseMakeActionTargetBranchProps) => {
+export const useMakeActionTargetBranch = (mutationConfig: MutationConfig<typeof makeActionTargetBranch>) => {
     return useMutation({
         mutationFn: (request: MakeActionTargetBranchRequst) => makeActionTargetBranch(request),
-        onSuccess,
-        onError,
+        ...mutationConfig,
     });
 };

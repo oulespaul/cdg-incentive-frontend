@@ -1,4 +1,5 @@
 import { apiClient } from '@/lib/api-client';
+import { MutationConfig } from '@/lib/react-query';
 import { useMsal } from '@azure/msal-react';
 import { useMutation } from '@tanstack/react-query';
 
@@ -56,20 +57,12 @@ const createTargetBranch = async (data: CreateTargetBranchRequest) => {
     return response.data;
 };
 
-interface UseCrerateTargetBranchProps {
-    onCreateTargetSuccess: (data: any) => void;
-    onCreateTargetError: (error: Error) => void;
-}
-
-export const useCreateTargetBranch = ({ onCreateTargetSuccess, onCreateTargetError }: UseCrerateTargetBranchProps) => {
+export const useCreateTargetBranch = (mutationConfig: MutationConfig<typeof createTargetBranch>) => {
     const { accounts } = useMsal();
 
     return useMutation({
         mutationFn: (request: CreateTargetBranchRequest) =>
             createTargetBranch({ ...request, createdBy: accounts[0].name }),
-        onSuccess: response => {
-            onCreateTargetSuccess(response.data);
-        },
-        onError: onCreateTargetError,
+        ...mutationConfig,
     });
 };

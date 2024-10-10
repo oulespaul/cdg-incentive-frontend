@@ -1,6 +1,6 @@
 import { Separator } from '@/components/ui/separator';
 import { formatThaiCurrency, handleFalsyOrInfinite } from '@/lib/number-utils';
-import { useTargetBranchStore } from '../../api/use-target-branch-store';
+import { useTargetBranchStore } from '../../hooks/use-target-branch-store';
 import { Spinner } from '@/components/spinner';
 import { Card } from '@/components/ui/card';
 

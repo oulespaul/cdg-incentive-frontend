@@ -1,6 +1,6 @@
 import { Card } from '@/components/ui/card';
 import _ from 'lodash';
-import { useTargetBranchStore } from '../../api/use-target-branch-store';
+import { useTargetBranchStore } from '../../hooks/use-target-branch-store';
 import TargetDSMSMMList from './components/TargetDSMList';
 import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
