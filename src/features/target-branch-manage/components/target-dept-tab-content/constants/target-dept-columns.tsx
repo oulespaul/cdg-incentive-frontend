@@ -58,7 +58,7 @@ export const targetDeptColumns: ColumnDef<TargetDept>[] = [
                 }
             }
             return (
-                <div className="text-start flex items-center w-[500px] overflow-auto">
+                <div className="text-start flex flex-wrap items-center w-[500px]">
                     {(row.getValue('subDepartmentPool') as SubDepartment[]).map(subDepartment => {
                         return (
                             <Card className="flex items-center bg-white mx-1 px-2 h-[31px]" key={subDepartment.id}>
