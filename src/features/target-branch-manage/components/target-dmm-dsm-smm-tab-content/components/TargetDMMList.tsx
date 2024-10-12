@@ -9,6 +9,8 @@ import SubDepartmentDialog from '../../sub-department-dialog';
 import { TargetBranchDataTable } from '../../target-branch-data-table';
 import { TargetDMM, targetDMMColumns } from '../constants/target-dmm-columns';
 import { useTargetBranchStore } from '@/features/target-branch-manage/hooks/use-target-branch-store';
+import { Button } from '@/components/ui/button';
+import { Plus } from 'lucide-react';
 
 interface TargetDMMListProps {
     isViewMode: boolean;
@@ -56,20 +58,6 @@ const TargetDMMList: React.FC<TargetDMMListProps> = ({ isViewMode }) => {
         setDialogsOpen(prev => ({ ...prev, [dialogType]: true }));
     }, []);
 
-    const addRow = () => {
-        const newRow = {
-            id: undefined,
-            dmmId: '',
-            department: undefined,
-            subDepartment: undefined,
-            goalDept: '',
-            actualSalesLastYear: '',
-            goalId: '',
-            actualSalesIDLastYear: '',
-        };
-        setTargetDMMList((old: TargetDMM[]) => [...old, newRow]);
-    };
-
     const updateData = (rowIndex: number, columnId: string, value: any) => {
         setTargetDMMList(old =>
             old.map((row, index) => {
@@ -92,20 +80,34 @@ const TargetDMMList: React.FC<TargetDMMListProps> = ({ isViewMode }) => {
         <>
             <TargetBranchDataTable
                 columns={targetDMMColumns}
-                data={
-                    targetDMMList?.map((target, index) => ({
-                        ...target,
-                        id: index + 1,
-                    })) ?? []
-                }
+                data={targetDMMList ?? []}
                 isCanAddRow={!_.isEmpty(targetCommission) && !isViewMode}
                 isLoading={isTargetBranchLoading}
                 columnVisibility={{ action: !isViewMode }}
                 className="max-h-[300px]"
                 meta={{
                     updateData,
-                    addRowTitle: 'เพิ่มพนักงาน DMM',
-                    addRow,
+                    addRowButton: () => {
+                        const addRowHandler = () => {
+                            const newRow = {
+                                id: undefined,
+                                dmmId: '',
+                                department: undefined,
+                                subDepartment: undefined,
+                                goalDept: '',
+                                actualSalesLastYear: '',
+                                goalId: '',
+                                actualSalesIDLastYear: '',
+                            };
+                            setTargetDMMList((old: TargetDMM[]) => [...old, newRow]);
+                        };
+
+                        return (
+                            <Button onClick={addRowHandler} variant="outlineSuccess">
+                                <Plus className="mr-2" /> เพิ่มพนักงาน DMM
+                            </Button>
+                        );
+                    },
                     removeRow,
                     selectedDepartment: rowIndex => openDialog('department', rowIndex),
                     selectedSubDepartment: rowIndex => openDialog('subDepartment', rowIndex),

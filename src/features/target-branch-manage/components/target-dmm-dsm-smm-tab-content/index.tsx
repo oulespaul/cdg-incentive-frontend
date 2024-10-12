@@ -18,11 +18,11 @@ const TargetDMMDSMSMMTabContent: React.FC<TargetDMMDSMSMMTabContentProps> = ({ i
     return (
         <Card className="p-4">
             {targetSMMDSMList.map((targetSMMDSM, index) => (
-                <div className="mb-2" key={`${targetSMMDSM.id}-${index}`}>
+                <div className="mb-4" key={`${targetSMMDSM.id}-${index}`}>
                     <TargetDSMSMMList smmRowIndex={index} isViewMode={isViewMode} />
 
                     {!_.isEmpty(targetCommission) && index === targetSMMDSMList.length - 1 && !isViewMode && (
-                        <div className="flex mt-2">
+                        <div className="flex my-4">
                             <Button
                                 onClick={() => {
                                     const newRow = {
@@ -32,13 +32,13 @@ const TargetDMMDSMSMMTabContent: React.FC<TargetDMMDSMSMMTabContentProps> = ({ i
                                     };
                                     setTargetSMMDSMList((old: TargetSMMDSM[]) => [...old, newRow]);
                                 }}
-                                variant="outline"
+                                variant="success"
                             >
                                 <Plus className="mr-2" /> เพิ่มพนักงาน SMM
                             </Button>
                         </div>
                     )}
-                    <Separator className="mt-4" />
+                    <Separator className="mt-4 h-1" />
                 </div>
             ))}
 

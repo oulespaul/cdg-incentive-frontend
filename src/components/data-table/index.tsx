@@ -34,8 +34,7 @@ interface DataTableProps<TData, TValue> {
 declare module '@tanstack/react-table' {
     interface TableMeta<TData extends RowData> {
         updateData: (rowIndex: number, columnId: string, value: unknown) => void;
-        addRowTitle: string;
-        addRow: () => void;
+        addRowButton: () => JSX.Element
         removeRow: (rowIndex: number) => void;
         selectedBrand?: (rowIndex: number) => void;
         selectedSubDepartmentPool?: (rowIndex: number) => void;

@@ -7,6 +7,8 @@ import { useTargetBranchStore } from '../../hooks/use-target-branch-store';
 import SubDepartmentPoolDialog from '../sub-dept-pool-dialog';
 import { SubDepartment } from '@/features/sub-department/models/sub-department';
 import { useFetchSubDepartment } from '@/features/sub-department/api/use-fetch-sub-department';
+import { Button } from '@/components/ui/button';
+import { Plus } from 'lucide-react';
 
 interface TargetDeptTabContentProps {
     isViewMode: boolean;
@@ -48,7 +50,7 @@ const TargetDeptTabContent: React.FC<TargetDeptTabContentProps> = ({ isViewMode 
         <Card>
             <TargetBranchDataTable
                 columns={targetDeptColumns}
-                data={targetDeptList.map((target, index) => ({ ...target, id: index + 1 })) ?? []}
+                data={targetDeptList ?? []}
                 isCanAddRow={!_.isEmpty(targetCommission) && !isViewMode}
                 isLoading={isTargetBranchLoading}
                 columnVisibility={{ action: !isViewMode }}
@@ -66,16 +68,23 @@ const TargetDeptTabContent: React.FC<TargetDeptTabContentProps> = ({ isViewMode 
                             }),
                         );
                     },
-                    addRowTitle: 'เพิ่ม Group',
-                    addRow: () => {
-                        const newRow = {
-                            id: undefined,
-                            groupDept: '',
-                            subDepartmentPool: [],
-                            goalDept: undefined,
-                            actualSalesIDLastYear: undefined,
+                    addRowButton: () => {
+                        const addRowHandler = () => {
+                            const newRow = {
+                                id: undefined,
+                                groupDept: '',
+                                subDepartmentPool: [],
+                                goalDept: undefined,
+                                actualSalesIDLastYear: undefined,
+                            };
+                            setTargetDeptList((old: TargetDept[]) => [...old, newRow]);
                         };
-                        setTargetDeptList((old: TargetDept[]) => [...old, newRow]);
+
+                        return (
+                            <Button onClick={addRowHandler} variant="success">
+                                <Plus className="mr-2" /> เพิ่ม Group
+                            </Button>
+                        );
                     },
                     removeRow: (rowIndex: number) => {
                         setTargetDeptList((old: TargetDept[]) =>

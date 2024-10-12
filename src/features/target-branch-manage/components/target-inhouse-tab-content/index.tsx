@@ -7,6 +7,8 @@ import { Brand } from '@/features/brand/models/brand';
 import { useTargetBranchStore } from '../../hooks/use-target-branch-store';
 import _ from 'lodash';
 import { showErrorToast } from '@/lib/toast-utils';
+import { Button } from '@/components/ui/button';
+import { Plus } from 'lucide-react';
 
 interface TargetInHouseTabContentProps {
     isViewMode: boolean;
@@ -80,21 +82,28 @@ const TargetInHouseTabContent: React.FC<TargetInHouseTabContentProps> = ({ isVie
                             }),
                         );
                     },
-                    addRowTitle: 'เพิ่ม Group',
-                    addRow: () => {
-                        const newRow: TargetInHouse = {
-                            id: undefined,
-                            departmentCode: '',
-                            departmentName: '',
-                            subDepartmentCode: '',
-                            subDepartmentName: '',
-                            brandId: undefined,
-                            brandName: '',
-                            groupBrand: '',
-                            goalBrand: undefined,
-                            actualSalesIDLastYear: undefined,
+                    addRowButton: () => {
+                        const addRowHandler = () => {
+                            const newRow: TargetInHouse = {
+                                id: undefined,
+                                departmentCode: '',
+                                departmentName: '',
+                                subDepartmentCode: '',
+                                subDepartmentName: '',
+                                brandId: undefined,
+                                brandName: '',
+                                groupBrand: '',
+                                goalBrand: undefined,
+                                actualSalesIDLastYear: undefined,
+                            };
+                            setTargetInHouseList((old: TargetInHouse[]) => [...old, newRow]);
                         };
-                        setTargetInHouseList((old: TargetInHouse[]) => [...old, newRow]);
+
+                        return (
+                            <Button onClick={addRowHandler} variant="success">
+                                <Plus className="mr-2" /> เพิ่ม Group
+                            </Button>
+                        );
                     },
                     removeRow: (rowIndex: number) => {
                         setTargetInHouseList((old: TargetInHouse[]) =>

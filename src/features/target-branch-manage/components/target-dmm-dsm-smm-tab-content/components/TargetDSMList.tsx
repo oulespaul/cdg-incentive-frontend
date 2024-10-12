@@ -11,6 +11,8 @@ import SubDepartmentDialog from '../../sub-department-dialog';
 import { TargetBranchDataTable } from '../../target-branch-data-table';
 import { TargetDSM, targetDSMSMMColumns } from '../constants/target-dsm-smm-columns';
 import { useTargetBranchStore } from '@/features/target-branch-manage/hooks/use-target-branch-store';
+import { Button } from '@/components/ui/button';
+import { Plus } from 'lucide-react';
 
 interface TargetDSMSMMListProps {
     smmRowIndex: number;
@@ -65,24 +67,6 @@ const TargetDSMSMMList: React.FC<TargetDSMSMMListProps> = ({ smmRowIndex, isView
         );
     };
 
-    const addRow = () => {
-        const newRow: TargetDSM = {
-            id: undefined,
-            dsmId: '',
-            department: undefined,
-            subDepartment: undefined,
-            goalDept: '',
-            actualSalesLastYear: '',
-            goalId: '',
-            actualSalesIDLastYear: '',
-        };
-        setTargetSMMDSMList(prevList =>
-            prevList.map((row, index) =>
-                index === smmRowIndex ? { ...row, targetDSMList: [...row.targetDSMList, newRow] } : row,
-            ),
-        );
-    };
-
     const updateData = (rowIndex: number, columnId: string, value: any) => {
         setTargetSMMDSMList(prevList =>
             prevList.map((row, index) => {
@@ -128,20 +112,40 @@ const TargetDSMSMMList: React.FC<TargetDSMSMMListProps> = ({ smmRowIndex, isView
 
             <TargetBranchDataTable
                 columns={targetDSMSMMColumns}
-                data={
-                    targetSMMDSMList[smmRowIndex]?.targetDSMList?.map((target, index) => ({
-                        ...target,
-                        id: index + 1,
-                    })) ?? []
-                }
+                data={targetSMMDSMList[smmRowIndex]?.targetDSMList ?? []}
                 isCanAddRow={!_.isEmpty(targetCommission) && !isViewMode}
                 className="max-h-[300px]"
                 isLoading={isTargetBranchLoading}
                 columnVisibility={{ action: !isViewMode }}
                 meta={{
                     updateData,
-                    addRowTitle: 'เพิ่มพนักงาน DSM',
-                    addRow,
+                    addRowButton: () => {
+                        const addRowHandler = () => {
+                            const newRow: TargetDSM = {
+                                id: undefined,
+                                dsmId: '',
+                                department: undefined,
+                                subDepartment: undefined,
+                                goalDept: '',
+                                actualSalesLastYear: '',
+                                goalId: '',
+                                actualSalesIDLastYear: '',
+                            };
+                            setTargetSMMDSMList(prevList =>
+                                prevList.map((row, index) =>
+                                    index === smmRowIndex
+                                        ? { ...row, targetDSMList: [...row.targetDSMList, newRow] }
+                                        : row,
+                                ),
+                            );
+                        };
+
+                        return (
+                            <Button onClick={addRowHandler} variant="outlineSuccess">
+                                <Plus className="mr-2" /> เพิ่มพนักงาน DSM
+                            </Button>
+                        );
+                    },
                     removeRow,
                     selectedDepartment: rowIndex => openDialog('department', rowIndex),
                     selectedSubDepartment: rowIndex => openDialog('subDepartment', rowIndex),

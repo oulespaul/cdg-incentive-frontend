@@ -29,7 +29,13 @@ export const targetDSMSMMColumns: ColumnDef<TargetDSM>[] = [
     {
         accessorKey: 'id',
         header: ({ column }) => <DataTableColumnHeader column={column} title="ลำดับ" className="text-center" />,
-        cell: ({ row }) => <div className="text-center">{row.getValue('id')}</div>,
+        cell: ({ row, table }) => {
+            return (
+                <div className="text-center">
+                    {(table.getSortedRowModel()?.flatRows?.findIndex(flatRow => flatRow.id === row.id) || 0) + 1}
+                </div>
+            );
+        },
         size: 100,
         enableSorting: false,
         enableHiding: false,
