@@ -14,7 +14,6 @@ import {
 import { useFetchTargetCommissionFilter } from '@/features/target-commission/api/use-fetch-target-commission-filters';
 import FilterSelect from '@/components/select';
 import { targetCommissionColumns } from '@/features/target-commission/constants/target-commission-columns';
-import { reOrderList } from '@/lib/list-utils';
 import UploadTargetCommissionInput from './upload-target-commission-input';
 
 export const TargetCommissionList = () => {
@@ -117,7 +116,7 @@ export const TargetCommissionList = () => {
 
                 <DataTable
                     columns={targetCommissionColumns}
-                    data={reOrderList(targetCommissionData?.content, 'id')}
+                    data={targetCommissionData?.content || []}
                     onPaginationChange={onPaginationChange}
                     pageCount={targetCommissionData?.totalElements ?? 0}
                     pagination={pagination}

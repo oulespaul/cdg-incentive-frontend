@@ -22,7 +22,13 @@ export const targetInHouseColumns: ColumnDef<TargetInHouse>[] = [
     {
         accessorKey: 'id',
         header: ({ column }) => <DataTableColumnHeader column={column} title="ลำดับ" className="text-center" />,
-        cell: ({ row }) => <div className="text-center">{row.getValue('id')}</div>,
+        cell: ({ row, table }) => {
+            return (
+                <div className="text-center">
+                    {(table.getSortedRowModel()?.flatRows?.findIndex(flatRow => flatRow.id === row.id) || 0) + 1}
+                </div>
+            );
+        },
         size: 100,
         enableSorting: false,
         enableHiding: false,
@@ -85,9 +91,14 @@ export const targetInHouseColumns: ColumnDef<TargetInHouse>[] = [
     {
         id: 'groupBrand',
         accessorKey: 'groupBrand',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Group" className="text-start" />,
-        enableSorting: false,
+        header: () => 'Group',
+        enableSorting: true,
         enableHiding: false,
+        sortingFn: (rowA, rowB) => {
+            // Handle empty values to lastest
+            if (rowA.original.groupBrand === '') return 1;
+            return Number(rowA.original.groupBrand) - Number(rowB.original.groupBrand);
+        },
     },
     {
         id: 'goalBrand',

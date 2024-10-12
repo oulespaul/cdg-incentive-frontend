@@ -71,9 +71,7 @@ export const useTargetBranchManage = () => {
             fetchTargetCommissionDetail().then(result => {
                 if (result.data) {
                     setTargetCommission(result.data);
-                    if (isEditMode || isViewMode) {
-                        fetchTargetBranchDetail(result.data.id);
-                    }
+                    fetchTargetBranchDetail(result.data.id);
                 }
             });
         }

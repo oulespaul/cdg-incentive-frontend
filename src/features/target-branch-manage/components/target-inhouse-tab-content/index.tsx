@@ -6,8 +6,7 @@ import BrandDialog from '../brand-dialog';
 import { Brand } from '@/features/brand/models/brand';
 import { useTargetBranchStore } from '../../hooks/use-target-branch-store';
 import _ from 'lodash';
-import { toast } from 'react-toastify';
-import { useFetchBrand } from '@/features/brand/api/use-fetch-branch';
+import { showErrorToast } from '@/lib/toast-utils';
 
 interface TargetInHouseTabContentProps {
     isViewMode: boolean;
@@ -19,19 +18,11 @@ const TargetInHouseTabContent: React.FC<TargetInHouseTabContentProps> = ({ isVie
 
     const { targetCommission, targetInHouseList, setTargetInHouseList, isTargetBranchLoading } = useTargetBranchStore();
 
-    const { data: brandList } = useFetchBrand();
-
     const handleBrandSelected = useCallback(
         (brandSelected: Brand | undefined) => {
             if (!brandSelected || currentRowIndex === null) return;
             if (targetInHouseList.some(target => target.brandId === brandSelected.id)) {
-                toast.error(
-                    <div className="flex flex-col text-start">
-                        <p className="text-sm font-bold text-ref-400">แบรนด์นี้มีข้อมูลอยูู่แล้ว</p>
-                        <p className="mt-2 text-xs">ไม่สามารถเพิ่มแบรนด์ได้ กรุณาลองใหม่อีกครั้ง</p>
-                    </div>,
-                    { position: 'bottom-right' },
-                );
+                showErrorToast('แบรนด์นี้มีข้อมูลอยู่แล้ว', 'ไม่สามารถเพิ่มแบรนด์ได้ กรุณาลองใหม่อีกครั้ง');
                 return;
             }
 
@@ -65,10 +56,16 @@ const TargetInHouseTabContent: React.FC<TargetInHouseTabContentProps> = ({ isVie
         <Card>
             <TargetBranchDataTable
                 columns={targetInHouseColumns}
-                data={targetInHouseList.map((target, index) => ({ ...target, id: index + 1 })) ?? []}
+                data={targetInHouseList}
                 isCanAddRow={!_.isEmpty(targetCommission) && !isViewMode}
                 isLoading={isTargetBranchLoading}
                 columnVisibility={{ action: !isViewMode }}
+                initialSoringState={[
+                    {
+                        id: 'groupBrand',
+                        desc: false,
+                    },
+                ]}
                 meta={{
                     updateData: (rowIndex, columnId, value) => {
                         setTargetInHouseList(old =>
@@ -110,11 +107,7 @@ const TargetInHouseTabContent: React.FC<TargetInHouseTabContentProps> = ({ isVie
             />
 
             {brandDialogOpen && (
-                <BrandDialog
-                    brandList={brandList}
-                    onBandSelected={handleBrandSelected}
-                    onCloseDialog={() => setBrandDialogOpen(false)}
-                />
+                <BrandDialog onBandSelected={handleBrandSelected} onCloseDialog={() => setBrandDialogOpen(false)} />
             )}
         </Card>
     );

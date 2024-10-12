@@ -71,7 +71,9 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
                     });
                     setIsLoading(false);
                 } catch (error) {
-                    console.error('Failed to load user details');
+                    instance.logoutRedirect();
+                } finally {
+                    setIsLoading(false);
                 }
             }
         };

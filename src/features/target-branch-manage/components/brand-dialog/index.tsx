@@ -6,19 +6,21 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@radix-ui/react-dropdown-menu';
 import { useCallback, useMemo, useState } from 'react';
 import { Brand } from '@/features/brand/models/brand';
+import { useFetchBrand } from '@/features/brand/api/use-fetch-branch';
 
 interface BrandDialogProps {
-    brandList: Brand[] | undefined;
     onBandSelected?: (brandSelected: Brand | undefined) => void;
     onCloseDialog: () => void;
 }
 
-const BrandDialog = ({ brandList, onBandSelected, onCloseDialog }: BrandDialogProps) => {
+const BrandDialog = ({ onBandSelected, onCloseDialog }: BrandDialogProps) => {
     const [brandSelected, setBrandSelected] = useState<Brand>();
     const [brandOptionSearch, setBrandOptionSearch] = useState<string>('');
 
+    const { data: brandList } = useFetchBrand();
+
     const brandOptions = useMemo(() => {
-        const brandUniqueNameList = _.unionBy(brandList, 'brandName');
+        const brandUniqueNameList = _.uniqBy(brandList, item => `${item.subDepartmentCode}-${item.brandName}`);
         return brandUniqueNameList?.filter(brand =>
             brand.brandName.toLowerCase().includes(brandOptionSearch.toLowerCase()),
         );
@@ -52,7 +54,9 @@ const BrandDialog = ({ brandList, onBandSelected, onCloseDialog }: BrandDialogPr
                     {brandOptions?.map(brand => (
                         <div className="flex items-center space-x-2" key={brand.id}>
                             <RadioGroupItem value={brand.id.toString()} id={brand.id.toString()} />
-                            <Label>{brand.brandName}</Label>
+                            <Label>
+                                {brand.subDepartmentCode} - {brand.brandName}
+                            </Label>
                         </div>
                     ))}
                 </RadioGroup>

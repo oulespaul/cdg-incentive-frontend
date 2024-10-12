@@ -1,8 +1,9 @@
 import { Menubar, MenubarContent, MenubarItem, MenubarMenu, MenubarTrigger } from '@/components/ui/menubar';
 import { Ellipsis } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useTargetBranchManage } from '../../hooks/use-target-branch-manage';
 import { TargetBranchDetail } from '@/types/api';
+import { useTargetBranchActions } from '../../hooks/use-target-branch-actions';
+import { WorkflowStatus } from '@/constants/workflow-status';
 
 interface TargetBranchActionMenusProps {
     targetBranchDetail: TargetBranchDetail;
@@ -10,7 +11,7 @@ interface TargetBranchActionMenusProps {
 
 const TargetBranchActionMenus: React.FC<TargetBranchActionMenusProps> = ({ targetBranchDetail }) => {
     const navigate = useNavigate();
-    const { deleteTargetBranchHandler } = useTargetBranchManage();
+    const { deleteTargetBranchHandler } = useTargetBranchActions();
 
     const onViewHandler = () => {
         navigate(`/app/target-branch/manage/${targetBranchDetail.year}/${targetBranchDetail.month}/view`);
@@ -29,12 +30,14 @@ const TargetBranchActionMenus: React.FC<TargetBranchActionMenusProps> = ({ targe
                 <MenubarContent>
                     <MenubarItem onClick={onViewHandler}>ดูรายละเอียด</MenubarItem>
                     <MenubarItem onClick={onEditHandler}>แก้ไข</MenubarItem>
-                    <MenubarItem
-                        className="text-red-500"
-                        onClick={() => deleteTargetBranchHandler(targetBranchDetail.id)}
-                    >
-                        ลบ
-                    </MenubarItem>
+                    {targetBranchDetail.status === WorkflowStatus.NEW && (
+                        <MenubarItem
+                            className="text-red-500"
+                            onClick={() => deleteTargetBranchHandler(targetBranchDetail.id)}
+                        >
+                            ลบ
+                        </MenubarItem>
+                    )}
                     <MenubarItem>ดาวน์โหลด Store Report</MenubarItem>
                 </MenubarContent>
             </MenubarMenu>
