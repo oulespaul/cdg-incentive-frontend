@@ -1,6 +1,11 @@
-import { TARGET_BRANCH_PATH, TARGET_BRANCH_REVIEW_APPROVE_PATH, TARGET_COMMISSION_PATH } from '@/constants/route-path';
+import {
+    EMPLOYEE_MANAGEMENT,
+    TARGET_BRANCH_PATH,
+    TARGET_BRANCH_REVIEW_APPROVE_PATH,
+    TARGET_COMMISSION_PATH,
+} from '@/constants/route-path';
 import { getRoutePermissionByPath } from '@/constants/route-permission';
-import { Calculator, CheckCircle, LucideIcon, Star } from 'lucide-react';
+import { Briefcase, Calculator, CheckCircle, LucideIcon, Star } from 'lucide-react';
 
 type Submenu = {
     href: string;
@@ -38,7 +43,8 @@ export function getMenuList(pathname: string): Group[] {
                 {
                     href: TARGET_BRANCH_PATH,
                     label: 'จัดการเป้าสาขา',
-                    active: pathname.includes(TARGET_BRANCH_PATH) && !pathname.includes(TARGET_BRANCH_REVIEW_APPROVE_PATH),
+                    active:
+                        pathname.includes(TARGET_BRANCH_PATH) && !pathname.includes(TARGET_BRANCH_REVIEW_APPROVE_PATH),
                     icon: Calculator,
                     submenus: [],
                     allowedRoles: getRoutePermissionByPath(TARGET_BRANCH_PATH)?.allowedRoles || [],
@@ -50,6 +56,14 @@ export function getMenuList(pathname: string): Group[] {
                     icon: CheckCircle,
                     submenus: [],
                     allowedRoles: getRoutePermissionByPath(TARGET_BRANCH_REVIEW_APPROVE_PATH)?.allowedRoles || [],
+                },
+                {
+                    href: EMPLOYEE_MANAGEMENT,
+                    label: 'จัดการข้อมูลพนักงานห้าง',
+                    active: pathname.includes(EMPLOYEE_MANAGEMENT),
+                    icon: Briefcase,
+                    submenus: [],
+                    allowedRoles: getRoutePermissionByPath(EMPLOYEE_MANAGEMENT)?.allowedRoles || [],
                 },
             ],
         },

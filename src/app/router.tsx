@@ -64,6 +64,13 @@ export const createAppRouter = (isAuthenticated: boolean) =>
                         return { Component: TargetBranchReviewDetail };
                     },
                 },
+                {
+                    path: 'employee-management',
+                    lazy: async () => {
+                        const { EmployeeManagementPage } = await import('./routes/app/employee-management');
+                        return { Component: EmployeeManagementPage };
+                    },
+                },
             ],
         },
         {

@@ -32,6 +32,7 @@ export interface Page<T> {
     empty: boolean;
 }
 
+// TargetCommission
 export type TargetCommission = {
     id: number;
     month: string;
@@ -60,3 +61,28 @@ export interface TargetBranchDetail {
     changeTargetIDPercentage: number;
     status: string;
 }
+
+// Employee
+export type Employee = {
+    id: number;
+    businessUnit: string;
+    company: string;
+    branch: string;
+    branchDescription: string;
+    employeeId: string;
+    hireDate: string;
+    employeeGroup: string;
+    positionDescription: string;
+    costCenter: string;
+    corporateTitle: string;
+    terminatedDate: string | null;
+    scheme: string;
+    newCostCenter: string;
+    brandId: string | null;
+    branchNo: string;
+    dayWorking: number;
+    createdAt: string;
+    createdBy: string;
+    updatedAt: string | null;
+    updatedBy: string | null;
+};

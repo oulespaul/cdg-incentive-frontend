@@ -1,4 +1,4 @@
-import { TARGET_BRANCH_PATH, TARGET_COMMISSION_PATH } from '@/constants/route-path';
+import { EMPLOYEE_MANAGEMENT, TARGET_BRANCH_PATH, TARGET_COMMISSION_PATH } from '@/constants/route-path';
 
 export interface AppUser {
     id: number;
@@ -37,5 +37,5 @@ interface Role {
 export const roleBasedRoutes: Record<ROLES, string> = {
     OneData: TARGET_COMMISSION_PATH,
     Branch: TARGET_BRANCH_PATH,
-    Incentive: '/',
+    Incentive: EMPLOYEE_MANAGEMENT,
 };

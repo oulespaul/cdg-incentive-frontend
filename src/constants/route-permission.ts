@@ -5,6 +5,7 @@ import {
     TARGET_BRANCH_REVIEW_APPROVE_PATH,
     TARGET_BRANCH_REVIEW_APPROVE_DETAIL_PATH,
     TARGET_COMMISSION_PATH,
+    EMPLOYEE_MANAGEMENT,
 } from './route-path';
 
 interface RoutePermission {
@@ -18,6 +19,7 @@ export const routePermissions: RoutePermission[] = [
     { path: TARGET_BRANCH_MANAGE_PATH, allowedRoles: [ROLES.BRANCH] },
     { path: TARGET_BRANCH_REVIEW_APPROVE_PATH, allowedRoles: [ROLES.ONE_DATA] },
     { path: TARGET_BRANCH_REVIEW_APPROVE_DETAIL_PATH, allowedRoles: [ROLES.ONE_DATA] },
+    { path: EMPLOYEE_MANAGEMENT, allowedRoles: [ROLES.INCENTIVE] },
 ];
 
 export const getRoutePermissionByPath = (path: string): RoutePermission | undefined => {
