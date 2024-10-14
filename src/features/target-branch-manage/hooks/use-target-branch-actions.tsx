@@ -40,7 +40,7 @@ export const useTargetBranchActions = () => {
 
     const deleteTargetBranch = useDeleteTargetBranch({
         onSuccess: () => {
-            showErrorToast('ลบข้อมูลสำเร็จ', 'ลบข้อมูลเป้าสาขาเรียบร้อย');
+            showSuccessToast('ลบข้อมูลสำเร็จ', 'ลบข้อมูลเป้าสาขาเรียบร้อย');
         },
         onError: () => {
             showErrorToast('ลบข้อมูลไม่สำเร็จ', 'ไม่สามารถลบข้อมูลได้ กรุณาลองใหม่อีกครั้ง');
