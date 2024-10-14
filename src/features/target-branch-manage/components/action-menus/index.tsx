@@ -29,7 +29,9 @@ const TargetBranchActionMenus: React.FC<TargetBranchActionMenusProps> = ({ targe
                 </MenubarTrigger>
                 <MenubarContent>
                     <MenubarItem onClick={onViewHandler}>ดูรายละเอียด</MenubarItem>
-                    <MenubarItem onClick={onEditHandler}>แก้ไข</MenubarItem>
+                    {targetBranchDetail.status !== WorkflowStatus.APPROVED && (
+                        <MenubarItem onClick={onEditHandler}>แก้ไข</MenubarItem>
+                    )}
                     {targetBranchDetail.status === WorkflowStatus.NEW && (
                         <MenubarItem
                             className="text-red-500"

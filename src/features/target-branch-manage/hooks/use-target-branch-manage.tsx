@@ -5,6 +5,7 @@ import { useUser } from '@/app/contexts/user-context';
 import { useFetchTargetCommissionDetail } from '@/features/target-commission/api/use-fetch-target-commission-detail';
 import { useFetchTargetBranchDetail } from '../api/use-fetch-target-branch-detail-by-target-commission-id';
 import { useTargetBranchFilters } from './use-target-branch-filters';
+import { WorkflowStatus } from '@/constants/workflow-status';
 
 export const useTargetBranchManage = () => {
     const { year, month, mode } = useParams();
@@ -16,6 +17,7 @@ export const useTargetBranchManage = () => {
 
     const {
         targetCommission,
+        targetWorkflow,
         setTargetCommission,
         setTargetInHouseList,
         setTargetDeptList,
@@ -93,6 +95,6 @@ export const useTargetBranchManage = () => {
         targetCommission,
         onFilterSelectHandler,
         isEditMode,
-        isViewMode,
+        isViewMode: isViewMode || targetWorkflow.status === WorkflowStatus.APPROVED,
     };
 };
