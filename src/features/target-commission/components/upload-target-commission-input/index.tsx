@@ -6,10 +6,10 @@ import { reOrderList } from '@/lib/list-utils';
 import { TargetCommission } from '@/types/api';
 import { CloudDownload, Loader2 } from 'lucide-react';
 import { useState } from 'react';
-import { toast } from 'react-toastify';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import UploadInput, { FileUploadProgress } from '@/components/upload-input';
+import { showErrorToast, showSuccessToast, showWarningToast } from '@/lib/toast-utils';
 
 const UploadTargetCommissionInput = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -21,35 +21,17 @@ const UploadTargetCommissionInput = () => {
             setTargetCommissionPreviewList(response.data);
         },
         onError: () => {
-            toast.warn(
-                <div className="flex flex-col text-start">
-                    <p className="text-sm font-bold text-orange-400">ไม่สามารถนำเข้าข้อมูลได้</p>
-                    <p className="mt-2 text-xs">ไฟล์ข้อมูลไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง</p>
-                </div>,
-                { position: 'bottom-right' },
-            );
+            showWarningToast('ไม่สามารถนำเข้าข้อมูลได้', 'ไฟล์ข้อมูลไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง');
         },
     });
 
     const uploadFile = useUploadTargetCommissionFile({
         onSuccess: () => {
-            toast.success(
-                <div className="flex flex-col text-start">
-                    <p className="text-sm font-bold text-green-400">นำเข้าข้อมูลสำเร็จ</p>
-                    <p className="mt-2 text-xs">นำเข้าข้อมูลเป้า commission เรียบร้อย</p>
-                </div>,
-                { position: 'bottom-right' },
-            );
+            showSuccessToast('นำเข้าข้อมูลสำเร็จ', 'นำเข้าข้อมูลเป้า commission เรียบร้อย');
             resetState();
         },
         onError: () => {
-            toast.error(
-                <div className="flex flex-col text-start">
-                    <p className="text-sm font-bold text-red-400">ข้อมูลไม่ถูกต้อง</p>
-                    <p className="mt-2 text-xs">ข้อมูลไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง</p>
-                </div>,
-                { position: 'bottom-right' },
-            );
+            showErrorToast('ข้อมูลไม่ถูกต้อง', 'ข้อมูลไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง');
         },
     });
 

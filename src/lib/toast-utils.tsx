@@ -19,3 +19,13 @@ export const showErrorToast = (title: string | undefined, description: string | 
         { position: 'bottom-right' },
     );
 };
+
+export const showWarningToast = (title: string | undefined, description: string | undefined) => {
+    toast.warn(
+        <div className="flex flex-col text-start">
+            <p className="text-sm font-bold text-orange-400">{title ?? 'ทำรายการไม่สำเร็จ'}</p>
+            <p className="mt-2 text-xs">{description}</p>
+        </div>,
+        { position: 'bottom-right' },
+    );
+};

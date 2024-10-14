@@ -1,55 +1,36 @@
 import { DataTable } from '@/components/data-table';
-import { useUploadTargetCommissionFile } from '@/features/target-commission/api/use-upload-target-commission';
-import { useValidatedTargetCommissionUploadFile } from '@/features/target-commission/api/use-validate-upload-target-commission';
-import { targetCommissionColumns } from '@/features/target-commission/constants/target-commission-columns';
-import { reOrderList } from '@/lib/list-utils';
-import { TargetCommission } from '@/types/api';
+import { Employee } from '@/types/api';
 import { CloudDownload, Loader2 } from 'lucide-react';
 import { useState } from 'react';
-import { toast } from 'react-toastify';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import UploadInput, { FileUploadProgress } from '@/components/upload-input';
+import { showErrorToast, showSuccessToast, showWarningToast } from '@/lib/toast-utils';
+import { useValidatedEmployeeUploadFile } from '../../api/use-validate-upload-employee';
+import { employeeManagementList } from '../../constants/employee-list-columns';
+import { useUploadEmployeeFile } from '../../api/use-upload-employee';
 
 const UploadEmployeeInput = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [filesToUpload, setFilesToUpload] = useState<FileUploadProgress[]>([]);
-    const [targetCommissionPreviewList, setTargetCommissionPreviewList] = useState<TargetCommission[]>([]);
+    const [employeePreviewList, setEmployeePreviewList] = useState<Employee[]>([]);
 
-    const validateUploadFile = useValidatedTargetCommissionUploadFile({
+    const validateUploadFile = useValidatedEmployeeUploadFile({
         onSuccess: response => {
-            setTargetCommissionPreviewList(response.data);
+            setEmployeePreviewList(response.data);
         },
         onError: () => {
-            toast.warn(
-                <div className="flex flex-col text-start">
-                    <p className="text-sm font-bold text-orange-400">ไม่สามารถนำเข้าข้อมูลได้</p>
-                    <p className="mt-2 text-xs">ไฟล์ข้อมูลไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง</p>
-                </div>,
-                { position: 'bottom-right' },
-            );
+            showWarningToast('ไม่สามารถนำเข้าข้อมูลได้', 'ไฟล์ข้อมูลไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง');
         },
     });
 
-    const uploadFile = useUploadTargetCommissionFile({
+    const uploadFile = useUploadEmployeeFile({
         onSuccess: () => {
-            toast.success(
-                <div className="flex flex-col text-start">
-                    <p className="text-sm font-bold text-green-400">นำเข้าข้อมูลสำเร็จ</p>
-                    <p className="mt-2 text-xs">นำเข้าข้อมูลเป้า commission เรียบร้อย</p>
-                </div>,
-                { position: 'bottom-right' },
-            );
+            showSuccessToast('นำเข้าข้อมูลสำเร็จ', 'นำเข้าข้อมูล พนักงานห้าง เรียบร้อย');
             resetState();
         },
         onError: () => {
-            toast.error(
-                <div className="flex flex-col text-start">
-                    <p className="text-sm font-bold text-red-400">ข้อมูลไม่ถูกต้อง</p>
-                    <p className="mt-2 text-xs">ข้อมูลไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง</p>
-                </div>,
-                { position: 'bottom-right' },
-            );
+            showErrorToast('ข้อมูลไม่ถูกต้อง', 'ข้อมูลไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง');
         },
     });
 
@@ -63,7 +44,7 @@ const UploadEmployeeInput = () => {
 
     const resetState = () => {
         setFilesToUpload([]);
-        setTargetCommissionPreviewList([]);
+        setEmployeePreviewList([]);
         setIsOpen(false);
     };
 
@@ -77,15 +58,18 @@ const UploadEmployeeInput = () => {
             </DialogTrigger>
             <DialogContent className="max-w-4xl">
                 <DialogHeader>
-                    <DialogTitle className="text-start">นำเข้าเป้า commission (เป้าสาขา)</DialogTitle>
+                    <DialogTitle className="text-start">นำเข้าข้อมูลพนักงานห้าง</DialogTitle>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
-                    {targetCommissionPreviewList.length > 0 ? (
-                        <DataTable
-                            columns={targetCommissionColumns}
-                            data={reOrderList(targetCommissionPreviewList, 'id')}
-                            manualPagination={false}
-                        />
+                    {employeePreviewList.length > 0 ? (
+                        <div className="h-[600px] overflow-y-auto">
+                            <DataTable
+                                columns={employeeManagementList}
+                                data={employeePreviewList}
+                                manualPagination={false}
+                                columnVisibility={{ action: false }}
+                            />
+                        </div>
                     ) : (
                         <UploadInput filesToUpload={filesToUpload} setFilesToUpload={setFilesToUpload} />
                     )}
@@ -98,7 +82,7 @@ const UploadEmployeeInput = () => {
                         >
                             ยกเลิก
                         </Button>
-                        {validateUploadFile.isSuccess && targetCommissionPreviewList.length !== 0 ? (
+                        {validateUploadFile.isSuccess && employeePreviewList.length !== 0 ? (
                             <Button
                                 disabled={uploadFile.isPending}
                                 onClick={() => {

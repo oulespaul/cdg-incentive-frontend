@@ -10,6 +10,7 @@ import {
     RowSelectionState,
     TableMeta,
     useReactTable,
+    VisibilityState,
 } from '@tanstack/react-table';
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -29,12 +30,13 @@ interface DataTableProps<TData, TValue> {
     onRowSelectedChange?: (rows: Row<any>[]) => void;
     rowSelectionExternal?: RowSelectionState | undefined;
     setRowSelectionExternal?: OnChangeFn<RowSelectionState> | undefined;
+    columnVisibility?: VisibilityState | undefined;
 }
 
 declare module '@tanstack/react-table' {
     interface TableMeta<TData extends RowData> {
         updateData: (rowIndex: number, columnId: string, value: unknown) => void;
-        addRowButton: () => JSX.Element
+        addRowButton: () => JSX.Element;
         removeRow: (rowIndex: number) => void;
         selectedBrand?: (rowIndex: number) => void;
         selectedSubDepartmentPool?: (rowIndex: number) => void;
@@ -57,6 +59,7 @@ export function DataTable<TData, TValue>({
     onRowSelectedChange,
     rowSelectionExternal,
     setRowSelectionExternal,
+    columnVisibility,
 }: DataTableProps<TData, TValue>) {
     const [rowSelection, setRowSelection] = useState({});
     const [paginationLocal, setPaginationLocal] = useState<PaginationState>({
@@ -71,6 +74,7 @@ export function DataTable<TData, TValue>({
         state: {
             pagination: manualPagination ? pagination : paginationLocal,
             rowSelection: rowSelectionExternal ? rowSelectionExternal : rowSelection,
+            columnVisibility,
         },
         getCoreRowModel: getCoreRowModel(),
         manualPagination,
