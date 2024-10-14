@@ -1,7 +1,8 @@
 import { useState, useRef } from 'react';
 import { WorkflowStatus } from '@/constants/workflow-status';
-import { TARGET_BRANCH_PATH, TARGET_BRANCH_REVIEW_APPROVE_PATH } from '@/constants/route-path';
+import { TARGET_BRANCH_MANAGE_PATH, TARGET_BRANCH_REVIEW_APPROVE_PATH } from '@/constants/route-path';
 import { Input } from '@/components/ui/input';
+import { useParams } from 'react-router-dom';
 
 interface MakeActionText {
     title: string;
@@ -16,6 +17,7 @@ interface MakeActionText {
 export const useActionMappings = () => {
     const [rejectReason, setRejectReason] = useState<string>('');
     const rejectReasonRef = useRef(rejectReason);
+    const { year, month } = useParams();
 
     const makeActionMetaMapping: Record<WorkflowStatus, MakeActionText | undefined> = {
         [WorkflowStatus.PENDING]: {
@@ -25,7 +27,7 @@ export const useActionMappings = () => {
             successDescription: 'ส่งคำขออนุมัติเป้าสาขาเรียบร้อย',
             failedTitle: 'ส่งคำขออนุมติสำเร็จ',
             failedDescription: 'ไม่สามารถส่งคำขออนุมัติข้อมูลได้ กรุณาลองใหม่ในภายหลัง',
-            redirect: TARGET_BRANCH_PATH,
+            redirect: TARGET_BRANCH_MANAGE_PATH + `/${year}/${month}/view`,
         },
         [WorkflowStatus.APPROVED]: {
             title: 'ยืนยันการอนุมัติข้อมูล',

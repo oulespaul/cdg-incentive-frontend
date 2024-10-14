@@ -11,6 +11,7 @@ import { TargetBranchWorkflow } from '../hooks/use-target-branch-store';
 import { useTargetBranchManage } from '../hooks/use-target-branch-manage';
 import { useTargetBranchActions } from '../hooks/use-target-branch-actions';
 import { useUser } from '@/app/contexts/user-context';
+import { getThaiMonthName } from '@/lib/month-utils';
 
 interface TargetBranchManageHeaderProps {
     targetCommissionDetail: TargetCommission | undefined;
@@ -46,7 +47,7 @@ const TargetBranchManageHeader = ({ targetCommissionDetail, targetWorkflow }: Ta
                     </Button>
                     <p className="text-lg font-semibold">เดือนข้อมูล:</p>
                     <span className="text-primaryLight">
-                        {filterParams.month} {filterParams.year}
+                        {getThaiMonthName(filterParams.month ?? '')} {filterParams.year}
                     </span>
                 </div>
             ) : (
