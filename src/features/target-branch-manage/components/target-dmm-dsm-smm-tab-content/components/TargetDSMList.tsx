@@ -12,7 +12,7 @@ import { TargetBranchDataTable } from '../../target-branch-data-table';
 import { TargetDSM, targetDSMSMMColumns } from '../constants/target-dsm-smm-columns';
 import { useTargetBranchStore } from '@/features/target-branch-manage/hooks/use-target-branch-store';
 import { Button } from '@/components/ui/button';
-import { Plus } from 'lucide-react';
+import { Plus, X } from 'lucide-react';
 
 interface TargetDSMSMMListProps {
     smmRowIndex: number;
@@ -97,15 +97,30 @@ const TargetDSMSMMList: React.FC<TargetDSMSMMListProps> = ({ smmRowIndex, isView
         );
     };
 
+    const removeSMM = (rowIndex: number) => {
+        setTargetSMMDSMList(prevList => prevList.filter((_, targetIndex) => targetIndex !== rowIndex));
+    };
+
     return (
         <>
             <div className="flex text-start mb-2">
                 <div className="grid w-full max-w-sm items-center gap-1.5">
                     <Label className="text-gray-500">รหัสพนักงาน SMM</Label>
                     {isViewMode ? (
-                        targetSMMDSMList[smmRowIndex].smmId
+                        <span>{targetSMMDSMList[smmRowIndex].smmId}</span>
                     ) : (
-                        <Input id="smm_id" onChange={handleSMMIdChange} value={targetSMMDSMList[smmRowIndex].smmId} />
+                        <div className="flex items-center">
+                            <Input
+                                id="smm_id"
+                                onChange={handleSMMIdChange}
+                                value={targetSMMDSMList[smmRowIndex].smmId}
+                            />
+                            {smmRowIndex !== 0 && (
+                                <Button variant="ghost" onClick={() => removeSMM(smmRowIndex)}>
+                                    <X className="text-destructive" />
+                                </Button>
+                            )}
+                        </div>
                     )}
                 </div>
             </div>
