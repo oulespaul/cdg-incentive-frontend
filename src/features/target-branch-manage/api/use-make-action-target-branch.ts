@@ -1,7 +1,7 @@
 import { WorkflowStatus } from '@/constants/workflow-status';
 import { apiClient } from '@/lib/api-client';
 import { MutationConfig } from '@/lib/react-query';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export interface MakeActionTargetBranchRequst {
     targetBranchIdList: number[];
@@ -15,8 +15,17 @@ const makeActionTargetBranch = async (request: MakeActionTargetBranchRequst) => 
 };
 
 export const useMakeActionTargetBranch = (mutationConfig: MutationConfig<typeof makeActionTargetBranch>) => {
+    const queryClient = useQueryClient();
+    const { onSuccess, ...restConfig } = mutationConfig || {};
+
     return useMutation({
         mutationFn: (request: MakeActionTargetBranchRequst) => makeActionTargetBranch(request),
-        ...mutationConfig,
+        onSuccess: (...args) => {
+            queryClient.invalidateQueries({
+                queryKey: ['target-branch-detail-by-target-branch-id'],
+            });
+            onSuccess?.(...args);
+        },
+        ...restConfig,
     });
 };

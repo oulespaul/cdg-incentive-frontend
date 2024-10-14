@@ -7,7 +7,7 @@ import { useParams } from 'react-router-dom';
 interface MakeActionText {
     title: string;
     content: string | JSX.Element | undefined;
-    redirect: string;
+    redirect: string | undefined;
     successTitle: string;
     successDescription: string;
     failedTitle: string;
@@ -36,7 +36,7 @@ export const useActionMappings = () => {
             successDescription: 'อนุมัติข้อมูลเป้าสาขาเรียบร้อย',
             failedTitle: 'อนุมัติข้อมูลไม่สำเร็จ',
             failedDescription: 'ไม่สามารถอนุมัติข้อมูลได้ กรุณาลองใหม่ในภายหลัง',
-            redirect: TARGET_BRANCH_REVIEW_APPROVE_PATH,
+            redirect: undefined,
         },
         [WorkflowStatus.REJECTED]: {
             title: 'ยืนยันการไม่อนุมัติข้อมูล',

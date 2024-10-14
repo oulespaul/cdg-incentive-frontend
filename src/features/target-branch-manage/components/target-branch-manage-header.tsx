@@ -79,10 +79,10 @@ const TargetBranchManageHeader = ({ targetCommissionDetail, targetWorkflow }: Ta
                 </p>
             </div>
 
-            <>
-                {isViewMode || [WorkflowStatus.APPROVED, WorkflowStatus.REJECTED].includes(targetWorkflow.status) ? (
-                    <div className="flex w-1/3 gap-3 justify-end">
-                        {targetWorkflow?.status !== WorkflowStatus.APPROVED && (
+            {targetWorkflow.status !== WorkflowStatus.APPROVED && (
+                <>
+                    {isViewMode && [WorkflowStatus.NEW, WorkflowStatus.REJECTED].includes(targetWorkflow.status) ? (
+                        <div className="flex w-1/3 gap-3 justify-end">
                             <Button
                                 className="bg-amber-500 hover:bg-amber-500/80"
                                 disabled={_.isEmpty(targetCommissionDetail)}
@@ -94,44 +94,48 @@ const TargetBranchManageHeader = ({ targetCommissionDetail, targetWorkflow }: Ta
                             >
                                 แก้ไข
                             </Button>
-                        )}
-                        <Button
-                            variant="destructive"
-                            onClick={() => {
-                                if (targetWorkflow?.id) {
-                                    deleteTargetBranchHandler(targetWorkflow.id);
-                                }
-                            }}
-                        >
-                            ลบ
-                        </Button>
-                    </div>
-                ) : (
-                    <div className="flex w-1/3 gap-3 justify-end">
-                        <Button variant="outline" onClick={onCancelTargetHandler}>
-                            ยกเลิก
-                        </Button>
-                        <Button
-                            variant="primary"
-                            disabled={_.isEmpty(targetCommissionDetail)}
-                            onClick={onSaveTargetHandler}
-                        >
-                            บันทึก
-                        </Button>
-                        <Button
-                            variant="success"
-                            disabled={_.isEmpty(targetCommissionDetail)}
-                            onClick={() => {
-                                if (targetWorkflow?.id) {
-                                    makeActionTargetBranchHandler([targetWorkflow.id], WorkflowStatus.PENDING);
-                                }
-                            }}
-                        >
-                            ส่งคำขออนุมัติ
-                        </Button>
-                    </div>
-                )}
-            </>
+                            {targetWorkflow?.status === WorkflowStatus.NEW && (
+                                <Button
+                                    variant="destructive"
+                                    onClick={() => {
+                                        if (targetWorkflow?.id) {
+                                            deleteTargetBranchHandler(targetWorkflow.id);
+                                        }
+                                    }}
+                                >
+                                    ลบ
+                                </Button>
+                            )}
+                        </div>
+                    ) : (
+                        <div className="flex w-1/3 gap-3 justify-end">
+                            <Button variant="outline" onClick={onCancelTargetHandler}>
+                                ยกเลิก
+                            </Button>
+                            <Button
+                                variant="primary"
+                                disabled={_.isEmpty(targetCommissionDetail)}
+                                onClick={onSaveTargetHandler}
+                            >
+                                บันทึก
+                            </Button>
+                            {targetWorkflow?.status === WorkflowStatus.NEW && (
+                                <Button
+                                    variant="success"
+                                    disabled={_.isEmpty(targetCommissionDetail)}
+                                    onClick={() => {
+                                        if (targetWorkflow?.id) {
+                                            makeActionTargetBranchHandler([targetWorkflow.id], WorkflowStatus.PENDING);
+                                        }
+                                    }}
+                                >
+                                    ส่งคำขออนุมัติ
+                                </Button>
+                            )}
+                        </div>
+                    )}
+                </>
+            )}
         </>
     );
 };
