@@ -8,7 +8,6 @@ import {
     ControllerProps,
     FieldPath,
     FieldValues,
-    FormProps,
     FormProvider,
     SubmitHandler,
     useForm,
