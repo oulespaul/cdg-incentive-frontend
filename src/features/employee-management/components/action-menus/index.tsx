@@ -7,6 +7,7 @@ import { useDeleteEmployeeById } from '../../api/use-delete-employee';
 import { showErrorToast, showSuccessToast } from '@/lib/toast-utils';
 import { useModalContext } from '@/app/contexts/modal-context';
 import { useDuplicateEmployeeId } from '../../api/use-duplicate-employee';
+import { useState } from 'react';
 
 interface EmployeeActionMenusProps {
     employee: Employee;
@@ -15,6 +16,7 @@ interface EmployeeActionMenusProps {
 const EmployeeActionMenus: React.FC<EmployeeActionMenusProps> = ({ employee }) => {
     const { close, open, isOpen } = useDisclosure();
     const { openModal, closeModal } = useModalContext();
+    const [isEditMode, setIsEditMode] = useState(false);
 
     const deleteEmployeeById = useDeleteEmployeeById({
         onSuccess: () => {
@@ -34,8 +36,14 @@ const EmployeeActionMenus: React.FC<EmployeeActionMenusProps> = ({ employee }) =
         },
     });
 
+    const onViewHandler = () => {
+        setIsEditMode(false);
+        open();
+    };
+
     const onEditHandler = () => {
-        // navigate(`/app/target-branch/manage/${targetBranchDetail.year}/${targetBranchDetail.month}/edit`);
+        setIsEditMode(true);
+        open();
     };
 
     const onDuplicateHandler = () => {
@@ -73,7 +81,7 @@ const EmployeeActionMenus: React.FC<EmployeeActionMenusProps> = ({ employee }) =
                         <Ellipsis />
                     </MenubarTrigger>
                     <MenubarContent>
-                        <MenubarItem onClick={open}>ดูรายละเอียด</MenubarItem>
+                        <MenubarItem onClick={onViewHandler}>ดูรายละเอียด</MenubarItem>
                         <MenubarItem onClick={onEditHandler}>แก้ไข</MenubarItem>
                         <MenubarItem onClick={onDuplicateHandler}>Duplicate</MenubarItem>
                         <MenubarItem className="text-red-500" onClick={onDeleteHandler}>
@@ -83,7 +91,7 @@ const EmployeeActionMenus: React.FC<EmployeeActionMenusProps> = ({ employee }) =
                 </MenubarMenu>
             </Menubar>
 
-            <EmployeeDetailDialog employeeId={employee.id} isOpen={isOpen} onClose={close} />
+            <EmployeeDetailDialog employeeId={employee.id} isOpen={isOpen} onClose={close} isEditMode={isEditMode} />
         </>
     );
 };

@@ -1,96 +1,469 @@
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useFetchEmployeeDetailById } from '../../api/use-fetch-employee-detail-by-id';
-import { DD_MM_YYYY, formatDate } from '@/lib/date-utils';
+import { DD_MM_YYYY, formatDate, YYYY_MM_DD_DASH } from '@/lib/date-utils';
 import _ from 'lodash';
+import { Input } from '@/components/ui/input';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { updateEmployeeInputSchema, useUpdateEmployee } from '../../api/use-update-employee';
+import { showSuccessToast } from '@/lib/toast-utils';
+import { SelectScrollable } from '@/components/select-scrollable';
+import { cn } from '@/lib/utils';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Calendar } from '@/components/ui/calendar';
+import { CalendarIcon } from 'lucide-react';
+import { useModalContext } from '@/app/contexts/modal-context';
 
 interface EmployeeDetailDialogProps {
     isOpen: boolean;
     onClose: () => void;
     employeeId: number | undefined;
+    isEditMode: boolean;
 }
 
-const EmployeeDetailDialog = ({ isOpen, onClose, employeeId }: EmployeeDetailDialogProps) => {
+const EmployeeDetailDialog = ({ isOpen, onClose, employeeId, isEditMode }: EmployeeDetailDialogProps) => {
+    const { openModal, closeModal } = useModalContext();
     const { data: employee } = useFetchEmployeeDetailById(isOpen ? employeeId : undefined);
+    const updateEmployeeMutation = useUpdateEmployee({
+        onSuccess: () => {
+            showSuccessToast('แก้ไขข้อมูลพนักงานสำเร็จ', 'แก้ไขข้อมูลพนักงานเรียบร้อย');
+        },
+    });
 
-    if (!employee) return null;
+    if (!employee || !employeeId) return null;
+
+    const onSubmitHandler = (values: any) => {
+        openModal({
+            title: 'ยืนยันการแก้ไขข้อมูลพนักงาน',
+            content: 'คุณต้องการแก้ไขข้อมูลพนักงานหรือไม่?',
+            showCancelButton: true,
+            onConfirm: () => {
+                updateEmployeeMutation.mutate({ id: employeeId, data: values });
+                closeModal();
+                onClose();
+            },
+        });
+    };
 
     return (
         <Dialog open={isOpen}>
             <DialogContent className="max-w-3xl">
-                <DialogHeader>
-                    <DialogTitle>รายละเอียดข้อมูลพนักงานห้าง</DialogTitle>
-                </DialogHeader>
-                <div className="grid grid-cols-2 gap-6 mt-6">
-                    <div>
-                        <div className="mb-4">
-                            <p className="text-sm font-medium text-gray-500">รหัสพนักงาน</p>
-                            <p>{_.defaultTo(employee.employeeId, '-')}</p>
-                        </div>
-                        <div className="mb-4">
-                            <p className="text-sm font-medium text-gray-500">New Cost Center</p>
-                            <p>{_.defaultTo(employee.newCostCenter, '-')}</p>
-                        </div>
-                        <div className="mb-4">
-                            <p className="text-sm font-medium text-gray-500">กลุ่มพนักงาน</p>
-                            <p>{_.defaultTo(employee.employeeGroup, '-')}</p>
-                        </div>
-                        <div className="mb-4">
-                            <p className="text-sm font-medium text-gray-500">Business Unit</p>
-                            <p>{_.defaultTo(employee.businessUnit, '-')}</p>
-                        </div>
-                        <div className="mb-4">
-                            <p className="text-sm font-medium text-gray-500">ตำแหน่ง</p>
-                            <p>{_.defaultTo(employee.positionDescription, '-')}</p>
-                        </div>
-                        <div className="mb-4">
-                            <p className="text-sm font-medium text-gray-500">Scheme</p>
-                            <p>{_.defaultTo(employee.scheme, '-')}</p>
-                        </div>
-                        <div className="mb-4">
-                            <p className="text-sm font-medium text-gray-500">จำนวนวันที่ทำงาน(วัน)</p>
-                            <p>{_.defaultTo(employee.dayWorking, '-')}</p>
-                        </div>
-                    </div>
+                <Form
+                    id="update-employee-form"
+                    onSubmit={onSubmitHandler}
+                    schema={updateEmployeeInputSchema}
+                    options={{
+                        defaultValues: {
+                            employeeId: employee.employeeId ?? '',
+                            newCostCenter: employee.newCostCenter ?? '',
+                            employeeGroup: employee.employeeGroup ?? '',
+                            businessUnit: employee.businessUnit ?? '',
+                            positionDescription: employee.positionDescription ?? '',
+                            brandId: employee.brandId ?? '',
+                            corporateTitle: employee.corporateTitle ?? '',
+                            branchNo: employee.branchNo ?? '',
+                            scheme: employee.scheme ?? '',
+                            costCenter: employee.costCenter ?? '',
+                            dayWorking: employee.dayWorking ?? 0,
+                            terminatedDate: employee.terminatedDate ?? undefined,
+                            hireDate: employee.hireDate ?? '',
+                        },
+                    }}
+                >
+                    {({ control }) => (
+                        <>
+                            <DialogHeader>
+                                <DialogTitle>รายละเอียดข้อมูลพนักงานห้าง</DialogTitle>
+                            </DialogHeader>
 
-                    <div>
-                        <div className="mb-4">
-                            <p className="text-sm font-medium text-gray-500">Cost Center</p>
-                            <p>{_.defaultTo(employee.costCenter, '-')}</p>
-                        </div>
-                        <div className="mb-4">
-                            <p className="text-sm font-medium text-gray-500">Brand ID</p>
-                            <p>{_.defaultTo(employee.brandId, '-')}</p>
-                        </div>
-                        <div className="mb-4">
-                            <p className="text-sm font-medium text-gray-500">ประเภทพนักงาน</p>
-                            <p>{_.defaultTo(employee.corporateTitle, '-')}</p>
-                        </div>
-                        <div className="mb-4">
-                            <p className="text-sm font-medium text-gray-500">สาขา</p>
-                            <p>
-                                {employee.branchNo} - {employee.branchDescription}
-                            </p>
-                        </div>
-                        <div className="mb-4">
-                            <p className="text-sm font-medium text-gray-500">วันที่เริ่มงาน</p>
-                            <p>{formatDate(employee.hireDate, DD_MM_YYYY)}</p>
-                        </div>
-                        <div className="mb-4">
-                            <p className="text-sm font-medium text-gray-500">Brand</p>
-                            <p>{_.defaultTo(employee.brandId, '-')}</p>
-                        </div>
-                        <div className="mb-4">
-                            <p className="text-sm font-medium text-gray-500">วันที่ออก</p>
-                            <p>{_.defaultTo(employee.terminatedDate, '-')}</p>
-                        </div>
-                    </div>
-                </div>
-                <DialogFooter className="flex sm:justify-center">
-                    <Button variant="outline" onClick={onClose}>
-                        ปิด
-                    </Button>
-                </DialogFooter>
+                            <div className="grid grid-cols-2 gap-6 mt-6">
+                                <div>
+                                    <div className="mb-4">
+                                        <FormField
+                                            control={control}
+                                            name="employeeId"
+                                            render={({ field }) => (
+                                                <FormItem className="space-y-0">
+                                                    <FormLabel className="text-gray-500">
+                                                        รหัสพนักงาน
+                                                        {isEditMode && <span className="text-red-500">*</span>}
+                                                    </FormLabel>
+                                                    <FormControl>
+                                                        {isEditMode ? (
+                                                            <Input {...field} />
+                                                        ) : (
+                                                            <p>{_.defaultTo(employee.employeeId, '-')}</p>
+                                                        )}
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
+                                    <div className="mb-4">
+                                        <FormField
+                                            control={control}
+                                            name="newCostCenter"
+                                            render={({ field }) => (
+                                                <FormItem className="space-y-0">
+                                                    <FormLabel className="text-gray-500">
+                                                        New Cost Center{' '}
+                                                        {isEditMode && <span className="text-red-500">*</span>}
+                                                    </FormLabel>
+                                                    <FormControl>
+                                                        {isEditMode ? (
+                                                            <Input {...field} />
+                                                        ) : (
+                                                            <p>{_.defaultTo(employee.newCostCenter, '-')}</p>
+                                                        )}
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
+                                    <div className="mb-4">
+                                        <FormField
+                                            control={control}
+                                            name="employeeGroup"
+                                            render={({ field }) => (
+                                                <FormItem className="space-y-0">
+                                                    <FormLabel className="text-gray-500">
+                                                        กลุ่มพนักงาน
+                                                        {isEditMode && <span className="text-red-500">*</span>}
+                                                    </FormLabel>
+                                                    <FormControl>
+                                                        {isEditMode ? (
+                                                            <SelectScrollable {...field} options={[]} />
+                                                        ) : (
+                                                            <p>{_.defaultTo(employee.employeeGroup, '-')}</p>
+                                                        )}
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
+                                    <div className="mb-4">
+                                        <FormField
+                                            control={control}
+                                            name="businessUnit"
+                                            render={({ field }) => (
+                                                <FormItem className="space-y-0">
+                                                    <FormLabel className="text-gray-500">
+                                                        Business Unit
+                                                        {isEditMode && <span className="text-red-500">*</span>}
+                                                    </FormLabel>
+                                                    <FormControl>
+                                                        {isEditMode ? (
+                                                            <SelectScrollable {...field} options={[]} />
+                                                        ) : (
+                                                            <p>{_.defaultTo(employee.businessUnit, '-')}</p>
+                                                        )}
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
+                                    <div className="mb-4">
+                                        <FormField
+                                            control={control}
+                                            name="positionDescription"
+                                            render={({ field }) => (
+                                                <FormItem className="space-y-0">
+                                                    <FormLabel className="text-gray-500">
+                                                        ตำแหน่ง
+                                                        {isEditMode && <span className="text-red-500">*</span>}
+                                                    </FormLabel>
+                                                    <FormControl>
+                                                        {isEditMode ? (
+                                                            <SelectScrollable {...field} options={[]} />
+                                                        ) : (
+                                                            <p>{_.defaultTo(employee.positionDescription, '-')}</p>
+                                                        )}
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
+                                    <div className="mb-4">
+                                        <FormField
+                                            control={control}
+                                            name="scheme"
+                                            render={({ field }) => (
+                                                <FormItem className="space-y-0">
+                                                    <FormLabel className="text-gray-500">Scheme</FormLabel>
+                                                    <FormControl>
+                                                        {isEditMode ? (
+                                                            <SelectScrollable {...field} options={[]} />
+                                                        ) : (
+                                                            <p>{_.defaultTo(employee.scheme, '-')}</p>
+                                                        )}
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
+                                    <div className="mb-4">
+                                        <FormField
+                                            control={control}
+                                            name="dayWorking"
+                                            render={({ field }) => (
+                                                <FormItem className="space-y-0">
+                                                    <FormLabel className="text-gray-500">
+                                                        จำนวนวันที่ทำงาน(วัน)
+                                                        {isEditMode && <span className="text-red-500">*</span>}
+                                                    </FormLabel>
+                                                    <FormControl>
+                                                        {isEditMode ? (
+                                                            <Input
+                                                                {...field}
+                                                                onChange={e => field.onChange(Number(e.target.value))}
+                                                            />
+                                                        ) : (
+                                                            <p>{_.defaultTo(employee.dayWorking, '-')}</p>
+                                                        )}
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div className="mb-4">
+                                        <FormField
+                                            control={control}
+                                            name="costCenter"
+                                            render={({ field }) => (
+                                                <FormItem className="space-y-0">
+                                                    <FormLabel className="text-gray-500">
+                                                        Cost Center
+                                                        {isEditMode && <span className="text-red-500">*</span>}
+                                                    </FormLabel>
+                                                    <FormControl>
+                                                        {isEditMode ? (
+                                                            <Input {...field} />
+                                                        ) : (
+                                                            <p>{_.defaultTo(employee.costCenter, '-')}</p>
+                                                        )}
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
+                                    <div className="mb-4">
+                                        <FormField
+                                            control={control}
+                                            name="brandId"
+                                            render={({ field }) => (
+                                                <FormItem className="space-y-0">
+                                                    <FormLabel className="text-gray-500">Brand ID</FormLabel>
+                                                    <FormControl>
+                                                        {isEditMode ? (
+                                                            <SelectScrollable {...field} options={[]} />
+                                                        ) : (
+                                                            <p>{_.defaultTo(employee.brandId, '-')}</p>
+                                                        )}
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
+                                    <div className="mb-4">
+                                        <FormField
+                                            control={control}
+                                            name="corporateTitle"
+                                            render={({ field }) => (
+                                                <FormItem className="space-y-0">
+                                                    <FormLabel className="text-gray-500">
+                                                        ประเภทพนักงาน
+                                                        {isEditMode && <span className="text-red-500">*</span>}
+                                                    </FormLabel>
+                                                    <FormControl>
+                                                        {isEditMode ? (
+                                                            <SelectScrollable {...field} options={[]} />
+                                                        ) : (
+                                                            <p>{_.defaultTo(employee.corporateTitle, '-')}</p>
+                                                        )}
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
+                                    <div className="mb-4">
+                                        <FormField
+                                            control={control}
+                                            name="branchNo"
+                                            render={({ field }) => (
+                                                <FormItem className="space-y-0">
+                                                    <FormLabel className="text-gray-500">
+                                                        สาขา
+                                                        {isEditMode && <span className="text-red-500">*</span>}
+                                                    </FormLabel>
+                                                    <FormControl>
+                                                        {isEditMode ? (
+                                                            <SelectScrollable {...field} options={[]} />
+                                                        ) : (
+                                                            <p>
+                                                                {employee.branchNo} - {employee.branchDescription}
+                                                            </p>
+                                                        )}
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
+                                    <div className="mb-4">
+                                        <FormField
+                                            control={control}
+                                            name="hireDate"
+                                            render={({ field }) => (
+                                                <FormItem className="flex flex-col">
+                                                    <FormLabel className="text-gray-500">
+                                                        วันที่เริ่มงาน
+                                                        {isEditMode && <span className="text-red-500">*</span>}
+                                                    </FormLabel>
+                                                    {isEditMode ? (
+                                                        <Popover modal>
+                                                            <PopoverTrigger asChild>
+                                                                <FormControl>
+                                                                    <Button
+                                                                        variant="outlineBlack"
+                                                                        className={cn(
+                                                                            'pl-3 text-left font-normal',
+                                                                            !field.value && 'text-muted-foreground',
+                                                                        )}
+                                                                    >
+                                                                        {field.value ? (
+                                                                            formatDate(field.value, DD_MM_YYYY)
+                                                                        ) : (
+                                                                            <span>ระบุวันที่</span>
+                                                                        )}
+                                                                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                                    </Button>
+                                                                </FormControl>
+                                                            </PopoverTrigger>
+                                                            <PopoverContent className="w-auto p-0" align="start">
+                                                                <Calendar
+                                                                    mode="single"
+                                                                    selected={
+                                                                        field.value ? new Date(field.value) : undefined
+                                                                    }
+                                                                    onSelect={(date: Date | undefined) => {
+                                                                        field.onChange(
+                                                                            formatDate(date, YYYY_MM_DD_DASH),
+                                                                        );
+                                                                    }}
+                                                                    initialFocus
+                                                                />
+                                                            </PopoverContent>
+                                                        </Popover>
+                                                    ) : (
+                                                        <p>{formatDate(employee.hireDate, DD_MM_YYYY)}</p>
+                                                    )}
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
+                                    <div className="mb-4">
+                                        <FormField
+                                            control={control}
+                                            name="brandId"
+                                            render={({ field }) => (
+                                                <FormItem className="space-y-0">
+                                                    <FormLabel className="text-gray-500">Brand</FormLabel>
+                                                    <FormControl>
+                                                        {isEditMode ? (
+                                                            <SelectScrollable {...field} options={[]} />
+                                                        ) : (
+                                                            <p>{_.defaultTo(employee.brandId, '-')}</p>
+                                                        )}
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
+                                    <div className="mb-4">
+                                        <FormField
+                                            control={control}
+                                            name="terminatedDate"
+                                            render={({ field }) => (
+                                                <FormItem className="flex flex-col">
+                                                    <FormLabel className="text-gray-500">วันที่ออก</FormLabel>
+                                                    {isEditMode ? (
+                                                        <Popover modal>
+                                                            <PopoverTrigger asChild>
+                                                                <FormControl>
+                                                                    <Button
+                                                                        variant="outlineBlack"
+                                                                        className={cn(
+                                                                            'pl-3 text-left font-normal',
+                                                                            !field.value && 'text-muted-foreground',
+                                                                        )}
+                                                                    >
+                                                                        {field.value ? (
+                                                                            formatDate(field.value, DD_MM_YYYY)
+                                                                        ) : (
+                                                                            <span>ระบุวันที่</span>
+                                                                        )}
+                                                                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                                    </Button>
+                                                                </FormControl>
+                                                            </PopoverTrigger>
+                                                            <PopoverContent className="w-auto p-0" align="start">
+                                                                <Calendar
+                                                                    mode="single"
+                                                                    selected={
+                                                                        field.value ? new Date(field.value) : undefined
+                                                                    }
+                                                                    onSelect={(date: Date | undefined) => {
+                                                                        field.onChange(
+                                                                            formatDate(date, YYYY_MM_DD_DASH),
+                                                                        );
+                                                                    }}
+                                                                    initialFocus
+                                                                />
+                                                            </PopoverContent>
+                                                        </Popover>
+                                                    ) : (
+                                                        <p>{_.defaultTo(employee.terminatedDate, '-')}</p>
+                                                    )}
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                            <DialogFooter
+                                className={cn('flex sm:justify-center', isEditMode ? 'sm:justify-between' : '')}
+                            >
+                                {isEditMode ? (
+                                    <Button variant="secondary" onClick={onClose}>
+                                        ยกเลิก
+                                    </Button>
+                                ) : (
+                                    <Button variant="outline" onClick={onClose}>
+                                        ปิด
+                                    </Button>
+                                )}
+
+                                {isEditMode && <Button type="submit">บันทึกข้อมูล</Button>}
+                            </DialogFooter>
+                        </>
+                    )}
+                </Form>
             </DialogContent>
         </Dialog>
     );
