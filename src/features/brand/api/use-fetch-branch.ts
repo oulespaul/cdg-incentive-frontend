@@ -6,12 +6,17 @@ const fetchBrandList = async () => {
     return await apiClient.get(`/brand`);
 };
 
-export const useFetchBrand = () => {
+type UseFetchBrandOptions = {
+    queryConfig?: { enabled?: boolean };
+};
+
+export const useFetchBrand = ({ queryConfig }: UseFetchBrandOptions = {}) => {
     return useQuery<Brand[], unknown>({
         queryFn: async () => {
             const { data } = await fetchBrandList();
             return data;
         },
         queryKey: ['brand'],
+        ...queryConfig,
     });
 };

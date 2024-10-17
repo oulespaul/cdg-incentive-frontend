@@ -13,6 +13,12 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Calendar } from '@/components/ui/calendar';
 import { CalendarIcon } from 'lucide-react';
 import { useModalContext } from '@/app/contexts/modal-context';
+import { getThaiMonthName } from '@/lib/month-utils';
+import { useFetchBrand } from '@/features/brand/api/use-fetch-branch';
+import { toFilterOption } from '@/lib/filter-option-utils';
+import { useMemo } from 'react';
+import { useFetchEmployeeFilter } from '../../api/use-fetch-employee-filters';
+import { useFetchBranchList } from '@/features/branch/api/use-fetch-branch-list';
 
 interface EmployeeDetailDialogProps {
     isOpen: boolean;
@@ -23,12 +29,37 @@ interface EmployeeDetailDialogProps {
 
 const EmployeeDetailDialog = ({ isOpen, onClose, employeeId, isEditMode }: EmployeeDetailDialogProps) => {
     const { openModal, closeModal } = useModalContext();
+
+    const { data: brandList } = useFetchBrand({ queryConfig: { enabled: isEditMode } });
+    const { data: employeeGoupOptions } = useFetchEmployeeFilter('employeeGroup');
+    const { data: positionDescriptionOptions } = useFetchEmployeeFilter('positionDescription');
+    const { data: corporateTitleOptions } = useFetchEmployeeFilter('corporateTitle');
+    const { data: branchList } = useFetchBranchList();
+
     const { data: employee } = useFetchEmployeeDetailById(isOpen ? employeeId : undefined);
     const updateEmployeeMutation = useUpdateEmployee({
         onSuccess: () => {
             showSuccessToast('แก้ไขข้อมูลพนักงานสำเร็จ', 'แก้ไขข้อมูลพนักงานเรียบร้อย');
         },
     });
+
+    const brandOptions = useMemo(() => {
+        const brandUniqueNameList = _.uniqBy(brandList, 'brandId');
+        return toFilterOption(brandUniqueNameList ?? [], 'brandId', 'brandId');
+    }, [brandList]);
+
+    const branchOptions = useMemo(() => {
+        const branchUniqueNameList = _.uniqBy(branchList, 'branchCode');
+        return branchUniqueNameList.map(branch => ({
+            value: branch.branchNumber,
+            label: `${branch.branchNumber} - ${branch.name}`,
+        }));
+    }, [branchList]);
+
+    const buOptions = useMemo(() => {
+        const branchUniqueNameList = _.uniqBy(branchList, 'bu');
+        return toFilterOption(branchUniqueNameList ?? [], 'bu', 'bu');
+    }, [branchList]);
 
     if (!employee || !employeeId) return null;
 
@@ -76,7 +107,15 @@ const EmployeeDetailDialog = ({ isOpen, onClose, employeeId, isEditMode }: Emplo
                                 <DialogTitle>รายละเอียดข้อมูลพนักงานห้าง</DialogTitle>
                             </DialogHeader>
 
-                            <div className="grid grid-cols-2 gap-6 mt-6">
+                            <div className="mb-4">
+                                <p className="text-gray-500">เดือนปีข้อมูล</p>
+                                <p className="text-blue-600">
+                                    {getThaiMonthName(formatDate(employee.month, 'MM'))}{' '}
+                                    {formatDate(employee.year, 'YYYY')}
+                                </p>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-6 mt-2">
                                 <div>
                                     <div className="mb-4">
                                         <FormField
@@ -134,7 +173,10 @@ const EmployeeDetailDialog = ({ isOpen, onClose, employeeId, isEditMode }: Emplo
                                                     </FormLabel>
                                                     <FormControl>
                                                         {isEditMode ? (
-                                                            <SelectScrollable {...field} options={[]} />
+                                                            <SelectScrollable
+                                                                {...field}
+                                                                options={employeeGoupOptions ?? []}
+                                                            />
                                                         ) : (
                                                             <p>{_.defaultTo(employee.employeeGroup, '-')}</p>
                                                         )}
@@ -156,7 +198,7 @@ const EmployeeDetailDialog = ({ isOpen, onClose, employeeId, isEditMode }: Emplo
                                                     </FormLabel>
                                                     <FormControl>
                                                         {isEditMode ? (
-                                                            <SelectScrollable {...field} options={[]} />
+                                                            <SelectScrollable {...field} options={buOptions ?? []} />
                                                         ) : (
                                                             <p>{_.defaultTo(employee.businessUnit, '-')}</p>
                                                         )}
@@ -178,7 +220,10 @@ const EmployeeDetailDialog = ({ isOpen, onClose, employeeId, isEditMode }: Emplo
                                                     </FormLabel>
                                                     <FormControl>
                                                         {isEditMode ? (
-                                                            <SelectScrollable {...field} options={[]} />
+                                                            <SelectScrollable
+                                                                {...field}
+                                                                options={positionDescriptionOptions ?? []}
+                                                            />
                                                         ) : (
                                                             <p>{_.defaultTo(employee.positionDescription, '-')}</p>
                                                         )}
@@ -266,7 +311,7 @@ const EmployeeDetailDialog = ({ isOpen, onClose, employeeId, isEditMode }: Emplo
                                                     <FormLabel className="text-gray-500">Brand ID</FormLabel>
                                                     <FormControl>
                                                         {isEditMode ? (
-                                                            <SelectScrollable {...field} options={[]} />
+                                                            <SelectScrollable {...field} options={brandOptions} />
                                                         ) : (
                                                             <p>{_.defaultTo(employee.brandId, '-')}</p>
                                                         )}
@@ -288,7 +333,10 @@ const EmployeeDetailDialog = ({ isOpen, onClose, employeeId, isEditMode }: Emplo
                                                     </FormLabel>
                                                     <FormControl>
                                                         {isEditMode ? (
-                                                            <SelectScrollable {...field} options={[]} />
+                                                            <SelectScrollable
+                                                                {...field}
+                                                                options={corporateTitleOptions ?? []}
+                                                            />
                                                         ) : (
                                                             <p>{_.defaultTo(employee.corporateTitle, '-')}</p>
                                                         )}
@@ -310,7 +358,10 @@ const EmployeeDetailDialog = ({ isOpen, onClose, employeeId, isEditMode }: Emplo
                                                     </FormLabel>
                                                     <FormControl>
                                                         {isEditMode ? (
-                                                            <SelectScrollable {...field} options={[]} />
+                                                            <SelectScrollable
+                                                                {...field}
+                                                                options={branchOptions ?? []}
+                                                            />
                                                         ) : (
                                                             <p>
                                                                 {employee.branchNo} - {employee.branchDescription}

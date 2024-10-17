@@ -65,6 +65,8 @@ export interface TargetBranchDetail {
 // Employee
 export type Employee = {
     id: number;
+    year: string;
+    month: string;
     businessUnit: string;
     company: string;
     branch: string;
@@ -86,3 +88,20 @@ export type Employee = {
     updatedAt: string | null;
     updatedBy: string | null;
 };
+
+// Branch
+export interface Branch {
+    id: number;
+    bu: string;
+    brand: string;
+    segment: string;
+    name: string;
+    regionName: string;
+    type: string;
+    branchNumber: string;
+    branchCode: string;
+    createdAt: null;
+    createdBy: string;
+    updatedAt: null;
+    updatedBy: string;
+}

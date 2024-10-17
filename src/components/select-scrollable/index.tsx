@@ -1,9 +1,10 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { FilterOption } from '@/models/filter-option';
 
 interface SelectScrollableProps {
     onChange: (value: string) => void;
     value: string | number;
-    options: string[];
+    options: FilterOption[];
 }
 
 export function SelectScrollable({ onChange, value, options }: SelectScrollableProps) {
@@ -13,10 +14,11 @@ export function SelectScrollable({ onChange, value, options }: SelectScrollableP
                 <SelectValue />
             </SelectTrigger>
             <SelectContent>
-                <SelectItem value="A - Permanent">A - Permanent</SelectItem>
-                <SelectItem value="RBS">RBS</SelectItem>
-                <SelectItem value="RBS.ZR.พนักงานขาย Pacific Union">RBS.ZR.พนักงานขาย Pacific Union</SelectItem>
-                <SelectItem value="Inhouse">Inhouse</SelectItem>
+                {options.map((option, index) => (
+                    <SelectItem key={`${option.value} ${index}`} value={option.value}>
+                        {option.label}
+                    </SelectItem>
+                ))}
             </SelectContent>
         </Select>
     );

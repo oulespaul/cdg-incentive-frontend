@@ -23,7 +23,7 @@ export const employeeManagementList: ColumnDef<Employee>[] = [
     {
         id: 'monthYear',
         accessorFn: row =>
-            `${getThaiMonthName(formatDate(row.createdAt, 'MM'))} - ${formatDate(row.createdAt, 'YYYY')}`,
+            `${getThaiMonthName(formatDate(row.month, 'MM'))} - ${formatDate(row.year, 'YYYY')}`,
         header: ({ column }) => <DataTableColumnHeader column={column} title="เดือน ปี" className="text-start" />,
         cell: ({ row }) => <div className="text-start">{`${row.getValue('monthYear')}`}</div>,
         size: 200,
