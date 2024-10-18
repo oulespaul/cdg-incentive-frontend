@@ -198,7 +198,13 @@ const EmployeeDetailDialog = ({ isOpen, onClose, employeeId, isEditMode }: Emplo
                                                     </FormLabel>
                                                     <FormControl>
                                                         {isEditMode ? (
-                                                            <SelectScrollable {...field} options={buOptions ?? []} />
+                                                            <SelectScrollable
+                                                                {...field}
+                                                                options={[
+                                                                    ...buOptions,
+                                                                    { label: field.value, value: field.value },
+                                                                ]}
+                                                            />
                                                         ) : (
                                                             <p>{_.defaultTo(employee.businessUnit, '-')}</p>
                                                         )}
@@ -242,7 +248,14 @@ const EmployeeDetailDialog = ({ isOpen, onClose, employeeId, isEditMode }: Emplo
                                                     <FormLabel className="text-gray-500">Scheme</FormLabel>
                                                     <FormControl>
                                                         {isEditMode ? (
-                                                            <SelectScrollable {...field} options={[]} />
+                                                            <SelectScrollable
+                                                                {...field}
+                                                                options={
+                                                                    field.value
+                                                                        ? [{ label: field.value, value: field.value }]
+                                                                        : []
+                                                                }
+                                                            />
                                                         ) : (
                                                             <p>{_.defaultTo(employee.scheme, '-')}</p>
                                                         )}
@@ -266,6 +279,7 @@ const EmployeeDetailDialog = ({ isOpen, onClose, employeeId, isEditMode }: Emplo
                                                         {isEditMode ? (
                                                             <Input
                                                                 {...field}
+                                                                type="number"
                                                                 onChange={e => field.onChange(Number(e.target.value))}
                                                             />
                                                         ) : (
@@ -435,7 +449,14 @@ const EmployeeDetailDialog = ({ isOpen, onClose, employeeId, isEditMode }: Emplo
                                                     <FormLabel className="text-gray-500">Brand</FormLabel>
                                                     <FormControl>
                                                         {isEditMode ? (
-                                                            <SelectScrollable {...field} options={[]} />
+                                                            <SelectScrollable
+                                                                {...field}
+                                                                options={
+                                                                    field.value
+                                                                        ? [{ label: field.value, value: field.value }]
+                                                                        : []
+                                                                }
+                                                            />
                                                         ) : (
                                                             <p>{_.defaultTo(employee.brandId, '-')}</p>
                                                         )}
