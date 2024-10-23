@@ -30,7 +30,9 @@ export const TargetBranchList = () => {
     });
 
     const { data: yearFilterOptions } = useFetchTargetCommissionFilter('year');
-    const { data: monthFilterOptions } = useFetchTargetCommissionFilter('month');
+    const { data: monthFilterOptions } = useFetchTargetCommissionFilter('month', {
+        year: filterParams.year,
+    });
 
     const onFilterSelectHandler = (key: string, value: string) => {
         setFilterParams(prevFilters => ({

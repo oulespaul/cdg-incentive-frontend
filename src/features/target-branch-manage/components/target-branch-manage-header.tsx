@@ -28,7 +28,7 @@ const TargetBranchManageHeader = ({ targetCommissionDetail, targetWorkflow }: Ta
         useTargetBranchActions();
 
     const { data: yearFilterOptions } = useFetchTargetCommissionFilter('year', { branchId: userBranchId });
-    const { data: monthFilterOptions } = useFetchTargetCommissionFilter('month', { branchId: userBranchId });
+    const { data: monthFilterOptions } = useFetchTargetCommissionFilter('month', { branchId: userBranchId, year: filterParams.year });
 
     const navigate = useNavigate();
 

@@ -7,6 +7,7 @@ import _ from 'lodash';
 
 interface TargetCommissionYearFilterParams {
     branchId?: number;
+    year?: string;
 }
 
 const fetchTargetCommissionFilter = async (key: string, params?: TargetCommissionYearFilterParams) => {
@@ -22,7 +23,7 @@ export const useFetchTargetCommissionFilter = (key: string, params?: TargetCommi
             const { data } = await fetchTargetCommissionFilter(key, params);
             return data;
         },
-        queryKey: ['target-commission/filter', key],
+        queryKey: ['target-commission/filter', key, params?.year],
         select: data => {
             if (key === 'month') {
                 return _.sortBy(
