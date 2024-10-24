@@ -32,6 +32,15 @@ export interface Page<T> {
     empty: boolean;
 }
 
+
+// Department
+export interface Department {
+    id: number;
+    departmentCode: string;
+    departmentName: string;
+}
+
+
 // TargetCommission
 export type TargetCommission = {
     id: number;
@@ -104,4 +113,22 @@ export interface Branch {
     createdBy: string;
     updatedAt: null;
     updatedBy: string;
+}
+
+// IncentiveScheme
+export interface IncentiveScheme {
+    id: number;
+    schemeKey: string;
+    schemeName: string;
+    targetUsing: string;
+    isCanCalculateShrinkgate: boolean;
+    isRequireBrandData: boolean;
+    incentiveSegments: IncentiveSegment[];
+    departments: Department[];
+}
+
+interface IncentiveSegment {
+    id: number;
+    name: string;
+    isActive: boolean;
 }

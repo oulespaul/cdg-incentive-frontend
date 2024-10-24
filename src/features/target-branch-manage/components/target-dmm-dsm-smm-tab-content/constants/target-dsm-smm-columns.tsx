@@ -6,7 +6,7 @@ import _ from 'lodash';
 import { SubDepartment } from '@/features/sub-department/models/sub-department';
 import { Card } from '@/components/ui/card';
 import { formatThaiCurrency } from '@/lib/number-utils';
-import { Department } from '@/features/department/models/department';
+import { Department } from '@/types/api';
 
 export type TargetSMMDSM = {
     id?: number;

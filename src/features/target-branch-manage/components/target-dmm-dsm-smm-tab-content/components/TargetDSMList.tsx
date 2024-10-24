@@ -1,6 +1,5 @@
 import { Input } from '@/components/ui/input';
 import { useFetchDepartment } from '@/features/department/api/use-fetch-department';
-import { Department } from '@/features/department/models/department';
 import { useFetchSubDepartment } from '@/features/sub-department/api/use-fetch-sub-department';
 import { SubDepartment } from '@/features/sub-department/models/sub-department';
 import { Label } from '@radix-ui/react-dropdown-menu';
@@ -13,6 +12,7 @@ import { TargetDSM, targetDSMSMMColumns } from '../constants/target-dsm-smm-colu
 import { useTargetBranchStore } from '@/features/target-branch-manage/hooks/use-target-branch-store';
 import { Button } from '@/components/ui/button';
 import { Plus, X } from 'lucide-react';
+import { Department } from '@/types/api';
 
 interface TargetDSMSMMListProps {
     smmRowIndex: number;

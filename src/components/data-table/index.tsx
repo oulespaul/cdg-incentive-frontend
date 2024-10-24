@@ -99,7 +99,9 @@ export function DataTable<TData, TValue>({
                         <TableRow key={headerGroup.id}>
                             {headerGroup.headers.map(header => {
                                 return (
-                                    <TableHead key={header.id} className={cn('text-bold')}>
+                                    <TableHead key={header.id} className={cn('text-bold')}
+                                        style={{ width: `${header.getSize()}px` }}
+                                    >
                                         {header.isPlaceholder
                                             ? null
                                             : flexRender(header.column.columnDef.header, header.getContext())}

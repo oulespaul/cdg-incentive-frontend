@@ -7,3 +7,5 @@ export const TARGET_BRANCH_REVIEW_APPROVE_PATH = '/app/target-branch/review-appr
 export const TARGET_BRANCH_REVIEW_APPROVE_DETAIL_PATH = '/app/target-branch/review-approve/detail';
 // Employee management
 export const EMPLOYEE_MANAGEMENT = '/app/employee-management';
+// Incentive Scheme management
+export const INCENTIVE_SCHEME_MANAGEMENT = '/app/incentive-scheme-management';

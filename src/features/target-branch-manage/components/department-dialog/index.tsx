@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@radix-ui/react-dropdown-menu';
 import { useCallback, useMemo, useState } from 'react';
-import { Department } from '@/features/department/models/department';
+import { Department } from '@/types/api';
 
 interface DepartmentDialogProps {
     departmentList: Department[] | undefined;

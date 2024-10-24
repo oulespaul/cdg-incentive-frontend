@@ -1,6 +1,6 @@
 import { apiClient } from '@/lib/api-client';
+import { Department } from '@/types/api';
 import { useQuery } from '@tanstack/react-query';
-import { Department } from '../models/department';
 
 const getDepartment = async () => {
     return await apiClient.get(`/department`);

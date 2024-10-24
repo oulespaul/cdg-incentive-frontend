@@ -1,11 +1,12 @@
 import {
     EMPLOYEE_MANAGEMENT,
+    INCENTIVE_SCHEME_MANAGEMENT,
     TARGET_BRANCH_PATH,
     TARGET_BRANCH_REVIEW_APPROVE_PATH,
     TARGET_COMMISSION_PATH,
 } from '@/constants/route-path';
 import { getRoutePermissionByPath } from '@/constants/route-permission';
-import { Briefcase, Calculator, CheckCircle, LucideIcon, Star } from 'lucide-react';
+import { Briefcase, Calculator, CheckCircle, LucideIcon, ScanBarcode, Star } from 'lucide-react';
 
 type Submenu = {
     href: string;
@@ -64,6 +65,14 @@ export function getMenuList(pathname: string): Group[] {
                     icon: Briefcase,
                     submenus: [],
                     allowedRoles: getRoutePermissionByPath(EMPLOYEE_MANAGEMENT)?.allowedRoles || [],
+                },
+                {
+                    href: INCENTIVE_SCHEME_MANAGEMENT,
+                    label: 'จัดการ Incentive Scheme',
+                    active: pathname.includes(INCENTIVE_SCHEME_MANAGEMENT),
+                    icon: ScanBarcode,
+                    submenus: [],
+                    allowedRoles: getRoutePermissionByPath(INCENTIVE_SCHEME_MANAGEMENT)?.allowedRoles || [],
                 },
             ],
         },
