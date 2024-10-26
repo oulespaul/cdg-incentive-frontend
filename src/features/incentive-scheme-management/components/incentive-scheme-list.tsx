@@ -8,6 +8,7 @@ import { Card } from '@/components/ui/card';
 import { usePagination } from '@/hooks/use-pagination';
 import { incentiveSchemeListColumns } from '../constants/incentive-scheme-list-columns';
 import { IncentiveSchemeFilterParams, incentiveSchemeInitialFilterParams, useFetchIncentiveSchemeList } from '../api/use-fetch-incentive-scheme-list';
+import { useNavigate } from 'react-router-dom';
 
 export const IncentiveSchemeList = () => {
     const [filterParams, setFilterParams] = useState<IncentiveSchemeFilterParams>(incentiveSchemeInitialFilterParams);
@@ -16,6 +17,8 @@ export const IncentiveSchemeList = () => {
         ...filterParams,
         ...pagination,
     });
+
+    const navigator = useNavigate();
 
     const onFilterValueChangeHandler = (key: keyof IncentiveSchemeFilterParams, event: React.ChangeEvent<HTMLInputElement>) => {
         event.preventDefault();
@@ -49,7 +52,7 @@ export const IncentiveSchemeList = () => {
                 </div>
 
                 <div className="flex w-1/2 justify-end">
-                    <Button className="bg-gradient-to-l from-cyan-500 to-blue-500">
+                    <Button className="bg-gradient-to-l from-cyan-500 to-blue-500" onClick={() => navigator('/app/incentive-scheme-management/create')}>
                         <Plus className="mr-2 h-4 w-4" />
                         เพิ่ม Scheme
                     </Button>

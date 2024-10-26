@@ -78,6 +78,13 @@ export const createAppRouter = (isAuthenticated: boolean) =>
                         return { Component: IncentiveSchemeManagementPage };
                     },
                 },
+                {
+                    path: 'incentive-scheme-management/:mode/:id?',
+                    lazy: async () => {
+                        const { IncentiveSchemeManagementManagePage } = await import('./routes/app/incentive-scheme-management-manage');
+                        return { Component: IncentiveSchemeManagementManagePage };
+                    },
+                },
             ],
         },
         {
