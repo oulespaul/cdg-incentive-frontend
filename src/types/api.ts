@@ -127,7 +127,7 @@ export interface IncentiveScheme {
     departments: Department[];
 }
 
-interface IncentiveSegment {
+export interface IncentiveSegment {
     id: number;
     name: string;
     isActive: boolean;
