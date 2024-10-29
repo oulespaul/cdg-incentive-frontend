@@ -25,9 +25,13 @@ export const createIncentiveSchemeInputSchema = z.object({
         maxTargetPerHead: z.number().optional(),
         majorCalculationList: z.array(z.object({
             incentive: z.number().optional(),
+        })),
+        minorCalculationList: z.array(z.object({
+            incentive: z.number().optional(),
         }))
     })),
     majorCalculationUnit: z.string().min(1, 'กรุณาเลือกหน่วยคำนวณ'),
+    minorCalculationUnit: z.string().min(1, 'กรุณาเลือกหน่วยคำนวณ'),
     majorCalculationRangeList: z.array(z.object({
         minIncentive: z.number().optional(),
         maxIncentive: z.number().optional(),

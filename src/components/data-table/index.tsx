@@ -47,6 +47,7 @@ declare module '@tanstack/react-table' {
         onAction?: (id: number) => void;
         addColumnButton?: () => JSX.Element | null;
         majorCalculationUnit?: string | undefined;
+        minorCalculationUnit?: string | undefined;
     }
 }
 

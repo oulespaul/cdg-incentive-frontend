@@ -36,8 +36,8 @@ const CreateIncentiveSchemeMajorStep: React.FC<CreateIncentiveSchemeMajorStepPro
 
     const majorRangeCommissionCalculationColumns = useMemo<ColumnDef<any>[]>(() => {
         return majorCalculationRangeWatch.map((_column, colIndex) => ({
-            id: `targetRange-${colIndex}`,
-            accessorKey: `targetRange-${colIndex}`,
+            id: `major-calculation-${colIndex}`,
+            accessorKey: `major-calculation-${colIndex}`,
             header: ({ table }) => {
                 return (
                     <div className="flex space-x-2">
@@ -106,7 +106,7 @@ const CreateIncentiveSchemeMajorStep: React.FC<CreateIncentiveSchemeMajorStepPro
                 meta={{
                     addRowButton: () => {
                         const addRowHandler = () => {
-                            appendMajorGroupCalculation({ groupName: '', minTargetPerHead: undefined, maxTargetPerHead: undefined, majorCalculationList: [] })
+                            appendMajorGroupCalculation({ groupName: '', minTargetPerHead: undefined, maxTargetPerHead: undefined, majorCalculationList: [], minorCalculationList: [] })
                         };
 
                         return (

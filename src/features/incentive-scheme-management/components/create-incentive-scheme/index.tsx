@@ -10,6 +10,7 @@ import { showSuccessToast } from "@/lib/toast-utils"
 import CreateIncentiveSchemeMainStep from "./components/main-step"
 import CreateIncentiveSchemeMajorStep from "./components/major-step"
 import { useState } from "react"
+import CreateIncentiveSchemeMinorStep from "./components/minor-step"
 
 const CreateIncentiveScheme = () => {
     const [step, setStep] = useState(1);
@@ -61,12 +62,14 @@ const CreateIncentiveScheme = () => {
                     isRequireBrandData: '',
                     majorGroupCalculationList: [],
                     majorCalculationUnit: '',
+                    minorCalculationUnit: '',
                     majorCalculationRangeList: []
                 },
             }}
         >
             {({ control, watch }) => {
-                const stepCalculationListWatch = watch("stepCalculationList")
+                const stepCalculationListWatch = watch("stepCalculationList") as string[]
+                console.log("🚀 ~ CreateIncentiveScheme ~ stepCalculationListWatch:", stepCalculationListWatch)
                 return (
                     <>
                         <div className="flex flex-col">
@@ -88,25 +91,39 @@ const CreateIncentiveScheme = () => {
 
                             <Card className="container py-6">
                                 {step === 1 && <CreateIncentiveSchemeMainStep control={control} />}
-                                {(step === 2 && stepCalculationListWatch.some(step => step === "MAJOR")) && <CreateIncentiveSchemeMajorStep />}
+
+                                {step === 2 && stepCalculationListWatch.includes("MAJOR") && <CreateIncentiveSchemeMajorStep />}
+
+                                {step === 3 && stepCalculationListWatch.includes("MAJOR") && stepCalculationListWatch.includes("MINOR") && (
+                                    <CreateIncentiveSchemeMinorStep />
+                                )}
 
                                 <div className="flex justify-between mt-4">
-                                    {[2, 3, 4].includes(step)
-                                        ? <Button type="button" variant="secondary" onClick={prevStep}>ย้อนกลับ</Button>
-                                        : <Button type="button" variant="secondary" onClick={onCancelHandler}>ยกเลิก</Button>}
-                                    {step === 2
-                                        ? <Button type="submit">
-                                            ยืนยันบันทึก
+                                    {[2, 3, 4].includes(step) ? (
+                                        <Button type="button" variant="secondary" onClick={prevStep}>
+                                            ย้อนกลับ
                                         </Button>
-                                        : <Button
+                                    ) : (
+                                        <Button type="button" variant="secondary" onClick={onCancelHandler}>
+                                            ยกเลิก
+                                        </Button>
+                                    )}
+
+                                    {step === 4 ? (
+                                        <Button type="submit">ยืนยันบันทึก</Button>
+                                    ) : (
+                                        <Button
                                             type="button"
                                             variant="outline"
                                             onClick={nextStep}
-                                            disabled={step === 1 && stepCalculationListWatch.length === 0}>
+                                            disabled={step === 1 && stepCalculationListWatch.length === 0}
+                                        >
                                             ถัดไป
-                                        </Button>}
+                                        </Button>
+                                    )}
                                 </div>
-                            </Card >
+                            </Card>
+
                         </div>
                     </>
                 )
