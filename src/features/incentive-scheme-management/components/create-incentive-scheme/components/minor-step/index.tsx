@@ -67,7 +67,7 @@ const CreateIncentiveSchemeMinorStep: React.FC<CreateIncentiveSchemeMinorStepPro
                 name="minorCalculationUnit"
                 render={({ field }) => (
                     <FormItem className="grid grid-cols-9">
-                        <FormLabel className="col-start-1 col-span-1 flex justify-start items-center font-semibold mr-2">หน่วยของค่าแรงจูงใจ :</FormLabel>
+                        <FormLabel className="col-start-1 col-span-1 flex justify-end items-center font-semibold mr-2">หน่วยของค่าแรงจูงใจ :</FormLabel>
                         <FormControl className="col-span-2">
                             <RadioGroup
                                 onValueChange={field.onChange}

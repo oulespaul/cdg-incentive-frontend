@@ -136,7 +136,11 @@ export const targetDeptColumns: ColumnDef<TargetDept>[] = [
         accessorKey: 'action',
         header: ({ column }) => <DataTableColumnHeader column={column} title="" className="text-center" />,
         cell: ({ row: { index }, table }) => (
-            <Button variant="ghost" size="sm" onClick={() => table.options.meta?.removeRow(index)}>
+            <Button variant="ghost" size="sm" onClick={() => {
+                if (table.options.meta?.removeRow) {
+                    table.options.meta.removeRow(index)
+                }
+            }}>
                 <X color="red" />
             </Button>
         ),

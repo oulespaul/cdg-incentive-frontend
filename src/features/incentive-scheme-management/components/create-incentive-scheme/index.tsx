@@ -11,6 +11,7 @@ import CreateIncentiveSchemeMainStep from "./components/main-step"
 import CreateIncentiveSchemeMajorStep from "./components/major-step"
 import { useState } from "react"
 import CreateIncentiveSchemeMinorStep from "./components/minor-step"
+import CreateIncentiveSchemeSpecialRewardStep from "./components/special-reward-step"
 
 const CreateIncentiveScheme = () => {
     const [step, setStep] = useState(1);
@@ -60,16 +61,18 @@ const CreateIncentiveScheme = () => {
                     stepCalculationList: [],
                     isCalculateShrinkgate: '',
                     isRequireBrandData: '',
-                    majorGroupCalculationList: [],
                     majorCalculationUnit: '',
                     minorCalculationUnit: '',
-                    majorCalculationRangeList: []
+                    specialRewardCalculationUnit: '',
+                    specialRewardCalculationMethod: '',
+                    majorGroupCalculationList: [],
+                    majorCalculationRangeList: [],
+                    // specialRewardCalculationList: [],
                 },
             }}
         >
             {({ control, watch }) => {
                 const stepCalculationListWatch = watch("stepCalculationList") as string[]
-                console.log("🚀 ~ CreateIncentiveScheme ~ stepCalculationListWatch:", stepCalculationListWatch)
                 return (
                     <>
                         <div className="flex flex-col">
@@ -98,6 +101,10 @@ const CreateIncentiveScheme = () => {
                                     <CreateIncentiveSchemeMinorStep />
                                 )}
 
+                                {step === 4 && stepCalculationListWatch.includes("SPECIAL_REWARD") && stepCalculationListWatch.includes("MINOR") && (
+                                    <CreateIncentiveSchemeSpecialRewardStep />
+                                )}
+
                                 <div className="flex justify-between mt-4">
                                     {[2, 3, 4].includes(step) ? (
                                         <Button type="button" variant="secondary" onClick={prevStep}>
@@ -109,7 +116,7 @@ const CreateIncentiveScheme = () => {
                                         </Button>
                                     )}
 
-                                    {step === 4 ? (
+                                    {step === 5 ? (
                                         <Button type="submit">ยืนยันบันทึก</Button>
                                     ) : (
                                         <Button
