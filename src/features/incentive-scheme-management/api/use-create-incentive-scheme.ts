@@ -19,6 +19,19 @@ export const createIncentiveSchemeInputSchema = z.object({
     }),
     isCalculateShrinkgate: z.string().min(1, 'กรุณาเลือกความต้องการคำนวณค่าสินค้าสูญหาย'),
     isRequireBrandData: z.string().min(1, 'กรุณาเลือกความต้องการข้อมูล Brand ในการคำนวณ'),
+    majorGroupCalculationList: z.array(z.object({
+        groupName: z.string().min(1, 'กรุณาระบุชื่อ Group'),
+        minTargetPerHead: z.number().optional(),
+        maxTargetPerHead: z.number().optional(),
+        majorCalculationList: z.array(z.object({
+            incentive: z.number().optional(),
+        }))
+    })),
+    majorCalculationUnit: z.string().min(1, 'กรุณาเลือกหน่วยคำนวณ'),
+    majorCalculationRangeList: z.array(z.object({
+        minIncentive: z.number().optional(),
+        maxIncentive: z.number().optional(),
+    }))
 });
 
 export type CreateIncentiveSchemeInput = z.infer<typeof createIncentiveSchemeInputSchema>;

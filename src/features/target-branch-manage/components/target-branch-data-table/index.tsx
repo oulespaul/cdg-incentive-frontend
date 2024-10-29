@@ -23,7 +23,9 @@ const defaultColumn: Partial<ColumnDef<any>> = {
         const [value, setValue] = useState(initialValue);
 
         const onBlur = () => {
-            table.options.meta?.updateData(index, id, value);
+            if (table.options.meta?.updateData) {
+                table.options.meta?.updateData(index, id, value);
+            }
         };
 
         useEffect(() => {

@@ -31,19 +31,22 @@ interface DataTableProps<TData, TValue> {
     rowSelectionExternal?: RowSelectionState | undefined;
     setRowSelectionExternal?: OnChangeFn<RowSelectionState> | undefined;
     columnVisibility?: VisibilityState | undefined;
+    showPaginationControl?: boolean;
 }
 
 declare module '@tanstack/react-table' {
     interface TableMeta<TData extends RowData> {
-        updateData: (rowIndex: number, columnId: string, value: unknown) => void;
-        addRowButton: () => JSX.Element;
-        removeRow: (rowIndex: number) => void;
+        updateData?: (rowIndex: number, columnId: string, value: unknown) => void;
+        addRowButton?: () => JSX.Element;
+        removeRow?: (rowIndex: number) => void;
         selectedBrand?: (rowIndex: number) => void;
         selectedSubDepartmentPool?: (rowIndex: number) => void;
         selectedDepartment?: (rowIndex: number) => void;
         selectedSubDepartment?: (rowIndex: number) => void;
         isViewMode?: boolean;
         onAction?: (id: number) => void;
+        addColumnButton?: () => JSX.Element | null;
+        majorCalculationUnit?: string | undefined;
     }
 }
 
@@ -60,6 +63,7 @@ export function DataTable<TData, TValue>({
     rowSelectionExternal,
     setRowSelectionExternal,
     columnVisibility,
+    showPaginationControl = true
 }: DataTableProps<TData, TValue>) {
     const [rowSelection, setRowSelection] = useState({});
     const [paginationLocal, setPaginationLocal] = useState<PaginationState>({
@@ -108,9 +112,17 @@ export function DataTable<TData, TValue>({
                                     </TableHead>
                                 );
                             })}
+                            {meta?.addColumnButton ? (
+                                <TableHead className="text-center bg-white"
+                                    style={{ width: `10px` }}
+                                >
+                                    {meta.addColumnButton()}
+                                </TableHead>
+                            ) : null}
                         </TableRow>
                     ))}
                 </TableHeader>
+
                 <TableBody>
                     {table.getRowModel().rows?.length ? (
                         table.getRowModel().rows.map((row, index) => (
@@ -133,10 +145,17 @@ export function DataTable<TData, TValue>({
                             </TableCell>
                         </TableRow>
                     )}
+                    {meta?.addRowButton ? (
+                        <TableRow>
+                            <TableCell colSpan={columns.length} className="text-start">
+                                {meta.addRowButton()}
+                            </TableCell>
+                        </TableRow>
+                    ) : null}
                 </TableBody>
             </Table>
 
-            <PaginationControl table={table} />
+            {showPaginationControl && <PaginationControl table={table} />}
         </div>
     );
 }
